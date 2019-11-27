@@ -1,10 +1,13 @@
 <template>
-  <div class="container" @click="clickHandle">
-    <div class="message">{{msg}}</div>
+  <div>
+    <img class="logo" src="/static/images/logo.png"/>
+    <button class="green" @click="goOrder()">点击预约</button>
+    <button class="green">扫码开锁</button>
   </div>
 </template>
 
 <script>
+// import storeChoose from "src/pages/index/storeChoose/storeChoose"
 export default {
   data() {
     return {
@@ -12,45 +15,8 @@ export default {
     };
   },
 
-  methods: {
-    clickHandle() {
-      /**
-       * 请求数据
-       */
-      // let data = {
-      //   user: {
-      //     code: "3333"
-      //   }
-      // };
-      // let that = this;
-      // // 此处发送请求
-      // $.ajax({
-      //   url:  + "/manager/login",
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   data: JSON.stringify(data),
-      //   dataType: "json",
-      //   success: function(data) {
-      //     console.log(data, "历史作业数据");
-      //     if (data.code == 1) {
-
-      //     } else {
-      //       Dialog({
-      //         title: "提示",
-      //         message: data.message,
-      //         skin: "ios"
-      //       });
-      //     }
-      //   },
-      //   complete: function(res) {
-      //     console.log(res);
-      //   }
-      // });
-    }
-  }
-};
+  methods: {}
+}
 </script>
 
 <style scoped>
@@ -58,5 +24,32 @@ export default {
   color: red;
   padding: 10px;
   text-align: center;
+}
+.logo{
+  width: 220px;
+  height: 220px;
+  display: block;
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto;
+  margin-top: 64px;
+  margin-bottom: 32px;
+}
+.green{
+  display: block;
+  position: relative;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  width: 220px;
+  height: 48px;
+  color: #ffffff;
+  background-color: #44644A;
+  border-radius: 24px;
+  line-height: 48px;
+  margin-top: 16.5px;
+  font-size: 16px;
 }
 </style>

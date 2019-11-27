@@ -1,11 +1,26 @@
 {
   "pages": [
-    "pages/index/main"
+    "pages/order/main",
+    "pages/index/main",
+    "pages/storeChoose/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "考拉",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [{
+      "pagePath": "pages/index/main",
+      "text": "首页",
+      "iconPath": "static/tabs/index.png",
+      "selectedIconPath": "static/tabs/index_selected.png"
+    },{
+      "pagePath": "pages/order/main",
+      "text": "订单",
+      "iconPath": "static/tabs/order.png",
+      "selectedIconPath": "static/tabs/index_selected.png"
+    }]
   }
 }
