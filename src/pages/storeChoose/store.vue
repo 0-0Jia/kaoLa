@@ -16,6 +16,7 @@
             <div class="order">预约</div>
             <div class="goStore">去门店</div>
         </div>
+        <img class="phone" src="/static/images/phone.png"/>
     </div>
 </template>
 
@@ -97,5 +98,13 @@ export default {
 }
 .order{
     margin-right: 8px;
+}
+.phone{
+    position: absolute;
+    display: block;
+    width: 22px;
+    height: 22px;
+    top: 12px;
+    right: 12px;
 }
 </style>

@@ -1,8 +1,6 @@
 <template>
   <div>
     <store v-for="(message, index) in messageList" :message="message" :key="index"></store>
-    <!-- <div>{{message.name}}</div> -->
-    <!-- <div>{{ name }}</div> -->
   </div>
 </template>
 
