@@ -1,15 +1,23 @@
 <template>
-    <div class="seat">
+    <div class="seat" :seatMsg="seatMsg">
         <img class="seatBg" src="/static/images/seatBg.png"/>
-        <div class="name">一号桌</div>
-        <div class="price">￥9.6/小时</div>
-        <div class="status">可预约</div>
+        <div class="name">{{seatMsg.name}}</div>
+        <div class="price">{{seatMsg.price}}</div>
+        <div :class="[{'redFont': !seatMsg.status}, 'status']">{{status}}</div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "seat"
+    name: "seat",
+    props: {
+        seatMsg: Object
+    },
+    data() {
+        return {
+            status: this.seatMsg.status?"可预约":"已满"
+        }
+    }
 }
 </script>
 
@@ -22,6 +30,7 @@ export default {
     border-radius: 6px;
     box-shadow: 0px 2px 12px rgba(68, 100, 74, 0.08);
     margin-bottom: 16px;
+    background-color: white;
 }
 .seatBg{
     display: block;
@@ -48,5 +57,8 @@ export default {
 }
 .status{
     right: 16px;
+}
+.redFont{
+    color: #F32727;
 }
 </style>

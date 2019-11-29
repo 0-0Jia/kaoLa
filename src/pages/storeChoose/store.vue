@@ -40,6 +40,7 @@ export default {
     right: 0;
     margin: auto;
     margin-top: 16px;
+    background-color: white;
 }
 .logo{
     width: 100px;

@@ -9,8 +9,8 @@
                 <span class="greenFont">开放区</span>
             </div>
         </div>
-        <div class="seat"><!--grid-->
-            <seat></seat>
+        <div class="seat">
+            <seat v-for="(seatMsg, index) in seatMsgList" :seatMsg="seatMsg" :key="index"></seat>
         </div>
     </div>
 </template>
@@ -20,6 +20,19 @@ import seat from "./seat"
 export default {
     components: {
         seat
+    },
+    data(){
+        return {
+            seatMsgList: [{
+                name: "一号桌",
+                price: "￥9.6/小时",
+                status: true
+            }, {
+                name: "二号桌",
+                price: "￥9.6/小时",
+                status: false
+            }]
+        }
     }
 }
 </script>
@@ -31,6 +44,7 @@ export default {
     margin-top: 8px;
     margin-bottom: 16px;
     padding-left: 18px;
+    background-color: white;
 }
 .nav>div{
     display: inline-block;

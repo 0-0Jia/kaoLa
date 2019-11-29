@@ -2,20 +2,26 @@
   <div>
     <img class="logo" src="/static/images/logo.png"/>
     <button class="green" @click="goOrder()">点击预约</button>
-    <button class="green">扫码开锁</button>
+    <button class="green" @click="scanCode()">扫码开锁</button>
   </div>
 </template>
 
 <script>
-// import storeChoose from "src/pages/index/storeChoose/storeChoose"
 export default {
   data() {
     return {
       msg: "Hello"
     };
   },
-
-  methods: {}
+  methods: {
+    scanCode(){
+      wx.scanCode({
+        success (res) {
+          console.log(res)
+        }
+      })
+    }
+  }
 }
 </script>
 
