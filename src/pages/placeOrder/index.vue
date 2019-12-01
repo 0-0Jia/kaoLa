@@ -10,7 +10,12 @@
             </div>
         </div>
         <div class="seat">
-            <seat v-for="(seatMsg, index) in seatMsgList" :seatMsg="seatMsg" :key="index"></seat>
+            <seat 
+                v-for="(seatMsg, index) in seatMsgList" 
+                :seatMsg="seatMsg" 
+                :key="index"
+            >
+            </seat>
         </div>
     </div>
 </template>
