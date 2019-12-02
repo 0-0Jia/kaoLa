@@ -3,7 +3,17 @@
         <seat-msg></seat-msg>
         <div class="msg">
             <msg-row name="预约日期" value="2019-12-01"></msg-row>
-            <msg-row name="已选事件" value="12：00-13：00"></msg-row>            
+            <msg-row name="已选时间" value="12：00-13：00"></msg-row>
+            <msg-row name="所在门店" value="考拉自习室"></msg-row> 
+            <msg-row name="费用总计" value="￥28.00"></msg-row>
+            <pay-methods :payMethods="payMethods" @choosePayMethod="choosePayMethod"></pay-methods>
+            <div class="chooseMeal" v-show="payMethods=='meal'">
+                <div class="title">选择套餐</div>
+                <!-- <div class="mealValue"> -->
+                    <span class="meal">wu</span>
+                    <img class="arrow" src="/static/images/arrow.png"/>
+                <!-- </div> -->
+            </div>
         </div>
         <submit :type="type"></submit>
     </div>
@@ -12,16 +22,24 @@
 <script>
 import seatMsg from "../components/seatMsg"
 import msgRow from "./msgRow"
+import payMethods from "./payMethods"
 import submit from "../components/submit"
 export default {
     components: {
         seatMsg,
         msgRow,
+        payMethods,
         submit
     },
     data() {
         return {
-            type: "pay"
+            type: "pay",
+            payMethods: "wx"
+        }
+    },
+    methods: {
+        choosePayMethod(value) {
+            this.payMethods = value;
         }
     }
 }
@@ -32,5 +50,39 @@ export default {
     width: 375px;
     padding-bottom: 16px;
     background-color: white;
+}
+.chooseMeal{
+    width: 343px;
+    height: 26px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    margin-top: 20px;
+    position: relative;
+    color: #2E2E2E;
+    background-color: white;
+}
+.title{
+    display: inline-block;
+    line-height: 22px;
+    font-size: 12px;
+}
+.meal{
+    display: inline-block;
+    line-height: 22px;
+    position: absolute;
+    font-size: 12px;
+    color: #A8A8A8;
+    right: 11px;
+}
+.arrow{
+    width: 7.13px;
+    height: 12.97px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    margin-left: 10.5px;
 }
 </style>

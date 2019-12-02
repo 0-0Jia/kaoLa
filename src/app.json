@@ -5,7 +5,8 @@
     "pages/storeChoose/main",
     "pages/placeOrder/main",
     "pages/timeOrder/main",
-    "pages/orderSubmission/main"
+    "pages/orderSubmission/main",
+    "pages/chooseMeal/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
