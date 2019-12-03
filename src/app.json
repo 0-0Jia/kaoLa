@@ -1,13 +1,19 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/order/main",
-    "pages/storeChoose/main",
-    "pages/placeOrder/main",
-    "pages/timeOrder/main",
-    "pages/orderSubmission/main",
-    "pages/chooseMeal/main"
+    "pages/order/main"
   ],
+  "subPackages": [{
+    "root": "pages/packageA/",
+    "pages": [
+      "storeChoose/main",
+      "placeOrder/main",
+      "timeOrder/main",
+      "orderSubmission/main",
+      "chooseMeal/main"
+    ],
+    "name": "packageA"
+  }],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

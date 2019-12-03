@@ -16,7 +16,7 @@ export default {
   methods: {
     goOrder() {
       wx.navigateTo({
-        url: "/pages/storeChoose/main"
+        url: "/pages/packageA/storeChoose/main"
       })
     },
     scanCode() {

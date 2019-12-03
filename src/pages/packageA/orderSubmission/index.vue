@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import seatMsg from "../components/seatMsg"
+import seatMsg from "../../components/seatMsg"
 import msgRow from "./msgRow"
 import payMethods from "./payMethods"
-import submit from "../components/submit"
+import submit from "../../components/submit"
 import aDialog from "./aDialog"
 export default {
     components: {
@@ -47,7 +47,7 @@ export default {
         },
         goChooseMeal() {
             wx.navigateTo({
-                url: "/pages/chooseMeal/main"
+                url: "/pages/packageA/chooseMeal/main"
             })
         },
         closeDialog() {

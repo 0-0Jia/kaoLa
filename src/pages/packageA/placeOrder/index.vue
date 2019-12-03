@@ -44,7 +44,7 @@ export default {
         goChooseTime() {
             console.log("跳转到事件选择页面");
             wx.navigateTo({
-                url: "/pages/timeOrder/main"
+                url: "/pages/packageA/timeOrder/main"
             })
         }
     }

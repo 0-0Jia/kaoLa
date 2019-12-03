@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "mpvueTemplateProjectVersion": "0.1.0",
   "description": "A Mpvue project",
-  "author": "Ghost",
+  "author": "kaolalala <1921346727@qq.com>",
   "private": true,
   "scripts": {
     "dev:wx": "node build/dev-server.js wx",
@@ -20,11 +20,9 @@
     "build:my": "node build/build.js my",
     "dev": "node build/dev-server.js wx",
     "start": "npm run dev",
-    "build": "node build/build.js wx",
-    "lint": "eslint --ext .js,.vue src"
+    "build": "node build/build.js wx"
   },
   "dependencies": {
-    "jquery": "^3.4.1",
     "mpvue": "^2.0.0",
     "vuex": "^3.0.1"
   },
@@ -40,16 +38,6 @@
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "cssnano": "^3.10.0",
-    "eslint": "^4.19.1",
-    "eslint-friendly-formatter": "^4.0.1",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-html": "^4.0.3",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-promise": "^3.4.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "babel-eslint": "^8.2.3",
     "eventsource-polyfill": "^0.9.6",
     "express": "^4.16.3",
     "extract-text-webpack-plugin": "^3.0.2",

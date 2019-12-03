@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import seatMsg from "../components/seatMsg.vue"
-import submit from "../components/submit.vue"
+import seatMsg from "../../components/seatMsg.vue"
+import submit from "../../components/submit.vue"
 import timeChoose from "./timeChoose"
 export default {
     components:{
@@ -28,7 +28,7 @@ export default {
         goPay() {
             console.log("现在跳转到支付页面");
             wx.navigateTo({
-                url: "/pages/orderSubmission/main"
+                url: "/pages/packageA/orderSubmission/main"
             })
         }
     }

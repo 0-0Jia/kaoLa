@@ -48,7 +48,7 @@ export default {
   methods: {
     clickToPlaceOrder() {
       wx.navigateTo({
-        url: "/pages/placeOrder/main"
+        url: "/pages/packageA/placeOrder/main"
       })
     }
   }
