@@ -1,6 +1,12 @@
 <template>
   <div>
-    <store v-for="(message, index) in messageList" :message="message" :key="index"></store>
+    <store 
+      v-for="(message, index) in messageList" 
+      :message="message" 
+      :key="index"
+      @goDetail="clickToPlaceOrder()"
+    >
+    </store>
   </div>
 </template>
 
@@ -39,7 +45,13 @@ export default {
       }]
     }
   },
-  methods: {}
+  methods: {
+    clickToPlaceOrder() {
+      wx.navigateTo({
+        url: "/pages/placeOrder/main"
+      })
+    }
+  }
 }
 </script>
 

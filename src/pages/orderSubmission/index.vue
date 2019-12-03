@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div :class="{hidden: !hasDialog}">
+            <a-dialog @close="closeDialog"></a-dialog>
+        </div>
         <seat-msg></seat-msg>
         <div class="msg">
             <msg-row name="预约日期" value="2019-12-01"></msg-row>
@@ -7,15 +10,13 @@
             <msg-row name="所在门店" value="考拉自习室"></msg-row> 
             <msg-row name="费用总计" value="￥28.00"></msg-row>
             <pay-methods :payMethods="payMethods" @choosePayMethod="choosePayMethod"></pay-methods>
-            <div class="chooseMeal" v-show="payMethods=='meal'">
+            <div class="chooseMeal" v-show="payMethods=='meal'" @click="goChooseMeal">
                 <div class="title">选择套餐</div>
-                <!-- <div class="mealValue"> -->
-                    <span class="meal">wu</span>
-                    <img class="arrow" src="/static/images/arrow.png"/>
-                <!-- </div> -->
+                <span class="meal">wu</span>
+                <img class="arrow" src="/static/images/arrow.png"/>
             </div>
         </div>
-        <submit :type="type"></submit>
+        <submit :type="type" @submit="submit"></submit>
     </div>
 </template>
 
@@ -24,22 +25,44 @@ import seatMsg from "../components/seatMsg"
 import msgRow from "./msgRow"
 import payMethods from "./payMethods"
 import submit from "../components/submit"
+import aDialog from "./aDialog"
 export default {
     components: {
         seatMsg,
         msgRow,
         payMethods,
-        submit
+        submit,
+        aDialog
     },
     data() {
         return {
             type: "pay",
-            payMethods: "wx"
+            payMethods: "wx",
+            hasDialog: false
         }
     },
     methods: {
         choosePayMethod(value) {
             this.payMethods = value;
+        },
+        goChooseMeal() {
+            wx.navigateTo({
+                url: "/pages/chooseMeal/main"
+            })
+        },
+        closeDialog() {
+            console.log("事件传递到了父组件");
+            this.hasDialog = false;
+        },
+        submit() {
+            if(this.payMethods == "restmoney") {    //余额支付则弹出窗口
+            console.log("事件传递到了父组件");
+                this.hasDialog = true;
+            } else if(this.payMethods == "wx") {    //微信支付则调用支付接口
+
+            } else if(this.payMethods == "meal") {  //套餐支付
+                
+            }
         }
     }
 }
@@ -84,5 +107,8 @@ export default {
     right: 0;
     margin: auto;
     margin-left: 10.5px;
+}
+.hidden{
+    visibility: hidden;
 }
 </style>

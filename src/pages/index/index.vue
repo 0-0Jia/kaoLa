@@ -14,7 +14,12 @@ export default {
     };
   },
   methods: {
-    scanCode(){
+    goOrder() {
+      wx.navigateTo({
+        url: "/pages/storeChoose/main"
+      })
+    },
+    scanCode() {
       wx.scanCode({
         success (res) {
           console.log(res)

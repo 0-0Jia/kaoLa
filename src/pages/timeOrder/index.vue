@@ -5,7 +5,7 @@
         <!-- 时间日期选择器 -->
         <time-choose :isChoose="isChoose"></time-choose>
         <!-- 提交按钮 -->
-        <submit :type="type"></submit>
+        <submit :type="type" @orderRightNow="goPay"></submit>
     </div>
 </template>
 
@@ -22,6 +22,14 @@ export default {
     data() {
         return {
             type: "order"
+        }
+    },
+    methods: {
+        goPay() {
+            console.log("现在跳转到支付页面");
+            wx.navigateTo({
+                url: "/pages/orderSubmission/main"
+            })
         }
     }
 }

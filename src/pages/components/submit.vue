@@ -1,7 +1,7 @@
 <template>
     <div class="submit">
         <div class="money">需支付：<span class="num">￥0.00</span></div>
-        <div class="button">{{buttonText}}</div>
+        <div class="button" @click="handleClick">{{buttonText}}</div>
     </div>
 </template>
 
@@ -20,6 +20,15 @@ export default {
         payOrSubmit() {
             if(this.type == "pay") this.buttonText = "支付";
             else this.buttonText = "立即预约";
+        },
+        handleClick() {
+            if(this.type == "pay") {
+                console.log("你点击了支付按钮");
+                this.$emit("submit");
+            } else {
+                console.log("你点击了立即预约按钮");
+                this.$emit("orderRightNow");
+            }
         }
     },
     created() {

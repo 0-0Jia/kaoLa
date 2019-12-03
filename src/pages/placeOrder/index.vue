@@ -14,6 +14,7 @@
                 v-for="(seatMsg, index) in seatMsgList" 
                 :seatMsg="seatMsg" 
                 :key="index"
+                @chooseTime="goChooseTime"
             >
             </seat>
         </div>
@@ -37,6 +38,14 @@ export default {
                 price: "￥9.6/小时",
                 status: false
             }]
+        }
+    },
+    methods: {
+        goChooseTime() {
+            console.log("跳转到事件选择页面");
+            wx.navigateTo({
+                url: "/pages/timeOrder/main"
+            })
         }
     }
 }

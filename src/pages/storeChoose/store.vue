@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="handle">
-            <div class="order">预约</div>
+            <div class="order" @click="goDetail()">预约</div>
             <div class="goStore">去门店</div>
         </div>
         <img class="phone" src="/static/images/phone.png"/>
@@ -25,6 +25,11 @@ export default {
     name: "store",
     props: {
         message: Object
+    },
+    methods: {
+        goDetail() {
+            this.$emit("goDetail");
+        }
     }
 }
 </script>

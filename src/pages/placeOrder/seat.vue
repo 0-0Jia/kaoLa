@@ -1,5 +1,5 @@
 <template>
-    <div class="seat" :seatMsg="seatMsg">
+    <div class="seat" :seatMsg="seatMsg" @click="goChooseTime">
         <img class="seatBg" src="/static/images/seatBg.png"/>
         <div class="name">{{seatMsg.name}}</div>
         <div class="price">{{seatMsg.price}}</div>
@@ -16,6 +16,12 @@ export default {
     data() {
         return {
             status: this.seatMsg.status?"可预约":"已满"
+        }
+    },
+    methods: {
+        goChooseTime() {
+            console.log("点击了子组件");
+            this.$emit("chooseTime");
         }
     }
 }
