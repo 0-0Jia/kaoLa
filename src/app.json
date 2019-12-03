@@ -17,7 +17,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "考拉",
+    "navigationBarTitleText": "考拉自习室",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
