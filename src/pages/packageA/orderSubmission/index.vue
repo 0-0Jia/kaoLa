@@ -22,7 +22,7 @@
 
 <script>
 import seatMsg from "../../components/seatMsg"
-import msgRow from "./msgRow"
+import msgRow from "../../components/msgRow"
 import payMethods from "./payMethods"
 import submit from "../../components/submit"
 import aDialog from "./aDialog"
