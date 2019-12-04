@@ -1,15 +1,20 @@
 <template>
     <div>
         <div :class="{hidden: !hasDialog}">
-            <a-dialog @close="closeDialog"></a-dialog>
+            <a-dialog @close="closeDialog" :dialog="dialog"></a-dialog>
         </div>
-        <seat-msg></seat-msg>
+        <seat-msg father="orderSubmission"></seat-msg>
         <div class="msg">
             <msg-row name="预约日期" value="2019-12-01"></msg-row>
             <msg-row name="已选时间" value="12：00-13：00"></msg-row>
             <msg-row name="所在门店" value="考拉自习室"></msg-row> 
             <msg-row name="费用总计" value="￥28.00"></msg-row>
-            <pay-methods :payMethods="payMethods" @choosePayMethod="choosePayMethod"></pay-methods>
+            <pay-methods 
+                :payMethods="payMethods" 
+                @choosePayMethod="choosePayMethod"
+                :choiceList="choiceList"
+            >
+            </pay-methods>
             <div class="chooseMeal" v-show="payMethods=='meal'" @click="goChooseMeal">
                 <div class="title">选择套餐</div>
                 <span class="meal">wu</span>
@@ -23,9 +28,9 @@
 <script>
 import seatMsg from "../../components/seatMsg"
 import msgRow from "../../components/msgRow"
-import payMethods from "./payMethods"
+import payMethods from "../../components/payMethods"
 import submit from "../../components/submit"
-import aDialog from "./aDialog"
+import aDialog from "../../components/aDialog"
 export default {
     components: {
         seatMsg,
@@ -38,7 +43,22 @@ export default {
         return {
             type: "pay",
             payMethods: "wx",
-            hasDialog: false
+            hasDialog: false,
+            choiceList: [{
+                name: "余额支付",
+                value: "restmoney"
+            }, {
+                name: "微信支付",
+                value: "wx"
+            }, {
+                name: "套餐支付",
+                value: "meal"
+            }],
+            dialog: {
+                title: "余额",
+                detail: "￥0.00",
+                button: "确认支付"
+            }
         }
     },
     methods: {

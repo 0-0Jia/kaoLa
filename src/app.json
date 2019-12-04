@@ -16,7 +16,9 @@
   }, {
     "root": "pages/packageB/",
     "pages": [
-      "orderDetail/main"
+      "orderDetail/main",
+      "mealShop/main",
+      "buyMeal/main"
     ],
     "name": "packageB"
   }],

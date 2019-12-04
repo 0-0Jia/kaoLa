@@ -11,7 +11,7 @@
         <div class="msg">
             <div class="name">
                 <div class="title">{{cardMsg.title}}</div>
-                <div class="detail" v-if="cardMsg.detail">{{cardMsg.detail}}</div>
+                <div :class="[{'hidden': !cardMsg.detail}, 'detail']">{{cardMsg.detail}}</div>
             </div>
             <div class="timeLimit">{{cardMsg.timeLimit}}</div>
         </div>
@@ -42,8 +42,9 @@ export default {
 }
 .msg{
     width: 65px;
+    height: 66px;
     position: absolute;
-    top: 16px;
+    top: 12px;
     right: 16px;
 }
 .title{
@@ -53,13 +54,18 @@ export default {
 }
 .detail{
     font-size: 9px;
-    margin-top: 6px;
+    margin-top: 3px;
     text-align: right;
 }
 .timeLimit{
     font-size: 12px;
     text-align: right;
-    margin-top: 21px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.hidden{
+    visibility: hidden;
 }
 .pickBg{
     background-image: linear-gradient(to left, #E4E4A5, #E4E4D2);

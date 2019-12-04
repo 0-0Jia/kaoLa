@@ -3,12 +3,27 @@
         <p class="payTitle">支付方式</p>
         <div class="methods">
             <div class="marginRight">
-                <pay-choice @choosePayMethod="choosePayMethod" choice="余额支付" :payMethods="payMethods" value="restmoney"></pay-choice>
+                <pay-choice 
+                    @choosePayMethod="choosePayMethod" 
+                    :choice="choiceList[0].name" 
+                    :payMethods="payMethods" 
+                    :value="choiceList[0].value"
+                ></pay-choice>
             </div>
             <div class="marginRight">
-                <pay-choice @choosePayMethod="choosePayMethod" choice="微信支付" :payMethods="payMethods" value="wx"></pay-choice>
+                <pay-choice 
+                    @choosePayMethod="choosePayMethod" 
+                    :choice="choiceList[1].name" 
+                    :payMethods="payMethods" 
+                    :value="choiceList[1].value"
+                ></pay-choice>
             </div>
-            <pay-choice @choosePayMethod="choosePayMethod" choice="套餐支付" :payMethods="payMethods" value="meal"></pay-choice>
+            <pay-choice 
+                @choosePayMethod="choosePayMethod" 
+                :choice="choiceList[2].name" 
+                :payMethods="payMethods" 
+                :value="choiceList[2].value"
+            ></pay-choice>
         </div>    
     </div>
 </template>
@@ -21,7 +36,8 @@ export default {
         payChoice
     },
     props: {
-        payMethods: String
+        payMethods: String,
+        choiceList: Array
     },
     methods: {
         choosePayMethod(value) {

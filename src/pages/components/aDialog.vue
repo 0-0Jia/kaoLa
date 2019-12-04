@@ -3,10 +3,10 @@
         <div class="dialog">
             <img src="/static/images/close.png" class="close" @click="closing()"/>
             <div class="word">
-                <p class="title">余额</p>
-                <p class="detail">￥ 0.00</p>
+                <p class="title">{{dialog.title}}</p>
+                <p class="detail">{{dialog.detail}}</p>
             </div>
-            <button>确认支付</button>
+            <button>{{dialog.button}}</button>
         </div>
     </div>
 </template>
@@ -14,6 +14,9 @@
 <script>
 export default {
     name: "aDialog",
+    props: {
+        dialog: Object
+    },
     methods: {
         closing() {
             console.log("点击了子组件");
