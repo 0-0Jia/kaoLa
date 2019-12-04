@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import card from "./card"
+import card from "../../components/card"
 export default {
     components: {
         card
