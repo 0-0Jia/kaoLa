@@ -18,7 +18,8 @@
     "pages": [
       "orderDetail/main",
       "mealShop/main",
-      "buyMeal/main"
+      "buyMeal/main",
+      "orderRecord/main"
     ],
     "name": "packageB"
   }],

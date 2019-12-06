@@ -9,7 +9,6 @@
         </div>
         <div class="button">
             <div :class="[{'greenBorder': effect}, 'effect']">{{effectText}}</div>
-            <div class="refund" v-if="effect">退款</div>
         </div>
     </div>
 </template>
