@@ -6,14 +6,18 @@
                 <span class="type">格间区</span>
                 <span class="name">一号桌</span>
             </div>
-            <div class="price">￥9.6/小时</div>
+            <div class="price" v-if="(father=='orderSubmission' || father=='timeOrder')">￥9.6/小时</div>
+            <div class="effect" v-if="(father=='orderDetail')">有效</div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: "seatMsg"
+    name: "seatMsg",
+    props: {
+        father: String
+    }
 }
 </script>
 
@@ -45,7 +49,6 @@ export default {
 .badge{
     color: #2B2B2B;
     font-size: 12px;
-    margin-bottom: 8px;
 }
 .type{
     margin-right: 9px;
@@ -54,5 +57,17 @@ export default {
     color: #44644A;
     font-size: 16px;
     font-weight: bold;
+    margin-top: 8px;
+}
+.effect{
+    width: 48px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 9px;
+    border: 2px solid #44644A;
+    border-radius: 24px;
+    margin-top: 4.5px;
+    margin-left: 29.5px;
 }
 </style>

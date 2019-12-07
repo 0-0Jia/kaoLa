@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 座位信息表 -->
-        <seat-msg></seat-msg>
+        <seat-msg father="timeOrder"></seat-msg>
         <!-- 时间日期选择器 -->
         <time-choose :isChoose="isChoose"></time-choose>
         <!-- 提交按钮 -->

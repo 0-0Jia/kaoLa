@@ -6,7 +6,7 @@
                 <span>{{value}}</span>   
             </div>
         </div>
-        <div class="bar"></div>
+        <div class="bar" v-if="!nobar"></div>
     </div>
 </template>
 
@@ -15,7 +15,8 @@ export default {
     name: "msgRow",
     props: {
         name: String,
-        value: String
+        value: String,
+        nobar: Boolean
     }
 }
 </script>

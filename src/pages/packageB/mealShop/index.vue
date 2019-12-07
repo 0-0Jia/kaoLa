@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div class="title">点击你要使用的套餐</div>
         <div class="card">
             <card 
                 v-for="(cardMsg, index) in cardMsgList" 
@@ -36,23 +35,17 @@ export default {
                 timeLimit: "无期限",
                 type: "try"
             }]
-        }
+        };
     }
 }
 </script>
 
 <style scoped>
-.title{
-    color: #A8A8A8;
-    font-size: 10px;
-    text-align: center;
-    margin-top: 16px;
-    margin-bottom: 12px;
-}
 .card{
     display: flex;
     margin-left: 16px;
     margin-right: 16px;
+    margin-top: 16px;
     flex-wrap: wrap;
     justify-content: space-between;
 }

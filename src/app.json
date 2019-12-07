@@ -17,11 +17,14 @@
     "name": "packageA"
   },
   {
-    "root": "pages/order/",
+    "root": "pages/packageB/",
     "pages": [
-      "test/main"
+      "orderDetail/main",
+      "mealShop/main",
+      "buyMeal/main",
+      "orderRecord/main"
     ],
-    "name": "order"
+    "name": "packageB"
   },
   {
     "root": "pages/user/",
