@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "个人中心",
+    "usingComponents": {
+        "wxc-avatar": "@minui/wxc-avatar"
+      }
+}

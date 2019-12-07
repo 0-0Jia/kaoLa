@@ -1,0 +1,64 @@
+{
+  "_from": "weui-wxss",
+  "_id": "weui-wxss@2.0.1",
+  "_inBundle": false,
+  "_integrity": "sha1-Iit0bDJ9k1jr+JgVHkHmj6yCch8=",
+  "_location": "/weui-wxss",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "weui-wxss",
+    "name": "weui-wxss",
+    "escapedName": "weui-wxss",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npm.taobao.org/weui-wxss/download/weui-wxss-2.0.1.tgz",
+  "_shasum": "222b746c327d9358ebf898151e41e68fac82721f",
+  "_spec": "weui-wxss",
+  "_where": "D:\\Git\\kaoLa",
+  "author": {
+    "name": "wechat ui team"
+  },
+  "bugs": {
+    "url": "https://github.com/weui/weui-wxss/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "weui-wxss",
+  "devDependencies": {
+    "autoprefixer": "^6.5.1",
+    "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-header": "^1.8.8",
+    "gulp-less": "^3.1.0",
+    "gulp-postcss": "^6.2.0",
+    "gulp-rename": "^1.2.2"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "homepage": "https://github.com/weui/weui-wxss",
+  "keywords": [
+    "weui",
+    "wxss"
+  ],
+  "license": "MIT",
+  "main": "dist/style/weui.wxss",
+  "name": "weui-wxss",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weui/weui-wxss.git"
+  },
+  "scripts": {
+    "start": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "2.0.1"
+}
