@@ -71,7 +71,7 @@ export default {
     font-weight: bold;
 }
 .address{
-    margin-top: 8PX;
+    margin-top: 4px;
 }
 .address, .workTime{
     color: #2B2B2B;
@@ -80,7 +80,7 @@ export default {
 .seatCount{
     color: #A8A8A8;
     font-size: 10px;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 .restSeat{
     margin-right: 12px;

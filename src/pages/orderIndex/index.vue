@@ -44,6 +44,7 @@ export default {
           title: "日卡",
           detail: "双人位",
           timeLimit: "无期限",
+          type: "daily"
       },{
           title: "月卡",
           detail: "8:00-12:00全早",

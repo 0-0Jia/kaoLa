@@ -50,7 +50,21 @@ export default {
       wx.navigateTo({
         url: "/pages/packageA/placeOrder/main"
       })
+    },
+    getStoreList() {
+      this.$wxhttp.get({
+        url: "/customer/store"
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log("error! ", err);
+      })
     }
+  },
+  created() {
+    this.getStoreList();
   }
 }
 </script>
