@@ -32,7 +32,7 @@
 
 <script>
 import card from "../components/card"
-import orderCard from "../order/orderCard"
+import orderCard from "./orderCard"
 export default {
   components: {
     orderCard,
