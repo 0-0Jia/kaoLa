@@ -26,13 +26,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import card from "../components/card"
 import orderCard from "./orderCard"
-=======
-import card from "../components/card";
-import orderCard from "../order/orderCard";
->>>>>>> 96ffdb4cc83a503d5ce51da9782678305abca583
 export default {
   components: {
     orderCard,
