@@ -1,9 +1,9 @@
 <template>
-    <div class="seat" :seatMsg="seatMsg" @click="goChooseTime">
+    <div class="seat" :seat="seat" @click="goChooseTime">
         <img class="seatBg" src="/static/images/seatBg.png"/>
-        <div class="name">{{seatMsg.name}}</div>
-        <div class="price">{{seatMsg.price}}</div>
-        <div :class="[{'redFont': !seatMsg.status}, 'status']">{{status}}</div>
+        <div class="name">{{seat.sitId}}</div>
+        <div class="price">{{seat.money}}</div>
+        <div :class="[{'redFont': !seat.preserved}, 'status']">{{status}}</div>
     </div>
 </template>
 
@@ -11,11 +11,11 @@
 export default {
     name: "seat",
     props: {
-        seatMsg: Object
+        seat: Object
     },
     data() {
         return {
-            status: this.seatMsg.status?"可预约":"已满"
+            status: (this.seat.preserved == 1)?"可预约":"已满"
         }
     },
     methods: {
