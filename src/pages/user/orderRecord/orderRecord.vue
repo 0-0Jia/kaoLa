@@ -2,7 +2,7 @@
   <div class="orderRecord">
     <view class="weui-tab">
       <view class="weui-navbar">
-        <block wx:for="{{tabs}}" wx:key="*this">
+        <block v-for="tab in tabs" :key="tab">
           <view
             id="{{index}}"
             class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}"

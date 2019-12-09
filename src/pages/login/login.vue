@@ -93,21 +93,28 @@ export default {
                     //获取用户信息
                     success: res => {
                       console.log(res, "用户信息");
-                      let { encryptedData, userInfo, iv } = res;
-                      console.log({ encryptedData, userInfo, iv })
-                      console.log(that.code)
+                      console.log(that.code);
                       that.$wxhttp
                         .post({
                           url: "/customer/login",
                           data: {
-                            code: that.code,
-                            encryptedData,
-                            iv
+                            code: that.code
                           }
                         })
                         .then(res => {
                           console.log(`后台交互拿回数据:`, res);
                           // 获取到后台重写的session数据，可以通过vuex做本地保存
+
+                          wx.setStorageSync(
+                            "sessionid",
+                            res.header["Set-Cookie"]
+                          );
+                          console.log(res.header["Set-Cookie"].split(";")[0]);
+
+                          // 测试跳转
+                          wx.switchTab({
+                            url: "/pages/index/main"
+                          });
                         })
                         .catch(err => {
                           console.log(`自动请求api失败 err:`, err);
