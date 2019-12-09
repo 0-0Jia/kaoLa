@@ -1,6 +1,12 @@
 <template>
     <div class="chooseToOrder">
-        <picker mode="date" :value="date" :start="currentDate" @change="bindDateChange">
+        <picker 
+            mode="date" 
+            :value="date" 
+            :start="startDay"
+            :end="endDay" 
+            @change="bindDateChange"
+        >
             <div class="picker">
                 <span>预约日期</span>
                 <div class="dateValue">
@@ -29,57 +35,44 @@
 <script>
 export default {
     name: "timeChoose",
+    props: {
+        timeList: Array,
+        startDay: String,
+        endDay: String
+    },
     data() {
         return {
             date: "",
             tdate: "",
             currentDate: "",
-            timeList: [
-                "8:00-9:00",
-                "9:00-10:00",
-                "10:00-11:00",
-                "11:00-12:00",
-                "12:00-13:00",
-                "13:00-14:00",
-                "14:00-15:00",
-                "15:00-16:00",
-                "16:00-17:00",
-                "17:00-18:00",
-                "18:00-19:00",
-                "19:00-20:00",
-                "20:00-21:00",
-                "21:00-22:00",
-                "22:00-23:00",
-            ],
-            isChoose: [
-                true,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                true
-            ]
+            isChoose: [],
+            choosedTime: [],
+            able: false
         }
     },
     methods: {
         chooseTime(index) {
             this.isChoose[index] = !this.isChoose[index];
-            console.log(this.isChoose[index]);
             this.date = "0";
             this.date = this.tdate;
+            //将选择的时间段传到父组件
+            this.choosedTime = [];
+            this.isChoose.forEach((flag, i) => {
+                if(flag) {
+                    this.choosedTime.push(this.timeList[i]);
+                }
+            });
+            //如果有选择时间，则支付按钮点亮
+            this.able = false;
+            if(this.choosedTime.length>0) {
+                this.able = true;
+            }
+            this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
         },
         bindDateChange(e) {
             this.date = e.mp.detail.value;
             this.tdate = this.date;
+            this.$emit("refreshTimeList", this.date);
         },
         getCurrentDate() {
             const current = new Date();
