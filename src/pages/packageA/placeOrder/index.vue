@@ -72,10 +72,10 @@ export default {
                 })
                 .then(res => {
                     // 将得到的房间列表存起来
-                    this.roomList = res.data.data.roomList;
+                    this.roomList = res.data.roomList;
                     // 更新房间类型数组
                     this.roomTypeList = [];
-                    res.data.data.roomList.forEach(room => {
+                    res.data.roomList.forEach(room => {
                         this.roomTypeList.push(room.roomType);
                     })
                     //获取座位表
@@ -107,7 +107,7 @@ export default {
             })
             .then(res => {
                 this.seatList = [];
-                const sitList = res.data.data.sitList;
+                const sitList = res.data.sitList;
                 if(sitList.length > 0) {
                     let tempseat = {};
                     tempseat.curDate = [];

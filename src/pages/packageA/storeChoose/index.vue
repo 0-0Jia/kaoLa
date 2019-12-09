@@ -40,7 +40,7 @@ export default {
       })
       .then(res => {
         console.log(res);
-        this.storeList = res.data.data.storeList;
+        this.storeList = res.data.storeList;
       })
       .catch(err => {
         console.log("error! ", err);
