@@ -55,6 +55,17 @@ export default {
     wx.setNavigationBarTitle({
       title: "个人中心"
     });
+
+    this.$wxhttp
+      .get({
+        url: "/customer/user"
+      })
+      .then(res => {
+        console.log(`后台交互拿回数据:`, res);
+      })
+      .catch(err => {
+        console.log(`自动请求api失败 err:`, err);
+      });
   },
 
   methods: {
