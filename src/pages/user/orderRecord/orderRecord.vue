@@ -1,6 +1,6 @@
 <template>
   <div class="orderRecord">
-    <view class="weui-tab">
+    <!-- <view class="weui-tab">
       <view class="weui-navbar">
         <block v-for="tab in tabs" :key="tab">
           <view
@@ -27,7 +27,7 @@
         <view class="weui-tab__content" hidden="{{activeIndex != 2}}">选项三的内容</view>
         <view class="weui-tab__content" hidden="{{activeIndex != 3}}">选项四的内容</view>
       </view>
-    </view>
+    </view> -->
   </div>
 </template>
 

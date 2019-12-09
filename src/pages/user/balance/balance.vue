@@ -1,12 +1,12 @@
 <template>
   <div class="login">
-      <div class="balance">
-    <div class="balance-card">
-      <p style="font-size:14px;">亲爱的大大大大饼，你共有余额</p>
-      <p class="balance-now">￥0.00</p>
+    <div class="balance">
+      <div class="balance-card">
+        <p style="font-size:14px;">亲爱的大大大大饼，你共有余额</p>
+        <p class="balance-now">￥{{balance}}</p>
+      </div>
+      <button class="recharge-button" @click="jumpRecharge">充值</button>
     </div>
-    <button class="recharge-button" @click="jumpRecharge">充值</button>
-  </div>
   </div>
 </template>
 
@@ -14,6 +14,15 @@
 // import $ from "jquery";
 
 export default {
+  data() {
+    return {
+      balance: "0.00"
+    };
+  },
+  onLoad: function(options){
+    this.balance = options.balance;
+  },
+
   mounted: function() {
     wx.setNavigationBarTitle({
       title: "余额"

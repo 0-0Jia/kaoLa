@@ -2,7 +2,7 @@
   <div class="coupon">
     <div class="coupon-card">
       <p style="font-size:14px;">输入优惠码</p>
-      <input type="text" class="coupon-input" />
+      <input type="text" class="coupon-input" v-model="coupon" />
     </div>
     <button class="coupon-button" @click="couponRedemption">确认</button>
   </div>
@@ -12,6 +12,12 @@
 // import $ from "jquery";
 
 export default {
+  data() {
+    return {
+      coupon: ""
+    };
+  },
+
   mounted: function() {
     wx.setNavigationBarTitle({
       title: "兑换优惠码"
@@ -19,7 +25,28 @@ export default {
   },
 
   methods: {
-    couponRedemption() {}
+    couponRedemption() {
+      this.$wxhttp
+        .post({
+          url: "/customer/groupon",
+          data: {
+            coupon: this.coupon
+          }
+        })
+        .then(res => {
+          if (res.data.msg == "操作成功") {
+            wx.showToast({
+              title: "兑换成功",
+              icon: "success",
+              duration: 2000
+            });
+          }
+          console.log(`后台交互拿回数据:`, res.data);
+        })
+        .catch(err => {
+          console.log(`自动请求api失败 err:`, err);
+        });
+    }
   }
 };
 </script>

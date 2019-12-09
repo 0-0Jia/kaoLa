@@ -2,7 +2,7 @@
   <div class="balance-recharge">
     <div class="recharge-card">
       <span class="money">￥</span>
-      <input type="text" class="recharge-input" />
+      <input type="text" class="recharge-input" v-model.lazy="money" placeholder="充值范围为0-300" />
     </div>
     <button class="recharge-button" @click="rechargeConfirm">确认</button>
   </div>
@@ -12,14 +12,43 @@
 // import $ from "jquery";
 
 export default {
+  data() {
+    return {
+      money: ""
+    };
+  },
+
   mounted: function() {
     wx.setNavigationBarTitle({
-      title: "兑换优惠码"
+      title: "余额充值"
     });
   },
 
   methods: {
-    rechaegeConfirm() {}
+    rechargeConfirm() {
+      let that = this;
+      console.log(this.money);
+      that.$wxhttp
+        .post({
+          url: "/customer/money",
+          data: {
+            money: that.money
+          }
+        })
+        .then(res => {
+          console.log(`后台交互拿回数据:`, res.data);
+          if (res.data.msg == "操作成功") {
+            wx.showToast({
+              title: "充值成功",
+              icon: "success",
+              duration: 2000
+            });
+          }
+        })
+        .catch(err => {
+          console.log(`err:`, err);
+        });
+    }
   }
 };
 </script>
@@ -36,10 +65,12 @@ export default {
   text-align: left;
 }
 .money {
-    font-weight: 600;
-    font-size: 30px;
+  font-weight: 600;
+  font-size: 30px;
 }
 .recharge-input {
+  display: inline-block;
+  width: 85%;
   height: 40px;
   border: none;
   margin-top: 4px;

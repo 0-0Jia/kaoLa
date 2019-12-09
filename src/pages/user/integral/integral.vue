@@ -2,7 +2,7 @@
   <div class="integral">
     <div class="integral-card">
       <p style="font-size:14px;">亲爱的大大大大饼，你共有积分</p>
-      <p class="integral-now">32分</p>
+      <p class="integral-now">{{integral}}分</p>
     </div>
     <button class="punch-button" @click="jumpPunch">打卡签到</button>
     <p class="introduction">打卡签到可赚取更多积分</p>
@@ -13,6 +13,14 @@
 // import $ from "jquery";
 
 export default {
+  data() {
+    return {
+      integral: ""
+    };
+  },
+  onLoad: function(options) {
+    this.integral = options.integral;
+  },
   mounted: function() {
     wx.setNavigationBarTitle({
       title: "积分"
