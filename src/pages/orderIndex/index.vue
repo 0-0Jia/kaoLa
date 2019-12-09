@@ -65,6 +65,17 @@ export default {
     order() {
       this.mode = "myOrder";
       console.log(this.mode);
+    },
+    getOrderList() {
+      this.$wxhttp.get({
+        url: '/customer/preservation'
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log('error! ', err);
+      })
     }
   },
 
@@ -77,6 +88,7 @@ export default {
         }
       }
     });
+    this.getOrderList();
   }
 };
 </script>

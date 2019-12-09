@@ -1,9 +1,9 @@
 <template>
     <div class="seat" :seat="seat" @click="goChooseTime">
         <img class="seatBg" src="/static/images/seatBg.png"/>
-        <div class="name">{{seat.sitId}}</div>
-        <div class="price">{{seat.money}}</div>
-        <div :class="[{'redFont': !seat.preserved}, 'status']">{{status}}</div>
+        <div class="name">{{sitId}}</div>
+        <div class="price">{{money}}元/小时</div>
+        <div :class="[{'redFont': !preserved}, 'status']">{{status}}</div>
     </div>
 </template>
 
@@ -13,16 +13,32 @@ export default {
     props: {
         seat: Object
     },
-    data() {
-        return {
-            status: (this.seat.preserved == 1)?"可预约":"已满"
-        }
-    },
     methods: {
         goChooseTime() {
             console.log("点击了子组件");
-            this.$emit("chooseTime");
+            this.$emit("chooseTime", this.seat);
         }
+    },
+    computed: {
+        status() {
+            if(this.seat) return (this.seat.preserved == 1)?"可预约":"已满";
+            else return '';
+        },
+        sitId() {
+            if(this.seat) return this.seat.sitId;
+            else return '';
+        },
+        money() {
+            if(this.seat) return this.seat.money;
+            else return '';
+        },
+        preserved() {
+            if(this.seat) return this.seat.preserved;
+            else return '';
+        }
+    },
+    mounted() {
+        console.log(this.seat);
     }
 }
 </script>

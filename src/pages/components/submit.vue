@@ -1,7 +1,7 @@
 <template>
     <div class="submit">
-        <div class="money">需支付：<span class="num">￥0.00</span></div>
-        <div class="button" @click="handleClick">{{buttonText}}</div>
+        <div class="money">需支付：<span class="num">￥{{money}}</span></div>
+        <div :class="[{able: ableToClick}, 'button']" @click="handleClick">{{buttonText}}</div>
     </div>
 </template>
 
@@ -9,7 +9,9 @@
 export default {
     name: "submit",
     props: {
-        type: String
+        type: String,
+        ableToClick: Boolean,
+        money: Number
     },
     data() {
         return {
@@ -22,12 +24,14 @@ export default {
             else this.buttonText = "立即预约";
         },
         handleClick() {
-            if(this.type == "pay") {
-                console.log("你点击了支付按钮");
-                this.$emit("submit");
-            } else {
-                console.log("你点击了立即预约按钮");
-                this.$emit("orderRightNow");
+            if(this.ableToClick){
+                if(this.type == "pay") {
+                    console.log("你点击了支付按钮");
+                    this.$emit("submit");
+                } else {
+                    console.log("你点击了立即预约按钮");
+                    this.$emit("orderRightNow");
+                }
             }
         }
     },
@@ -71,5 +75,8 @@ export default {
     color: white;
     font-size: 12px;
     text-align: center;
+}
+.able{
+    background-color: #44644A;
 }
 </style>

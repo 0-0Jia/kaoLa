@@ -5,10 +5,10 @@
         </div>
         <seat-msg father="orderSubmission"></seat-msg>
         <div class="msg">
-            <msg-row name="预约日期" value="2019-12-01"></msg-row>
-            <msg-row name="已选时间" value="12：00-13：00"></msg-row>
-            <msg-row name="所在门店" value="考拉自习室"></msg-row> 
-            <msg-row name="费用总计" value="￥28.00"></msg-row>
+            <msg-row name="预约日期" :value="basicmsg.date"></msg-row>
+            <msg-row name="已选时间" :value="basicmsg.choosedTime"></msg-row>
+            <msg-row name="所在门店" :value="basicmsg.storeName"></msg-row> 
+            <msg-row name="费用总计" :value="'￥' + basicmsg.money"></msg-row>
             <pay-methods 
                 :payMethods="payMethods" 
                 @choosePayMethod="choosePayMethod"
@@ -21,7 +21,12 @@
                 <img class="arrow" src="/static/images/arrow.png"/>
             </div>
         </div>
-        <submit :type="type" @submit="submit"></submit>
+        <submit 
+            :type="type" 
+            @submit="submit"
+            ableToClick 
+            :money="basicmsg.money"
+        ></submit>
     </div>
 </template>
 
@@ -58,7 +63,9 @@ export default {
                 title: "余额",
                 detail: "￥0.00",
                 button: "确认支付"
-            }
+            },
+            msg: {},
+            basicmsg: {}
         }
     },
     methods: {
@@ -76,14 +83,40 @@ export default {
         },
         submit() {
             if(this.payMethods == "restmoney") {    //余额支付则弹出窗口
-            console.log("事件传递到了父组件");
                 this.hasDialog = true;
             } else if(this.payMethods == "wx") {    //微信支付则调用支付接口
-
+                this.msg.payType = 1;
+                this.$wxhttp.post({
+                    url: '/customer/sits',
+                    data: {
+                        msg: this.msg
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
             } else if(this.payMethods == "meal") {  //套餐支付
                 
             }
+        },
+        getPayMsg() {
+            const eventChannel = this.$mp.page.getOpenerEventChannel();
+            eventChannel.on('acceptPayMsg', data => {
+                this.msg = data;
+            });
+            eventChannel.on('acceptBasicMsg', data => {
+                this.basicmsg = data;
+                this.dialog.detail = '￥' + this.basicmsg.money;
+                console.log(this.basicmsg);
+            })
+            console.log(this.msg);
         }
+    },
+    mounted() {
+        this.getPayMsg();
     }
 }
 </script>

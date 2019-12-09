@@ -3,9 +3,22 @@
         <!-- 座位信息表 -->
         <seat-msg father="timeOrder"></seat-msg>
         <!-- 时间日期选择器 -->
-        <time-choose :isChoose="isChoose"></time-choose>
+        <time-choose 
+            :isChoose="isChoose" 
+            :timeList="timeList"
+            :startDay="startDay"
+            :endDay="endDay"
+            @sendChoosedTime="getChooseTime"
+            @refreshTimeList="refreshTimeList"
+        >
+        </time-choose>
         <!-- 提交按钮 -->
-        <submit :type="type" @orderRightNow="goPay"></submit>
+        <submit 
+            :type="type" 
+            @orderRightNow="goPay" 
+            :ableToClick="ableToClick" 
+            :money="money"
+        ></submit>
     </div>
 </template>
 
@@ -17,20 +30,94 @@ export default {
     components:{
         seatMsg,
         timeChoose,
-        submit
+        submit,
     },
     data() {
         return {
-            type: "order"
+            type: "order",
+            timeList: [],
+            startDay: "",
+            endDay: "",
+            seat: {},
+            choosedTime: "",
+            currentDate: "",
+            ableToClick: false,
+            room: {},
+            money: 0,
+            storeName: ""
         }
     },
     methods: {
         goPay() {
+            const time = this.currentDate + " " + this.choosedTime;
+            console.log(time);
             console.log("现在跳转到支付页面");
-            wx.navigateTo({
-                url: "/pages/packageA/orderSubmission/main"
+            const seat = this.seat;
+            const room = this.room;
+            const money = this.money;
+            const currentDate = this.currentDate;
+            const choosedTime = this.choosedTime;
+            const storeName = this.storeName;
+            mpvue.navigateTo({
+                url: "/pages/packageA/orderSubmission/main",
+                success: function(res) {
+                    res.eventChannel.emit('acceptPayMsg', {
+                        sitId: seat.sitId,
+                        time: time,
+                        room: room
+                    });
+                    res.eventChannel.emit('acceptBasicMsg', {
+                        money: money,
+                        date: currentDate,
+                        choosedTime: choosedTime,
+                        storeName: storeName
+                    });
+                }
             })
+        },
+        getSeatMsg() {
+            const eventChannel = this.$mp.page.getOpenerEventChannel();
+            eventChannel.on('acceptSeatId', data => {
+                this.seat = data.seat;
+                console.log(this.seat);
+                //设置时间段
+                this.timeList = data.seat.curDate[0].sitDate;
+                //设置时间选择器的起止时间
+                this.startDay = data.seat.curDate[0].value;
+                this.endDay = data.seat.curDate[1].value;
+            });
+            eventChannel.on('acceptRoomList', data => {
+                this.room = data.room;
+                console.log(this.room);
+            });
+            eventChannel.on('acceptStoreName', data => {
+                this.storeName = data.storeName;
+            })
+        },
+        //获得选择的时间段
+        getChooseTime(data) {
+            this.choosedTime = data.choosedTime.join(',');
+            this.money = data.choosedTime.length * this.seat.money;
+            //判断当前按钮是否为亮
+            this.ableToClick = data.able;
+            console.log(this.ableToClick);
+        },
+        //刷新时间表
+        refreshTimeList(date) {
+            // 判断是哪一天去更新时间表
+            if(this.seat.curDate[0].value == date) {
+                this.timeList = this.seat.curDate[0].sitDate;
+                this.currentDate = date;
+            }
+            if(this.seat.curDate[1].value == date) {
+                this.timeList = this.seat.curDate[1].sitDate;
+                this.currentDate = date;
+            }
         }
+    },
+    mounted() {
+        this.getSeatMsg();
+        this.currentDate = this.seat.curDate[0].value;
     }
 }
 </script>
