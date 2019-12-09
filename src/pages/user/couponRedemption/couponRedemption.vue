@@ -2,7 +2,7 @@
   <div class="coupon">
     <div class="coupon-card">
       <p style="font-size:14px;">输入优惠码</p>
-      <input type="text" class="coupon-input" v-model="coupon" />
+      <input type="text" class="coupon-input" v-model.lazy="coupon" />
     </div>
     <button class="coupon-button" @click="couponRedemption">确认</button>
   </div>
@@ -34,14 +34,19 @@ export default {
           }
         })
         .then(res => {
-          if (res.data.msg == "操作成功") {
+          if (res.msg == "操作成功") {
             wx.showToast({
               title: "兑换成功",
               icon: "success",
               duration: 2000
             });
+          } else {
+            wx.showToast({
+              title: res.msg,
+              duration: 2000
+            });
           }
-          console.log(`后台交互拿回数据:`, res.data);
+          console.log(`后台交互拿回数据:`, res);
         })
         .catch(err => {
           console.log(`自动请求api失败 err:`, err);

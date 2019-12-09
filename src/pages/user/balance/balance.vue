@@ -2,7 +2,7 @@
   <div class="login">
     <div class="balance">
       <div class="balance-card">
-        <p style="font-size:14px;">亲爱的大大大大饼，你共有余额</p>
+        <p style="font-size:14px;">亲爱的{{name}}，你共有余额</p>
         <p class="balance-now">￥{{balance}}</p>
       </div>
       <button class="recharge-button" @click="jumpRecharge">充值</button>
@@ -16,10 +16,12 @@
 export default {
   data() {
     return {
+      name: '',
       balance: "0.00"
     };
   },
   onLoad: function(options){
+    this.name = options.name;
     this.balance = options.balance;
   },
 

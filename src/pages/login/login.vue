@@ -13,7 +13,40 @@ export default {
   },
 
   mounted: function() {
-    // this.requestCode();
+    const that = this;
+    wx.login({
+      //用户登录
+      success(res) {
+        if (res.code) {
+          // 发起网络请求
+          console.log("res.code+" + res.code);
+          that.code = res.code;
+
+          that.$wxhttp
+            .post({
+              url: "/customer/login",
+              data: {
+                code: that.code
+              }
+            })
+            .then(res => {
+              console.log(`后台交互拿回数据:`, res);
+              // 获取到后台重写的session数据，可以通过vuex做本地保存
+
+              wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
+              console.log(res.header["Set-Cookie"].split(";")[0]);
+
+              // 测试跳转
+              wx.switchTab({
+                url: "/pages/index/main"
+              });
+            })
+            .catch(err => {
+              console.log(`自动请求api失败 err:`, err);
+            });
+        }
+      }
+    });
   },
 
   methods: {
