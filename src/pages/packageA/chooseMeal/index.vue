@@ -37,6 +37,17 @@ export default {
                 type: "try"
             }]
         }
+    },
+    mounted() {
+        this.$wxhttp.get({
+            url: '/customer/user/meal'
+        })
+        .then(res => {
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err + "!");
+        })
     }
 }
 </script>

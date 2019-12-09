@@ -29,7 +29,7 @@ export default {
     methods: {
         goDetail() {
             // 将本页面的storeId传递到子组件去跳转页面以拿到该店的座位信息
-            this.$emit("goDetail", this.message.storeId);
+            this.$emit("goDetail", this.message);
         }
     }
 }
