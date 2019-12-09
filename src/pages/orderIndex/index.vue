@@ -39,15 +39,9 @@ export default {
         {
           title: "日卡",
           detail: "双人位",
-<<<<<<< HEAD
           timeLimit: "无期限",
           type: "daily"
       },{
-=======
-          timeLimit: "无期限"
-        },
-        {
->>>>>>> master
           title: "月卡",
           detail: "8:00-12:00全早",
           timeLimit: "剩余1天",
