@@ -1,7 +1,7 @@
 <template>
   <div class="integral">
     <div class="integral-card">
-      <p style="font-size:14px;">亲爱的大大大大饼，你共有积分</p>
+      <p style="font-size:14px;">亲爱的{{name}}，你共有积分</p>
       <p class="integral-now">{{integral}}分</p>
     </div>
     <button class="punch-button" @click="jumpPunch">打卡签到</button>
@@ -15,10 +15,12 @@
 export default {
   data() {
     return {
+      name: '',
       integral: ""
     };
   },
   onLoad: function(options) {
+    this.name = options.name;
     this.integral = options.integral;
   },
   mounted: function() {

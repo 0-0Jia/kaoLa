@@ -1,7 +1,8 @@
 <template>
   <div class="user">
     <view class="userInfo">
-      <view class="avatar" style="background-image:url(../../../static/tabs/photo.png);"></view>
+      <div class="avatar" :style=" 
+     {backgroundImage:'url('+userPhoto+')'}"></div>
       <p class="user-name">{{userData.name? userData.name : "用户名"}}</p>
       <p class="user-phone">{{userData.tel? userData.tel : "123456789"}}</p>
       <div class="integral-balance-card">
@@ -43,7 +44,8 @@
 export default {
   data() {
     return {
-      userData: []
+      userData: [],
+      userPhoto: "../../static/tabs/photo.png"
     };
   },
   mounted() {
@@ -60,7 +62,9 @@ export default {
         url:
           "/pages/user/integral/main" +
           "?integral=" +
-          (this.userData.score ? this.userData.score : "0")
+          (this.userData.score ? this.userData.score : "0") +
+          "&name=" +
+          (this.userData.name ? this.userData.name : "用户")
       });
     },
     jumpBalance() {
@@ -68,7 +72,9 @@ export default {
         url:
           "/pages/user/balance/main" +
           "?balance=" +
-          (this.userData.rareMoney ? this.userData.rareMoney : "0.00")
+          (this.userData.rareMoney ? this.userData.rareMoney : "0.00") +
+          "&name=" +
+          (this.userData.name ? this.userData.name : "用户")
       });
     },
     jumpPunch() {
@@ -89,19 +95,25 @@ export default {
     getData() {
       this.$wxhttp
         .get({
-          url: "/customer/user",
-          headers: {
-            "content-type": "application/json", // 默认值
-            "cookie": wx.getStorageSync("sessionid").split(";")[0]
-          }
+          url: "/customer/user"
         })
         .then(res => {
-          console.log(`后台交互拿回数据:`, res.data);
-          this.userData = res.data;
+          console.log(`后台交互拿回数据:`, res);
+          this.userData = res.data.user;
+          console.log(this.userData.url);
+          // this.userPhoto = this.userData.url;
         })
         .catch(err => {
           console.log(`自动请求api失败 err:`, err);
         });
+    },
+    // 将对象转变为style字符串
+    showJson(style) {
+      for (let i in style) {
+        s.push(i + ":" + style[i]);
+      }
+      s = s.join(";");
+      return s;
     }
   }
 };

@@ -36,11 +36,16 @@ export default {
           }
         })
         .then(res => {
-          console.log(`后台交互拿回数据:`, res.data);
-          if (res.data.msg == "操作成功") {
+          console.log(`后台交互拿回数据:`, res);
+          if (res.msg == "操作成功") {
             wx.showToast({
               title: "充值成功",
               icon: "success",
+              duration: 2000
+            });
+          } else {
+            wx.showToast({
+              title: res.msg,
               duration: 2000
             });
           }

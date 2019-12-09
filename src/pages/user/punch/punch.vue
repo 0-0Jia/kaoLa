@@ -31,7 +31,28 @@ export default {
 
   methods: {
     punchRequest() {
-      
+      this.$wxhttp
+        .post({
+          url: "/customer/signedon"
+        })
+        .then(res => {
+          console.log(`后台交互拿回数据:`, res);
+          if (res.msg == "操作成功") {
+            wx.showToast({
+              title: "充值成功",
+              icon: "success",
+              duration: 2000
+            });
+          } else {
+            wx.showToast({
+              title: res.msg,
+              duration: 2000
+            });
+          }
+        })
+        .catch(err => {
+          console.log(`err:`, err);
+        });
     },
     tapDate(data) {
       //根据data.type进行判断用户点击的是哪一天,进行下一步业务操作
