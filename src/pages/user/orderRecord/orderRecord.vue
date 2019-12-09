@@ -2,10 +2,10 @@
   <div class="orderRecord">
     <view class="weui-tab">
       <view class="weui-navbar">
-        <block v-for="tab in tabs" :key="tab">
+        <block v-for="(tab, index) in tabs" :key="index">
           <view
-            id="{{index}}"
-            class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}"
+            :id="index"
+            :class="[weui-navbar__item, (activeIndex == index) ? 'weui-bar__item_on' : '']"
             @click="tabClick"
           >
             <view class="weui-navbar__title">{{item}}</view>
@@ -13,7 +13,7 @@
         </block>
       </view>
       <view class="weui-tab__panel">
-        <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+        <view class="weui-tab__content" :hidden="(activeIndex != 0)">
           <div class="order-card">
             <p>已支付</p>
             <p>交易对象：预约</p>
@@ -23,9 +23,9 @@
             <button class="order-button">退款</button>
           </div>
         </view>
-        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
-        <view class="weui-tab__content" hidden="{{activeIndex != 2}}">选项三的内容</view>
-        <view class="weui-tab__content" hidden="{{activeIndex != 3}}">选项四的内容</view>
+        <view class="weui-tab__content" :hidden="activeIndex != 1">选项二的内容</view>
+        <view class="weui-tab__content" :hidden="activeIndex != 2">选项三的内容</view>
+        <view class="weui-tab__content" :hidden="activeIndex != 3">选项四的内容</view>
       </view>
     </view>
   </div>

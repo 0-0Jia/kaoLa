@@ -3,13 +3,13 @@
         <img src="/static/images/logo.png" class="logo" />
         <div class="message">
             <div class="basicMsg">
-                <div class="name">{{message.name}}</div>
-                <div class="address">{{message.address}}</div>
-                <div class="workTime">营业时间：{{message.workTime}}</div>
+                <div class="name">{{message.storeName}}</div>
+                <div class="address">{{message.storeAddress}}</div>
+                <div class="workTime">营业时间：8:00-20:30</div>
             </div>
             <div class="seatCount">
-                <span class="restSeat">空位数：{{message.restSeat}}</span>
-                <span class="totalSeat">座位数：{{message.totalSeat}}</span>
+                <span class="restSeat">空位数：{{message.freeSeats}}</span>
+                <span class="totalSeat">座位数：{{message.totalSeats}}</span>
             </div>
         </div>
         <div class="handle">
@@ -28,7 +28,8 @@ export default {
     },
     methods: {
         goDetail() {
-            this.$emit("goDetail");
+            // 将本页面的storeId传递到子组件去跳转页面以拿到该店的座位信息
+            this.$emit("goDetail", this.message.storeId);
         }
     }
 }
@@ -69,9 +70,18 @@ export default {
     color: #44644A;
     font-size: 16px;
     font-weight: bold;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .address{
-    margin-top: 8PX;
+    margin-top: 4px;
+    height: 32px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 .address, .workTime{
     color: #2B2B2B;
@@ -80,7 +90,7 @@ export default {
 .seatCount{
     color: #A8A8A8;
     font-size: 10px;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 .restSeat{
     margin-right: 12px;

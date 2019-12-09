@@ -1,10 +1,10 @@
 <template>
   <div>
     <store 
-      v-for="(message, index) in messageList" 
+      v-for="message in storeList" 
       :message="message" 
-      :key="index"
-      @goDetail="clickToPlaceOrder()"
+      :key="message.storeId"
+      @goDetail="clickToPlaceOrder"
     >
     </store>
   </div>
@@ -18,39 +18,37 @@ export default {
   },
   data() {
     return {
-      messageList: [{
-        name: "考拉自习室",
-        address: "深圳市宝安区创业二路华联城市全景1栋G座1821-1822",
-        workTime: "8：00-23：00",
-        restSeat: 18,
-        totalSeat: 18
-      }, {
-        name: "考拉自习室",
-        address: "深圳市宝安区创业二路华联城市全景1栋G座1821-1822",
-        workTime: "8：00-23：00",
-        restSeat: 18,
-        totalSeat: 18
-      }, {
-        name: "考拉自习室",
-        address: "深圳市宝安区创业二路华联城市全景1栋G座1821-1822",
-        workTime: "8：00-23：00",
-        restSeat: 18,
-        totalSeat: 18
-      }, {
-        name: "考拉自习室",
-        address: "深圳市宝安区创业二路华联城市全景1栋G座1821-1822",
-        workTime: "8：00-23：00",
-        restSeat: 18,
-        totalSeat: 18
-      }]
+      storeList: []
     }
   },
   methods: {
-    clickToPlaceOrder() {
-      wx.navigateTo({
-        url: "/pages/packageA/placeOrder/main"
+    //跳转到座位预定页面
+    clickToPlaceOrder(storeId) {
+      mpvue.navigateTo({
+        url: "/pages/packageA/placeOrder/main",
+        //监听跳转到的页面的事件，执行拿到座位信息的函数
+        success: function(res) {
+          console.log('success');
+          res.eventChannel.emit('acceptStoreId', { data: storeId });
+        }
+      })
+    },
+    //获取门店信息列表
+    getStoreList() {
+      this.$wxhttp.get({
+        url: "/customer/store"
+      })
+      .then(res => {
+        console.log(res);
+        this.storeList = res.data.storeList;
+      })
+      .catch(err => {
+        console.log("error! ", err);
       })
     }
+  },
+  created() {
+    this.getStoreList();
   }
 }
 </script>
