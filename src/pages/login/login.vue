@@ -1,6 +1,10 @@
 <template>
   <div class="login">
-    <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button>
+    <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button> -->
+    <img class="logo" src="/static/images/logo.png" />
+    <p class="title">需要您的授权</p>
+    <p class="discription">为了提供更好的服务，<br>请允许稍后的微信授权</p>
+    <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
   </div>
 </template>
 
@@ -13,40 +17,40 @@ export default {
   },
 
   mounted: function() {
-    const that = this;
-    wx.login({
-      //用户登录
-      success(res) {
-        if (res.code) {
-          // 发起网络请求
-          console.log("res.code+" + res.code);
-          that.code = res.code;
+    // const that = this;
+    // wx.login({
+    //   //用户登录
+    //   success(res) {
+    //     if (res.code) {
+    //       // 发起网络请求
+    //       console.log("res.code+" + res.code);
+    //       that.code = res.code;
 
-          that.$wxhttp
-            .post({
-              url: "/customer/login",
-              data: {
-                code: that.code
-              }
-            })
-            .then(res => {
-              console.log(`后台交互拿回数据:`, res);
-              // 获取到后台重写的session数据，可以通过vuex做本地保存
+    //       that.$wxhttp
+    //         .post({
+    //           url: "/customer/login",
+    //           data: {
+    //             code: that.code
+    //           }
+    //         })
+    //         .then(res => {
+    //           console.log(`后台交互拿回数据:`, res);
+    //           // 获取到后台重写的session数据，可以通过vuex做本地保存
 
-              wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
-              console.log(res.header["Set-Cookie"].split(";")[0]);
+    //           wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
+    //           console.log(res.header["Set-Cookie"].split(";")[0]);
 
-              // 测试跳转
-              wx.switchTab({
-                url: "/pages/index/main"
-              });
-            })
-            .catch(err => {
-              console.log(`自动请求api失败 err:`, err);
-            });
-        }
-      }
-    });
+    //           // 测试跳转
+    //           wx.switchTab({
+    //             url: "/pages/index/main"
+    //           });
+    //         })
+    //         .catch(err => {
+    //           console.log(`自动请求api失败 err:`, err);
+    //         });
+    //     }
+    //   }
+    // });
   },
 
   methods: {
@@ -123,4 +127,41 @@ export default {
 </script>
 
 <style>
+.login {
+  color: rgb(66, 66, 66);
+  text-align: center;
+}
+.logo {
+  width: 200px;
+  height: 200px;
+  display: block;
+  margin: 0 auto;
+  margin-top: 64px;
+  margin-bottom: 20px;
+  border-radius: 50%;
+}
+.title {
+  width: 80%;
+  margin: 15px auto;
+  margin-top: 8px;
+  font-size: 20px;
+}
+.discription {
+  width: 80%;
+  margin: 10px auto;
+  font-size: 16px;
+}
+.green {
+  display: block;
+  margin: auto;
+  text-align: center;
+  width: 220px;
+  height: 48px;
+  color: #ffffff;
+  background-color: #44644a;
+  border-radius: 24px;
+  line-height: 48px;
+  margin-top: 16.5px;
+  font-size: 16px;
+}
 </style>

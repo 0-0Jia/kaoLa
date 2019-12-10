@@ -41,11 +41,11 @@ export default {
 
 <style scoped>
 .integral-card {
-  width: 90%;
-  margin: 20px auto;
+  width: 84%;
+  margin: 20px 4%;
   border-radius: 6pt;
   background-color: white;
-  padding: 10px 0;
+  padding: 10px 4%;
   text-align: center;
   box-shadow: 0 0 10px rgba(68, 100, 74, 0.08);
 }
