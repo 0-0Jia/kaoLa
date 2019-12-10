@@ -1,13 +1,17 @@
 <template>
     <div>
-        <seat-msg father="orderDetail"></seat-msg>
+        <seat-msg 
+            :roomType="preservation.roomType" 
+            :sitId="preservation.sitId" 
+            father="orderDetail"
+        ></seat-msg>
         <div class="msg">
-            <msg-row name="预约日期" value="2019-12-01"></msg-row>
-            <msg-row name="已选时间" value="12：00-13：00"></msg-row>
-            <msg-row name="所在门店" value="考拉自习室"></msg-row> 
-            <msg-row name="费用总计" value="￥28.00" nobar></msg-row>
+            <msg-row name="预约日期" :value="date"></msg-row>
+            <msg-row name="已选时间" :value="time"></msg-row>
+            <msg-row name="所在门店" value="考拉自习室" nobar></msg-row> 
+            <!-- <msg-row name="费用总计" :value="'￥' + preservation.money" nobar></msg-row> -->
         </div>
-        <div class="refund" @click="showModal()">退款</div>
+        <!-- <div class="refund" @click="showModal()">退款</div> -->
     </div>
 </template>
 
@@ -18,6 +22,13 @@ export default {
     components: {
         msgRow,
         seatMsg
+    },
+    data() {
+        return {
+            preservation: {},
+            date: '',
+            time: ''
+        }
     },
     methods: {
         showModal() {
@@ -32,7 +43,20 @@ export default {
                     }
                 }
             })
+        },
+        getPreservation() {
+            const eventChannel = this.$mp.page.getOpenerEventChannel();
+            eventChannel.on('acceptPreservation', data => {
+                console.log(data);
+                this.preservation = data.preservation;
+                console.log(this.preservation);
+                this.date = this.preservation.preservationDate.split(' ')[0];
+                this.time = this.preservation.preservationDate.split(' ')[1];
+            })
         }
+    },
+    mounted() {
+        this.getPreservation();
     }
 }
 </script>

@@ -53,10 +53,14 @@ function get (obj) {
 function post (obj) {
   return request(obj.url, 'POST', obj.data)
 }
- 
+
+function Delete (obj) {
+  return request(obj.url, 'DELETE', obj.data)
+}
 export default {
   request,
   get,
   post,
-  host
+  host,
+  Delete
 }
