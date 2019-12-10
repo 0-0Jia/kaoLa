@@ -27,7 +27,7 @@ function request (url, method, data, header = {}) {
       // },
       success: function (res) {
         wx.hideLoading()
-        if(url === '/customer/login'){
+        if(url === '/customer/login'|| url === '/customer/money'){
           resolve(res)
         }else{
           resolve(res.data)

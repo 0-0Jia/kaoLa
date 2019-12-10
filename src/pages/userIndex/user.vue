@@ -1,8 +1,12 @@
 <template>
   <div class="user">
     <view class="userInfo">
-      <div class="avatar" :style=" 
-     {backgroundImage:'url('+userPhoto+')'}"></div>
+      <div
+        class="avatar"
+        :style=" 
+     {backgroundImage:'url('+userPhoto+')'}"
+        @click="changeAvatar"
+      ></div>
       <p class="user-name">{{userData.name? userData.name : "用户名"}}</p>
       <p class="user-phone">{{userData.tel? userData.tel : "123456789"}}</p>
       <div class="integral-balance-card">
@@ -107,13 +111,25 @@ export default {
           console.log(`自动请求api失败 err:`, err);
         });
     },
-    // 将对象转变为style字符串
-    showJson(style) {
-      for (let i in style) {
-        s.push(i + ":" + style[i]);
-      }
-      s = s.join(";");
-      return s;
+    changeAvatar() {
+      wx.chooseImage({
+        count: 1,// 默认9
+        success(res) {
+          const tempFilePaths = res.tempFilePaths;
+          wx.uploadFile({
+            url: "https://qgailab.com:12410/kaola-customer/customer/portrait", //仅为示例，非真实的接口地址
+            filePath: tempFilePaths[0],
+            name: "file",
+            formData: {
+              user: "test"
+            },
+            success(res) {
+              const data = res.data;
+              //do something
+            }
+          });
+        }
+      });
     }
   }
 };

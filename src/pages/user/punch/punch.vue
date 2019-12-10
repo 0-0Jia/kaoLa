@@ -36,10 +36,11 @@ export default {
           url: "/customer/signedon"
         })
         .then(res => {
-          console.log(`后台交互拿回数据:`, res);
+          console.log(`后台数据:`, res);
           if (res.msg == "操作成功") {
+            // this.onLoad();
             wx.showToast({
-              title: "充值成功",
+              title: "成功",
               icon: "success",
               duration: 2000
             });

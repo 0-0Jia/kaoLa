@@ -30,7 +30,7 @@ export default {
         .post({
           url: "/customer/groupon",
           data: {
-            coupon: this.coupon
+            code: this.coupon
           }
         })
         .then(res => {

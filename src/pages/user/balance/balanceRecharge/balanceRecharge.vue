@@ -37,12 +37,8 @@ export default {
         })
         .then(res => {
           console.log(`后台交互拿回数据:`, res);
-          if (res.msg == "操作成功") {
-            wx.showToast({
-              title: "充值成功",
-              icon: "success",
-              duration: 2000
-            });
+          if (res.data.msg == "success") {
+            this.doWxPay(res.data.data.wxPayMap);
           } else {
             wx.showToast({
               title: res.msg,
@@ -53,6 +49,35 @@ export default {
         .catch(err => {
           console.log(`err:`, err);
         });
+    },
+
+    doWxPay(param) {
+      //小程序发起微信支付
+      wx.requestPayment({
+        timeStamp: param.timeStamp+"", //记住，这边的timeStamp一定要是字符串类型的，不然会报错
+        nonceStr: param.nonceStr,
+        package: param.package,
+        signType: "MD5",
+        paySign: param.sign,
+        success: function(event) {
+          // success
+          console.log(event);
+          wx.showToast({
+            title: "支付成功",
+            icon: "success",
+            duration: 2000
+          });
+        },
+        fail: function(error) {
+          // fail
+          console.log("支付失败");
+          console.log(error);
+        },
+        complete: function() {
+          // complete
+          console.log("pay complete");
+        }
+      });
     }
   }
 };
