@@ -101,7 +101,7 @@ export default {
         //获得选择的时间段
         getChooseTime(data) {
             this.choosedTime = data.choosedTime.join(',');
-            this.money = data.choosedTime.length * this.seat.money;
+            this.money = (data.choosedTime.length * this.seat.money).toFixed(2);
             //判断当前按钮是否为亮
             this.ableToClick = data.able;
             console.log(this.ableToClick);

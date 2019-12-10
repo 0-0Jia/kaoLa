@@ -1,170 +1,203 @@
 <template>
-    <div>
-        <div :class="{hidden: !hasDialog}">
-            <a-dialog @close="closeDialog" :dialog="dialog"></a-dialog>
-        </div>
-        <seat-msg 
-            father="orderSubmission"
-            :roomType="roomType" 
-            :sitId="sitId" 
-        ></seat-msg>
-        <div class="msg">
-            <msg-row name="预约日期" :value="basicmsg.date"></msg-row>
-            <msg-row name="已选时间" :value="basicmsg.choosedTime"></msg-row>
-            <msg-row name="所在门店" :value="basicmsg.storeName"></msg-row> 
-            <msg-row name="费用总计" :value="'￥' + basicmsg.money"></msg-row>
-            <pay-methods 
-                :payMethods="payMethods" 
-                @choosePayMethod="choosePayMethod"
-                :choiceList="choiceList"
-            >
-            </pay-methods>
-            <div class="chooseMeal" v-show="payMethods=='meal'" @click="goChooseMeal">
-                <div class="title">选择套餐</div>
-                <span class="meal">wu</span>
-                <img class="arrow" src="/static/images/arrow.png"/>
-            </div>
-        </div>
-        <submit 
-            :type="type" 
-            @submit="submit"
-            ableToClick 
-            :money="basicmsg.money"
-        ></submit>
+  <div>
+    <div :class="{hidden: !hasDialog}">
+      <a-dialog @close="closeDialog" :dialog="dialog"></a-dialog>
     </div>
+    <seat-msg father="orderSubmission" :roomType="roomType" :sitId="sitId"></seat-msg>
+    <div class="msg">
+      <msg-row name="预约日期" :value="basicmsg.date"></msg-row>
+      <msg-row name="已选时间" :value="basicmsg.choosedTime"></msg-row>
+      <msg-row name="所在门店" :value="basicmsg.storeName"></msg-row>
+      <msg-row name="费用总计" :value="'￥' + basicmsg.money"></msg-row>
+      <pay-methods
+        :payMethods="payMethods"
+        @choosePayMethod="choosePayMethod"
+        :choiceList="choiceList"
+      ></pay-methods>
+      <div class="chooseMeal" v-show="payMethods=='meal'" @click="goChooseMeal">
+        <div class="title">选择套餐</div>
+        <span class="meal">wu</span>
+        <img class="arrow" src="/static/images/arrow.png" />
+      </div>
+    </div>
+    <submit :type="type" @submit="submit" ableToClick :money="basicmsg.money"></submit>
+  </div>
 </template>
 
 <script>
-import seatMsg from "../../components/seatMsg"
-import msgRow from "../../components/msgRow"
-import payMethods from "../../components/payMethods"
-import submit from "../../components/submit"
-import aDialog from "../../components/aDialog"
+import seatMsg from "../../components/seatMsg";
+import msgRow from "../../components/msgRow";
+import payMethods from "../../components/payMethods";
+import submit from "../../components/submit";
+import aDialog from "../../components/aDialog";
 export default {
-    components: {
-        seatMsg,
-        msgRow,
-        payMethods,
-        submit,
-        aDialog
-    },
-    data() {
-        return {
-            type: "pay",
-            payMethods: "wx",
-            hasDialog: false,
-            choiceList: [{
-                name: "微信支付",
-                value: "wx"
-            }, {
-                name: "套餐支付",
-                value: "meal"
-            }],
-            dialog: {
-                title: "余额",
-                detail: "￥0.00",
-                button: "确认支付"
-            },
-            msg: {},
-            basicmsg: {},
-            roomType: "",
-            sitId: ""
+  components: {
+    seatMsg,
+    msgRow,
+    payMethods,
+    submit,
+    aDialog
+  },
+  data() {
+    return {
+      type: "pay",
+      payMethods: "wx",
+      hasDialog: false,
+      choiceList: [
+        {
+          name: "微信支付",
+          value: "wx"
+        },
+        {
+          name: "套餐支付",
+          value: "meal"
         }
+      ],
+      dialog: {
+        title: "余额",
+        detail: "￥0.00",
+        button: "确认支付"
+      },
+      msg: {},
+      basicmsg: {},
+      roomType: "",
+      sitId: ""
+    };
+  },
+  methods: {
+    choosePayMethod(value) {
+      this.payMethods = value;
     },
-    methods: {
-        choosePayMethod(value) {
-            this.payMethods = value;
-        },
-        goChooseMeal() {
-            wx.navigateTo({
-                url: "/pages/packageA/chooseMeal/main"
-            })
-        },
-        closeDialog() {
-            console.log("事件传递到了父组件");
-            this.hasDialog = false;
-        },
-        submit() {
-            if(this.payMethods == "wx") {    //微信支付则调用支付接口
-                console.log(this.msg);
-                this.msg.payType = 1;
-                console.log(this.msg);
-                this.$wxhttp.post({
-                    url: '/customer/sits',
-                    data: this.msg
-                })
-                .then(res => {
-                    console.log(res);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-            } else if(this.payMethods == "meal") {  //套餐支付
-                
+    goChooseMeal() {
+      wx.navigateTo({
+        url: "/pages/packageA/chooseMeal/main"
+      });
+    },
+    closeDialog() {
+      console.log("事件传递到了父组件");
+      this.hasDialog = false;
+    },
+    submit() {
+      if (this.payMethods == "wx") {
+        //微信支付则调用支付接口
+        //微信支付则调用支付接口
+        this.msg.payType = 1;
+        //微信支付则调用支付接口
+        this.$wxhttp
+          .post({
+            url: "/customer/sits",
+            data: this.msg
+          })
+          .then(res => {
+            console.log(`微信支付:`, res);
+            if (res.msg == "success") {
+              console.log(`微信支付here`);
+              this.doWxPay(res.data.wxPayMap);
+            } else {
+              wx.showToast({
+                title: res.msg,
+                duration: 2000
+              });
             }
-        },
-        getPayMsg() {
-            const eventChannel = this.$mp.page.getOpenerEventChannel();
-            eventChannel.on('acceptPayMsg', data => {
-                this.msg = data;
-                this.roomType = data.room.roomType;
-                this.sitId = data.sitId;
-            });
-            eventChannel.on('acceptBasicMsg', data => {
-                this.basicmsg = data;
-                this.dialog.detail = '￥' + this.basicmsg.money;
-                console.log(this.basicmsg);
-            })
-            console.log(this.msg);
-        }
+          })
+          .catch(err => {
+            console.log(`err:`, err);
+          });
+      } else if (this.payMethods == "meal") {
+        //套餐支付
+      }
     },
-    mounted() {
-        this.getPayMsg();
+    getPayMsg() {
+      const eventChannel = this.$mp.page.getOpenerEventChannel();
+      eventChannel.on("acceptPayMsg", data => {
+        this.msg = data;
+        this.roomType = data.room.roomType;
+        this.sitId = data.sitId;
+      });
+      eventChannel.on("acceptBasicMsg", data => {
+        this.basicmsg = data;
+        this.dialog.detail = "￥" + this.basicmsg.money;
+        console.log(this.basicmsg);
+      });
+      console.log(this.msg);
+    },
+    doWxPay(param) {
+      //小程序发起微信支付
+      wx.requestPayment({
+        timeStamp: param.timeStamp + "", //记住，这边的timeStamp一定要是字符串类型的，不然会报错
+        nonceStr: param.nonceStr,
+        package: param.package,
+        signType: "MD5",
+        paySign: param.paySign,
+        appId: param.appId,
+        success: function(event) {
+          // success
+          console.log(event);
+          wx.showToast({
+            title: "支付成功",
+            icon: "success",
+            duration: 2000
+          });
+        },
+        fail: function(error) {
+          // fail
+          console.log("支付失败");
+          console.log(error);
+        },
+        complete: function() {
+          // complete
+          console.log("pay complete");
+        }
+      });
     }
-}
+  },
+  mounted() {
+    this.getPayMsg();
+  }
+};
 </script>
 
 <style scoped>
-.msg{
-    width: 375px;
-    padding-bottom: 16px;
-    background-color: white;
+.msg {
+  width: 375px;
+  padding-bottom: 16px;
+  background-color: white;
 }
-.chooseMeal{
-    width: 343px;
-    height: 26px;
-    right: 0;
-    left: 0;
-    margin: auto;
-    margin-top: 20px;
-    position: relative;
-    color: #2E2E2E;
-    background-color: white;
+.chooseMeal {
+  width: 343px;
+  height: 26px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  margin-top: 20px;
+  position: relative;
+  color: #2e2e2e;
+  background-color: white;
 }
-.title{
-    display: inline-block;
-    line-height: 22px;
-    font-size: 12px;
+.title {
+  display: inline-block;
+  line-height: 22px;
+  font-size: 12px;
 }
-.meal{
-    display: inline-block;
-    line-height: 22px;
-    position: absolute;
-    font-size: 12px;
-    color: #A8A8A8;
-    right: 11px;
+.meal {
+  display: inline-block;
+  line-height: 22px;
+  position: absolute;
+  font-size: 12px;
+  color: #a8a8a8;
+  right: 11px;
 }
-.arrow{
-    width: 7.13px;
-    height: 12.97px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    margin: auto;
-    margin-left: 10.5px;
+.arrow {
+  width: 7.13px;
+  height: 12.97px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  margin-left: 10.5px;
 }
-.hidden{
-    visibility: hidden;
+.hidden {
+  visibility: hidden;
 }
 </style>
