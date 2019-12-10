@@ -3,7 +3,10 @@
     <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button> -->
     <img class="logo" src="/static/images/logo.png" />
     <p class="title">需要您的授权</p>
-    <p class="discription">为了提供更好的服务，<br>请允许稍后的微信授权</p>
+    <p class="discription">
+      为了提供更好的服务，
+      <br />请允许稍后的微信授权
+    </p>
     <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
   </div>
 </template>
@@ -25,7 +28,6 @@ export default {
     //       // 发起网络请求
     //       console.log("res.code+" + res.code);
     //       that.code = res.code;
-
     //       that.$wxhttp
     //         .post({
     //           url: "/customer/login",
@@ -36,10 +38,8 @@ export default {
     //         .then(res => {
     //           console.log(`后台交互拿回数据:`, res);
     //           // 获取到后台重写的session数据，可以通过vuex做本地保存
-
     //           wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
     //           console.log(res.header["Set-Cookie"].split(";")[0]);
-
     //           // 测试跳转
     //           wx.switchTab({
     //             url: "/pages/index/main"
@@ -72,12 +72,17 @@ export default {
                     //获取用户信息
                     success: res => {
                       console.log(res, "用户信息");
-                      console.log(that.code);
+                      wx.setStorageSync("userInfo", res.userInfo);
+                      let user = res;
                       that.$wxhttp
                         .post({
                           url: "/customer/login",
                           data: {
-                            code: that.code
+                            code: that.code,
+                            // rawData: user.rawData,
+                            // signature: user.signature,
+                            // encryptedData: user.encryptedData,
+                            // iv: user.iv
                           }
                         })
                         .then(res => {
@@ -88,7 +93,6 @@ export default {
                             "sessionid",
                             res.header["Set-Cookie"]
                           );
-                          console.log(res.header["Set-Cookie"].split(";")[0]);
 
                           // 测试跳转
                           wx.switchTab({

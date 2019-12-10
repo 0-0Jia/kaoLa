@@ -1,13 +1,18 @@
 <template>
   <div class="user">
     <view class="userInfo">
-      <div
+      <!-- <div
         class="avatar"
         :style=" 
      {backgroundImage:'url('+userPhoto+')'}"
         @click="changeAvatar"
+      ></div> -->
+      <div
+        class="avatar"
+        :style=" 
+     {backgroundImage:'url('+userPhoto+')'}"
       ></div>
-      <p class="user-name">{{userData.name? userData.name : "用户名"}}</p>
+      <p class="user-name">{{userData.name? userData.name : name}}</p>
       <p class="user-phone">{{userData.tel? userData.tel : "123456789"}}</p>
       <div class="integral-balance-card">
         <div class="integral" @click="jumpIntegral">
@@ -49,7 +54,8 @@ export default {
   data() {
     return {
       userData: [],
-      userPhoto: "../../static/tabs/photo.png"
+      userPhoto: wx.getStorageSync("userInfo").avatarUrl,
+      name: wx.getStorageSync("userInfo").nickName
     };
   },
   mounted() {
@@ -105,30 +111,107 @@ export default {
           console.log(`后台交互拿回数据:`, res);
           this.userData = res.data.user;
           console.log(this.userData.url);
-          // this.userPhoto = this.userData.url;
+          // this.userPhoto =
+          //   "https://qgailab.com:12410/portrait/" + this.userData.url;
         })
         .catch(err => {
           console.log(`自动请求api失败 err:`, err);
         });
     },
-    changeAvatar() {
+    //点击图片选择手机相册或者电脑本地图片
+    changeAvatar: function(e) {
+      var that = this;
       wx.chooseImage({
-        count: 1,// 默认9
-        success(res) {
-          const tempFilePaths = res.tempFilePaths;
-          console.log(tempFilePaths[0])
-          wx.uploadFile({
-            url: "https://qgailab.com:12410/kaola-customer/customer/portrait",
-            filePath: tempFilePaths[0],
-            name: "file",
-            formData: {
-              user: tempFilePaths[0]
-            },
-            success(res) {
-              const data = res.data;
-              //do something
-            }
-          });
+        count: 1, // 默认9
+        sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+        success: function(res) {
+          // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+          var tempFilePaths = res.tempFilePaths;
+          //这里是上传操作
+
+          that.$wxhttp
+            .post({
+              url: "/customer/portrait", //真正修改操作,填写你们修改的API,
+              data:
+                "\r\n--XXX" +
+                "\r\nContent-Disposition: form-data; file=" +
+                tempFilePaths[0] +
+                "\r\n" +
+                "\r\nvalue1" +
+                "\r\n--XXX" +
+                '\r\nContent-Disposition: form-data; name="field2"' +
+                "\r\n" +
+                "\r\nvalue2" +
+                "\r\n--XXX--",
+              header: {
+                "Content-Type": "multipart/form-data; boundary=XXX", //记得设置
+                cookie: wx.getStorageSync("sessionid").split(";")[0]
+              }
+            })
+            .then(res => {
+              console.log(`后台数据:`, res);
+              if (res.msg == "操作成功") {
+                that.userPhoto = tempFilePaths[0];
+                wx.showToast({
+                  title: "成功",
+                  icon: "success",
+                  duration: 2000
+                });
+              } else {
+                wx.showToast({
+                  title: res.msg,
+                  duration: 2000
+                });
+              }
+            })
+            .catch(err => {
+              console.log(`err:`, err);
+            });
+
+          // wx.uploadFile({
+          //   url: "https://qgailab.com:12410/kaola-customer" + "/customer/portrait", //里面填写你的上传图片服务器API接口的路径
+          //   filePath: tempFilePaths[0], //要上传文件资源的路径 String类型
+          //   name: "avatar", //按个人情况修改，文件对应的 key,开发者在服务器端通过这个 key 可以获取到文件二进制内容，(后台接口规定的关于图片的请求参数)
+          //   header: {
+          //     "Content-Type": "multipart/form-data", //记得设置
+          //     cookie: wx.getStorageSync("sessionid").split(";")[0]
+          //   },
+          //   success: function(res) {
+          //     //当调用uploadFile成功之后，再次调用后台修改的操作，这样才真正做了修改头像
+          //     if ((res.statusCode = 200)) {
+          //       var data = res.data;
+          //       var statusCode = res.statusCode;
+          //       console.log("返回值1" + data);
+          //       console.log("返回值2" + statusCode);
+          //       //这里调用后台的修改操作， tempFilePaths[0],是上面uploadFile上传成功，然后赋值到修改这里。
+          //       that.$wxhttp
+          //         .post({
+          //           url: "/customer/portrait"+'?avatar=' + tempFilePaths[0], //真正修改操作,填写你们修改的API,
+          //           data: tempFilePaths[0]
+          //         })
+          //         .then(res => {
+          //           console.log(`后台数据:`, res);
+          //           if (res.msg == "操作成功") {
+          //             that.userPhoto = tempFilePaths[0];
+          //             wx.showToast({
+          //               title: "成功",
+          //               icon: "success",
+          //               duration: 2000
+          //             });
+          //           } else {
+          //             wx.showToast({
+          //               title: res.msg,
+          //               duration: 2000
+          //             });
+          //           }
+          //         })
+          //         .catch(err => {
+          //           console.log(`err:`, err);
+          //         });
+          //     }
+          //   }
+          // });
         }
       });
     }
