@@ -1,98 +1,127 @@
 <template>
-  <div class="orderRecord">
-    <!-- <view class="weui-tab">
-      <view class="weui-navbar">
-        <block v-for="(tab, index) in tabs" :key="index">
-          <view
-            :id="index"
-            :class="[weui-navbar__item, (activeIndex == index) ? 'weui-bar__item_on' : '']"
-            @click="tabClick"
-          >
-            <view class="weui-navbar__title">{{item}}</view>
-          </view>
-        </block>
-      </view>
-      <view class="weui-tab__panel">
-        <view class="weui-tab__content" :hidden="(activeIndex != 0)">
-          <div class="order-card">
-            <p>已支付</p>
-            <p>交易对象：预约</p>
-            <p>交易方式：微信支付</p>
-            <p>交易金额：￥28.80</p>
-            <p>有效日期：2019-11-16 至 2019-11-18</p>
-            <button class="order-button">退款</button>
-          </div>
-        </view>
-        <view class="weui-tab__content" :hidden="activeIndex != 1">选项二的内容</view>
-        <view class="weui-tab__content" :hidden="activeIndex != 2">选项三的内容</view>
-        <view class="weui-tab__content" :hidden="activeIndex != 3">选项四的内容</view>
-      </view>
-    </view> -->
-  </div>
+    <div>
+        <div class="nav">
+            <div @click="all()" class="gridArea">
+                <span :class="{greenFont: mode=='all'}">全部</span>
+                <div class="greenBar" v-show="mode=='all'"></div>
+            </div>
+            <div @click="payed()" class="gridArea">
+                <span :class="{greenFont: mode=='payed'}">已支付</span>
+                <div class="greenBar" v-show="mode=='payed'"></div>
+            </div>
+            <div @click="refunding()" class="gridArea">
+                <span :class="{greenFont: mode=='refunding'}">正在申请退款</span>
+                <div class="greenBar" v-show="mode=='refunding'"></div>
+            </div>
+            <div @click="refunded()">
+                <span :class="{greenFont: mode=='refunded'}">已退款</span>
+                <div class="greenBar" v-show="mode=='refunded'"></div>
+            </div>
+        </div>
+        <record-card 
+            v-for="(order, index) in orderList" 
+            :key="index"
+            :order="order"
+            :button="button"
+        ></record-card>
+    </div>
 </template>
 
 <script>
-// import $ from "jquery";
-
+import recordCard from "./recordCard"
 export default {
-  data() {
-    return {
-      tabs: ["全部", "已支付", "正在申请退款", "已退款"],
-      activeIndex: 1,
-      sliderOffset: 0,
-      sliderLeft: 0
-    };
-  },
-  mounted: function() {
-    wx.setNavigationBarTitle({
-      title: "订单记录"
-    });
-
-    var that = this;
-    var sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
-    wx.getSystemInfo({
-      success: function(res) {
-        that.sliderLeft =
-          (res.windowWidth / that.tabs.length - sliderWidth) / 2;
-        that.sliderOffset =
-          res.windowWidth / that.tabs.length * that.activeIndex;
-      }
-    });
-  },
-
-  methods: {
-    tabClick: function(e) {
-      this.sliderOffset = e.currentTarget.offsetLeft;
-      this.activeIndex = e.currentTarget.id;
+    components: {
+        recordCard
+    },
+    data() {
+        return {
+            mode: "all",
+            orderList: [],
+            doneList: [],
+            refundingList: [],
+            refundedList: [],
+            button: '全部'
+        }
+    },
+    methods: {
+        all() {
+            this.mode = "all";
+            this.button = "全部"
+        },
+        payed() {
+            this.mode = "payed";
+            this.button = "已支付"
+        },
+        refunding() {
+            this.mode = "refunding";
+            this.button = "正在退款"
+        },
+        refunded() {
+            this.mode = "refunded";
+            this.button = "已退款" 
+        }
+    },
+    mounted() {
+        this.$wxhttp.get({
+            url: '/customer/order'
+        })
+        .then(res => {
+            console.log(res);
+            this.orderList = res.data.orderList;
+            this.orderList.forEach(order => {
+                if(order.orderStatus == "已支付") {
+                    this.doneList.push(order);
+                }
+                if(order.orderStatus == "正在退款") {
+                    this.refundingList.push(order);
+                }
+                if(order.orderStatus == "同意退款") {
+                    this.refundedList.push(order);
+                }
+            })
+            console.log(this.orderList);
+            console.log(this.doneList);
+            console.log(this.refundingList);
+            console.log(this.refundedList);
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
-  }
-};
+}
 </script>
 
 <style scoped>
-.weui-tab__content {
-  padding-top: 60px;
-  text-align: center;
+.nav{
+    height: 48px;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    padding-left: 18px;
+    background-color: white;
 }
-.order-card {
-  width: 100%;
-  padding: 8px 10px;
-  margin: 8px auto;
-  background-color: white;
-  text-align: left;
+.nav>div{
+    display: inline-block;
+    color: #2E2E2E;
+    font-size: 16px;
+    height: 100%;
+    line-height: 48px;
+    position: relative;
 }
-.order-button {
-  display: block;
-  margin: auto;
-  text-align: center;
-  width: 220px;
-  height: 48px;
-  color: #ffffff;
-  background-color: #44644a;
-  box-shadow: 0 0 10px rgba(68, 100, 74, 0.08);
-  border-radius: 24px;
-  line-height: 48px;
-  margin-top: 16.5px;
-  font-size: 16px;
+.greenBar{
+    position: absolute;
+    width: 31.5px;
+    height: 4px;
+    right: 0;
+    left: 0;
+    margin: auto;
+    bottom: 0;
+    background-color: #44644A;
+}
+.greenFont{
+    color: #44644A;
+}
+.gridArea{
+    margin-right: 36px;
 }
 </style>
