@@ -73,7 +73,7 @@ export default {
           .post({
             url: "/customer/meal",
             data: {
-              type: 1,
+              payType: 4,
               meal: {
                 mealId: mealMsg.mealId // 套餐唯一ID
               }
@@ -81,6 +81,14 @@ export default {
           })
           .then(res => {
             console.log(res);
+            wx.showToast({
+              title: res.msg,
+              icon: 'none',
+              duration: 2000
+            })
+          })
+          .catch(err => {
+            console.log(err);
           });
       } else if (this.payMethods == "wx") {
         //微信支付则调用支付接口

@@ -2,7 +2,7 @@
   <div>
     <img class="logo" src="/static/images/logo.png" />
     <button class="green" @click="goOrder()">点击预约</button>
-    <button class="green" @click="scanCode()">扫码开锁</button>
+    <!-- <button class="green" @click="scanCode()">扫码开锁</button> -->
   </div>
 </template>
 

@@ -3,7 +3,12 @@
     <div :class="{hidden: !hasDialog}">
       <a-dialog @close="closeDialog" :dialog="dialog"></a-dialog>
     </div>
-    <seat-msg father="orderSubmission" :roomType="roomType" :sitId="sitId"></seat-msg>
+    <seat-msg 
+      father="orderSubmission" 
+      :roomType="roomType" 
+      :sitId="sitId"
+      :price="basicmsg.price"
+    ></seat-msg>
     <div class="msg">
       <msg-row name="预约日期" :value="basicmsg.date"></msg-row>
       <msg-row name="已选时间" :value="basicmsg.choosedTime"></msg-row>
@@ -16,11 +21,11 @@
       ></pay-methods>
       <div class="chooseMeal" v-show="payMethods=='meal'" @click="goChooseMeal">
         <div class="title">选择套餐</div>
-        <span class="meal">wu</span>
+        <span class="meal">{{mealName}}</span>
         <img class="arrow" src="/static/images/arrow.png" />
       </div>
     </div>
-    <submit :type="type" @submit="submit" ableToClick :money="basicmsg.money"></submit>
+    <submit :type="type" @submit="submit" ableToClick :money="money"></submit>
   </div>
 </template>
 
@@ -61,17 +66,39 @@ export default {
       msg: {},
       basicmsg: {},
       roomType: "",
-      sitId: ""
+      sitId: "",
+      choosedMeal: {},
+      mealName: "",
+      money: 0
     };
   },
   methods: {
     choosePayMethod(value) {
       this.payMethods = value;
+      if(value == "wx") this.money = this.basicmsg.money;
+      if(value == "meal") this.money = 0;
     },
     goChooseMeal() {
+      let temp = this.choosedMeal;
+      let passValue = this.passValue;
       wx.navigateTo({
-        url: "/pages/packageA/chooseMeal/main"
+        url: "/pages/packageA/chooseMeal/main",
+        success(res) {
+          res.eventChannel.on('acceptChoosedMeal', data => {
+            temp = data.meal;
+            passValue(temp);
+          })
+        }
       });
+    },
+    passValue(temp) {
+      this.choosedMeal = temp;
+      this.mealName = this.choosedMeal.name;
+      this.msg.payType = 3;
+      this.msg.meal = {};
+      this.msg.meal.mealId = this.choosedMeal.mealId;
+      this.money = 0;
+      console.log(this.msg);
     },
     closeDialog() {
       console.log("事件传递到了父组件");
@@ -82,6 +109,7 @@ export default {
         //微信支付则调用支付接口
         //微信支付则调用支付接口
         this.msg.payType = 1;
+        this.msg.mealId = null;
         //微信支付则调用支付接口
         this.$wxhttp
           .post({
@@ -105,6 +133,28 @@ export default {
           });
       } else if (this.payMethods == "meal") {
         //套餐支付
+          this.msg.payType = 3;
+          this.msg.mealId = this.choosedMeal.mealId;
+          this.$wxhttp.post({
+            url: '/customer/sits',
+            data: this.msg
+          })
+          .then(res => {
+            console.log(res);
+            wx.showToast({
+              title: res.msg,
+              duration: 2000,
+              icon: "none"
+            })
+            if(res.code == 0) {
+              wx.switchTab({
+                url: '/index/main'
+              })
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          })
       }
     },
     getPayMsg() {
@@ -117,7 +167,10 @@ export default {
       eventChannel.on("acceptBasicMsg", data => {
         this.basicmsg = data;
         this.dialog.detail = "￥" + this.basicmsg.money;
+        this.money = this.basicmsg.money;
         console.log(this.basicmsg);
+        console.log(this.basicmsg.price);
+
       });
       console.log(this.msg);
     },
@@ -138,6 +191,11 @@ export default {
             icon: "success",
             duration: 2000
           });
+          if(res.code == 0) {
+              wx.switchTab({
+                url: '/index/main'
+              })
+            }
         },
         fail: function(error) {
           // fail

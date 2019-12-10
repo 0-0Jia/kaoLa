@@ -2,7 +2,7 @@
     <div 
         class="card blueBg"
         :cardMsg="cardMsg"
-        @click="goBuyMeal"
+        @click="handleClick"
     >
         <img src="/static/images/cardBg.png" class="cardBg"/>
         <div class="msg">
@@ -11,7 +11,7 @@
                 <div :class="[{'hidden': !cardMsg.mealDesc}, 'detail']">{{cardMsg.mealDesc}}</div>
             </div>
             <div class="timeLimit" v-if="!cardMsg.status">时效：{{cardMsg.mealDays}}天</div>
-            <div class="timeLimit" v-else>剩余：{{cardMsg.rareDays}}天</div>
+            <div class="timeLimit" v-else>剩余：{{cardMsg.usedTimes}}次</div>
         </div>
     </div>
 </template>
@@ -20,15 +20,19 @@
 export default {
     name: "card",
     props: {
-        cardMsg: Object
+        cardMsg: Object,
+        chooseCard: Boolean
     },
     mounted() {
         console.log(this.cardMsg);
     },
     methods: {
-        goBuyMeal() {
+        handleClick() {
             if(this.cardMsg.status == null) {
-                this.$emit('goBuyMeal', this.cardMsg);
+                this.$emit('handleClick', this.cardMsg);
+            }
+            if(this.chooseCard) {
+                this.$emit('chooseCard', this.cardMsg);
             }
         }
     }

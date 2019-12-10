@@ -3,9 +3,11 @@
         <div class="title">点击你要使用的套餐</div>
         <div class="card">
             <card 
-                v-for="(cardMsg, index) in cardMsgList" 
+                v-for="(cardMsg, index) in userMealList" 
                 :key="index" 
                 :cardMsg="cardMsg"
+                chooseCard
+                @chooseCard="chooseMeal"
             >
             </card>
         </div>
@@ -35,19 +37,37 @@ export default {
                 detail: null,
                 timeLimit: "无期限",
                 type: "try"
-            }]
+            }],
+            preservationList: [],
+            userMealList: []
         }
     },
     mounted() {
-        this.$wxhttp.get({
-            url: '/customer/user/meal'
-        })
-        .then(res => {
-            console.log(res);
-        })
-        .catch(err => {
-            console.log(err + "!");
-        })
+        this.getUserMeal();  
+    },
+    methods: {
+        getUserMeal() {
+            this.$wxhttp.get({
+                url: '/customer/user/meal'
+            })
+            .then(res => {
+                console.log(res);
+                this.userMealList = res.data.mealList;
+                console.log(this.userMealList);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        chooseMeal(meal) {
+            const eventChannel = this.$mp.page.getOpenerEventChannel();
+            eventChannel.emit('acceptChoosedMeal', {
+                meal
+            })
+            mpvue.navigateBack({
+                delta: 1
+            })
+        }
     }
 }
 </script>

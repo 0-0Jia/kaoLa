@@ -5,7 +5,7 @@
                 v-for="(cardMsg, index) in mealList" 
                 :key="index" 
                 :cardMsg="cardMsg"
-                @goBuyMeal="goBuyMeal"
+                @handleClick="goBuyMeal"
             >
             </card>
         </div>

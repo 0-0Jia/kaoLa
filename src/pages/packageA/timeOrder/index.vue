@@ -5,6 +5,7 @@
             father="timeOrder"
             :roomType="room.roomType" 
             :sitId="seat.sitId"
+            :price="seat.money"
         ></seat-msg>
         <!-- 时间日期选择器 -->
         <time-choose 
@@ -54,8 +55,8 @@ export default {
     methods: {
         goPay() {
             const time = this.currentDate + " " + this.choosedTime;
-            console.log(time);
-            console.log("现在跳转到支付页面");
+            // console.log(time);
+            // console.log("现在跳转到支付页面");
             const seat = this.seat;
             const room = this.room;
             const money = this.money;
@@ -74,7 +75,8 @@ export default {
                         money: money,
                         date: currentDate,
                         choosedTime: choosedTime,
-                        storeName: storeName
+                        storeName: storeName,
+                        price: seat.money
                     });
                 }
             })
@@ -83,16 +85,18 @@ export default {
             const eventChannel = this.$mp.page.getOpenerEventChannel();
             eventChannel.on('acceptSeatId', data => {
                 this.seat = data.seat;
-                console.log(this.seat);
+                // console.log(this.seat);
                 //设置时间段
                 this.timeList = data.seat.curDate[0].sitDate;
                 //设置时间选择器的起止时间
                 this.startDay = data.seat.curDate[0].value;
-                this.endDay = data.seat.curDate[1].value;
+                if(data.seat.curDate.length > 1) {
+                    this.endDay = data.seat.curDate[data.seat.curDate.length-1].value;
+                } else this.endDay = this.startDay;
             });
             eventChannel.on('acceptRoomList', data => {
                 this.room = data.room;
-                console.log(this.room);
+                // console.log(this.room);
             });
             eventChannel.on('acceptStoreName', data => {
                 this.storeName = data.storeName;
@@ -104,23 +108,23 @@ export default {
             this.money = (data.choosedTime.length * this.seat.money).toFixed(2);
             //判断当前按钮是否为亮
             this.ableToClick = data.able;
-            console.log(this.ableToClick);
+            // console.log(this.ableToClick);
         },
         //刷新时间表
         refreshTimeList(date) {
             // 判断是哪一天去更新时间表
-            if(this.seat.curDate[0].value == date) {
-                this.timeList = this.seat.curDate[0].sitDate;
-                this.currentDate = date;
-            }
-            if(this.seat.curDate[1].value == date) {
-                this.timeList = this.seat.curDate[1].sitDate;
-                this.currentDate = date;
+            for(let i = 0; i < this.seat.curDate.length; i++){
+                if(this.seat.curDate[i].value == date) {
+                    this.timeList = this.seat.curDate[i].sitDate;
+                    this.currentDate = date;
+                }
             }
         }
     },
     mounted() {
         this.getSeatMsg();
+        console.log(this.seat.curDate);
+        console.log(this.seat.curDate[0]);
         this.currentDate = this.seat.curDate[0].value;
     }
 }

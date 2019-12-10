@@ -16,6 +16,7 @@
         :preservation="preservation"
         :key="index"
         @goOrderDetail="goOrderDetail"
+        @openDoor="openDoor"
       ></order-card>
     </div>
     <div v-show="mode=='myMeal'">
@@ -63,6 +64,7 @@ export default {
     },
     order() {
       this.mode = "myOrder";
+      this.getOrderList();
       console.log(this.mode);
     },
     getOrderList() {
@@ -88,6 +90,26 @@ export default {
     goShop() {
       mpvue.navigateTo({
         url: '/pages/packageB/mealShop/main'
+      })
+    },
+    openDoor(preservation) {
+      this.$wxhttp.post({
+        url: '/customer/opendoor',
+        data: {
+          storeId: preservation.storeId,
+          preservationId: preservation.preservationId 
+        }
+      })
+      .then(res => {
+        console.log(res);
+        wx.showToast({
+          title: res.msg,
+          icon: 'none',
+          duration: 2000
+        })
+      })
+      .catch(err => {
+        console.log(err)
       })
     }
   },
