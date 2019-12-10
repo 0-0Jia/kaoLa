@@ -1,6 +1,6 @@
 <template>
   <div class="balance-recharge">
-    <div class="recharge-card">
+    <div class="balance-recharge-card">
       <span class="money">￥</span>
       <input type="text" class="recharge-input" v-model.lazy="money" placeholder="充值范围为0-300" />
     </div>
@@ -58,7 +58,8 @@ export default {
         nonceStr: param.nonceStr,
         package: param.package,
         signType: "MD5",
-        paySign: param.sign,
+        paySign: param.paySign,
+        appId: param.appId,
         success: function(event) {
           // success
           console.log(event);
@@ -84,13 +85,13 @@ export default {
 </script>
 
 <style scoped>
-.recharge-card {
-  width: 90%;
-  margin: 20px auto;
+.balance-recharge-card {
+ width: 84%;
+  margin: 20px 4%;
   border-radius: 6pt;
   background-color: white;
-  padding: 15px 7%;
-  text-align: left;
+  padding: 10px 4%;
+  text-align: center;
   box-shadow: 0 0 10px rgba(68, 100, 74, 0.08);
   text-align: left;
 }
@@ -100,14 +101,14 @@ export default {
 }
 .recharge-input {
   display: inline-block;
-  width: 85%;
+  width: 80%;
   height: 40px;
   border: none;
-  margin-top: 4px;
+  margin-bottom: -6px;
   margin-left: 5px;
   border-bottom: 1px solid #a8a8a8;
   font-size: 24px;
-  padding: 2px 12px;
+  padding: 0 12px;
 }
 .recharge-button {
   display: block;

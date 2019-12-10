@@ -58,13 +58,14 @@ export default {
 
 <style scoped>
 .coupon-card {
-  width: 90%;
-  margin: 20px auto;
+  width: 84%;
+  margin: 20px 4%;
   border-radius: 6pt;
   background-color: white;
-  padding: 15px 7%;
-  text-align: left;
+  padding: 10px 4%;
+  text-align: center;
   box-shadow: 0 0 10px rgba(68, 100, 74, 0.08);
+  text-align: left;
 }
 .coupon-input {
   height: 40px;

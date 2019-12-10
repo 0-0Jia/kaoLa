@@ -116,12 +116,13 @@ export default {
         count: 1,// 默认9
         success(res) {
           const tempFilePaths = res.tempFilePaths;
+          console.log(tempFilePaths[0])
           wx.uploadFile({
-            url: "https://qgailab.com:12410/kaola-customer/customer/portrait", //仅为示例，非真实的接口地址
+            url: "https://qgailab.com:12410/kaola-customer/customer/portrait",
             filePath: tempFilePaths[0],
             name: "file",
             formData: {
-              user: "test"
+              user: tempFilePaths[0]
             },
             success(res) {
               const data = res.data;
