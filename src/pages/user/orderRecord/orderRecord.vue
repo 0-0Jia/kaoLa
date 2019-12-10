@@ -18,12 +18,46 @@
                 <div class="greenBar" v-show="mode=='refunded'"></div>
             </div>
         </div>
-        <record-card 
-            v-for="(order, index) in orderList" 
-            :key="index"
-            :order="order"
-            :button="button"
-        ></record-card>
+        <div v-if="mode=='all'">
+            <record-card 
+                v-for="(order, index) in orderList" 
+                :key="index"
+                :order="order"
+                :button="buttonList[index]"
+                :ifAble="ifAbleList[index]"
+                @handleClick="handleButtonClick"
+            ></record-card>
+        </div>
+        <div v-if="mode=='payed'">
+            <record-card 
+                v-for="(order, index) in doneList" 
+                :key="index"
+                :order="order"
+                :button="button"
+                :ifAble="ifAble"
+                @handleClick="handleButtonClick"
+            ></record-card>
+        </div>
+        <div v-if="mode=='refunding'">
+            <record-card 
+                v-for="(order, index) in refundingList" 
+                :key="index"
+                :order="order"
+                :button="button"
+                :ifAble="ifAble"
+                @handleClick="handleButtonClick"
+            ></record-card>
+        </div>
+        <div v-if="mode=='refunded'">
+            <record-card 
+                v-for="(order, index) in refundedList" 
+                :key="index"
+                :order="order"
+                :button="button"
+                :ifAble="ifAble"
+                @handleClick="handleButtonClick"
+            ></record-card>
+        </div>
     </div>
 </template>
 
@@ -37,56 +71,93 @@ export default {
         return {
             mode: "all",
             orderList: [],
+            totalList: [],
             doneList: [],
             refundingList: [],
             refundedList: [],
-            button: '全部'
+            button: '全部',
+            buttonList: [],
+            ifAble: false,
+            ifAbleList: []
         }
     },
     methods: {
         all() {
             this.mode = "all";
-            this.button = "全部"
+            this.button = "全部";
+            this.orderList = this.totalList;
         },
         payed() {
             this.mode = "payed";
-            this.button = "已支付"
+            this.button = "退款";
+            this.ifAble = true;
+            this.orderList = this.doneList;
         },
         refunding() {
             this.mode = "refunding";
-            this.button = "正在退款"
+            this.button = "正在退款";
+            this.ifAble = false;
+            this.orderList = this.refundingList;
         },
         refunded() {
             this.mode = "refunded";
-            this.button = "已退款" 
+            this.button = "已退款";
+            this.ifAble = false; 
+            this.orderList = this.refundedList;
+        },
+        handleButtonClick(order) {
+            this.$wxhttp.Delete({
+                url: `/customer/order/${order.orderId}`
+            })
+            .then(res => {
+                console.log(res);
+                this.getOrderList();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        getOrderList() {
+            this.$wxhttp.get({
+                url: '/customer/order'
+            })
+            .then(res => {
+                console.log(res);
+                this.totalList = res.data.orderList;
+                for(let i = 0; i<this.totalList.length; i++) {
+                    if(this.totalList[i].orderStatus == "已支付") {
+                        this.doneList.push(this.totalList[i]);
+                        this.buttonList[i] = "退款";
+                        this.ifAbleList[i] = true;
+                    }
+                    if(this.totalList[i].orderStatus == "正在退款") {
+                        this.refundingList.push(this.totalList[i]);
+                        this.buttonList[i] = "退款中";
+                        this.ifAbleList[i] = false;
+                    }
+                    if(this.totalList[i].orderStatus == "同意退款") {
+                        this.refundedList.push(this.totalList[i]);
+                        this.buttonList[i] = "已退款";
+                        this.ifAbleList[i] = false;
+                    }
+                    if(this.totalList[i].orderStatus == "未支付") {
+                        this.buttonList[i] = "未支付";
+                        this.ifAbleList[i] = false;
+                    }
+                }
+                this.orderList = this.totalList;
+                console.log(this.orderList);
+                console.log(this.doneList);
+                console.log(this.refundingList);
+                console.log(this.refundedList);
+            })
+            .catch(err => {
+                console.log(err);
+            })
         }
     },
     mounted() {
-        this.$wxhttp.get({
-            url: '/customer/order'
-        })
-        .then(res => {
-            console.log(res);
-            this.orderList = res.data.orderList;
-            this.orderList.forEach(order => {
-                if(order.orderStatus == "已支付") {
-                    this.doneList.push(order);
-                }
-                if(order.orderStatus == "正在退款") {
-                    this.refundingList.push(order);
-                }
-                if(order.orderStatus == "同意退款") {
-                    this.refundedList.push(order);
-                }
-            })
-            console.log(this.orderList);
-            console.log(this.doneList);
-            console.log(this.refundingList);
-            console.log(this.refundedList);
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.getOrderList();
     }
 }
 </script>

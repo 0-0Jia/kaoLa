@@ -6,22 +6,26 @@
         <div class="seat blueBg">
             <img src="/static/images/cardBg.png" class="seatBg"/>
             <div class="msg">
-                <div class="badge">体验卡</div>
-                <div class="price">￥9.99</div>
+                <div class="badge">{{mealMsg.name}}</div>
+                <div class="price">￥{{mealMsg.money}}</div>
             </div>
         </div>
         <div class="detail">
-            <msg-row name="已有数量" value="0张"></msg-row>
-            <msg-row name="费用总计" value="￥9.99"></msg-row>
+            <msg-row name="费用总计" :value="'￥' + mealMsg.money"></msg-row>
             <pay-methods 
                 :payMethods="payMethods" 
                 @choosePayMethod="choosePayMethod"
                 :choiceList="choiceList"
             >
             </pay-methods>
-            <div class="tip">注：32积分兑换一张体验卡</div>
+            <!-- <div class="tip">注：32积分兑换一张体验卡</div> -->
         </div>
-        <submit type="pay" @submit="submit"></submit>
+        <submit 
+            type="pay" 
+            @submit="submit" 
+            ableToClick
+            :money="mealMsg.money"
+        ></submit>
     </div>
 </template>
 
@@ -46,16 +50,14 @@ export default {
             }, {
                 name: "微信支付",
                 value: "wx"
-            }, {
-                name: "积分支付",
-                value: "point"
             }],
             hasDialog: false,
             dialog: {
                 title: "积分",
                 detail: "32分",
                 button: "确认兑换"
-            }
+            },
+            mealMsg: {}
         }
     },
     methods: {
@@ -67,15 +69,38 @@ export default {
             this.hasDialog = false;
         },
         submit() {
+            const mealMsg = this.mealMsg;
             if(this.payMethods == "restmoney") {    //余额支付则弹出窗口
-                
+                this.$wxhttp.post({
+                    url: '/customer/meal',
+                    data: {
+                        type: 1,
+                        meal: {
+                            mealId: mealMsg.mealId // 套餐唯一ID
+                        }
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                })
             } else if(this.payMethods == "wx") {    //微信支付则调用支付接口
 
-            } else if(this.payMethods == "point") {  //套餐支付
-                console.log("事件传递到了父组件");
-                this.hasDialog = true;
             }
+            //  else if(this.payMethods == "point") {  //套餐支付
+            //     console.log("事件传递到了父组件");
+            //     this.hasDialog = true;
+            // }
+        },
+        getMealMsg() {
+            const eventChannel = this.$mp.page.getOpenerEventChannel();
+            eventChannel.on('acceptMealMsg', data => {
+                this.mealMsg = data.mealMsg;
+                console.log(this.mealMsg);
+            })
         }
+    },
+    mounted() {
+        this.getMealMsg();
     }
 }
 </script>
@@ -108,7 +133,7 @@ export default {
     margin-top: 9px;
     margin-bottom: 9px;
     height: 46px;
-    width: 53px;
+    width: 200px;
 }
 .badge{
     font-size: 16px;
@@ -137,12 +162,12 @@ export default {
     background-color: white;
     padding-bottom: 16px;
 }
-.tip{
+/* .tip{
     font-size: 9px;
     color: #A8A8A8;
     margin-left: 16px;
     margin-top: 8px;
-}
+} */
 .hidden{
     visibility: hidden;
 }

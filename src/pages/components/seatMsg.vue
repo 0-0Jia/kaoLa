@@ -3,11 +3,11 @@
         <img src="/static/images/seatBg.png" class="seatBg"/>
         <div class="msg">
             <div class="badge">
-                <span class="type">格间区</span>
-                <span class="name">一号桌</span>
+                <span class="type">{{roomType}}</span>
+                <span class="name">{{sitId}}</span>
             </div>
             <div class="price" v-if="(father=='orderSubmission' || father=='timeOrder')">￥9.6/小时</div>
-            <div class="effect" v-if="(father=='orderDetail')">有效</div>
+            <!-- <div class="effect" v-if="(father=='orderDetail')">有效</div> -->
         </div>
     </div>
 </template>
@@ -16,7 +16,9 @@
 export default {
     name: "seatMsg",
     props: {
-        father: String
+        father: String,
+        roomType: String,
+        sitId: Number
     }
 }
 </script>

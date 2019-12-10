@@ -11,15 +11,21 @@
       </div>
     </div>
     <div class="myOrder" v-show="mode=='myOrder'">
-      <order-card effect></order-card>
-      <order-card></order-card>
+      <order-card 
+        v-for="(preservation, index) in preservationList"
+        :preservation="preservation"
+        :key="index"
+        @goOrderDetail="goOrderDetail"
+      ></order-card>
     </div>
-    <!-- 由于这里使用v-show的话给盒子加上的display:none的属性会和原本的flex属性值冲突，
-    无法不显示，所以这里改了另一种写法-->
     <div v-show="mode=='myMeal'">
-      <div class="mealShop">套餐商城</div>
+      <div class="mealShop" @click="goShop">套餐商城</div>
       <div class="myMeal">
-        <card v-for="(cardMsg, index) in cardMsgList" :key="index" :cardMsg="cardMsg"></card>
+        <card 
+          v-for="(cardMsg, index) in userMealList" 
+          :key="index" 
+          :cardMsg="cardMsg"
+        ></card>
       </div>
     </div>
   </div>
@@ -35,32 +41,25 @@ export default {
   },
   data() {
     return {
-      cardMsgList: [
-        {
-          title: "日卡",
-          detail: "双人位",
-          timeLimit: "无期限",
-          type: "daily"
-      },{
-          title: "月卡",
-          detail: "8:00-12:00全早",
-          timeLimit: "剩余1天",
-          type: "monthly"
-        },
-        {
-          title: "体验卡",
-          detail: null,
-          timeLimit: "无期限",
-          type: "try"
-        }
-      ],
-      mode: "myOrder"
+      mode: "myOrder",
+      preservationList: [],
+      userMealList: []
     };
   },
   methods: {
     meal() {
       this.mode = "myMeal";
-      console.log(this.mode);
+      this.$wxhttp.get({
+        url: '/customer/user/meal'
+      })
+      .then(res => {
+        console.log(res);
+        this.userMealList = res.data.mealList;
+        console.log(this.userMealList);
+      })
+      .catch(err => {
+        console.log(err);
+      })
     },
     order() {
       this.mode = "myOrder";
@@ -71,14 +70,27 @@ export default {
         url: '/customer/preservation'
       })
       .then(res => {
-        console.log(res);
+        this.preservationList = res.data.preservationList;
+        console.log(this.preservationList);
       })
       .catch(err => {
         console.log('error! ', err);
       })
+    },
+    goOrderDetail(preservation) {
+      mpvue.navigateTo({
+        url: '/pages/packageB/orderDetail/main',
+        success: function(res) {
+          res.eventChannel.emit('acceptPreservation', {preservation: preservation});
+        }
+      })
+    },
+    goShop() {
+      mpvue.navigateTo({
+        url: '/pages/packageB/mealShop/main'
+      })
     }
   },
-
   mounted: function() {
     wx.login({
       success(res) {

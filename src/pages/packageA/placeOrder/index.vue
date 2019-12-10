@@ -98,9 +98,9 @@ export default {
         // 请求某个房间的座位信息
         // 这个函数又臭又长 可是我没办法 时间来不及了555
         getSeatList() {
-            // /.${this.roomList[this.currentTypeIndex].roomType}
+            
             console.log(this.roomList[this.currentTypeIndex]);
-            const url = `/customer/sits/${this.storeId}/${this.roomList[this.currentTypeIndex].roomId}`;
+            const url = `/customer/sits/${this.storeId}/${this.roomList[this.currentTypeIndex].roomId}/${this.roomList[this.currentTypeIndex].roomType}`;
             console.log(url);
             this.$wxhttp.get({
                 url: url
@@ -160,6 +160,23 @@ export default {
             .catch(err => {
                 console.log("error! " ,err);
             })
+        },
+        toUtf8(str) {
+            // return (window.TextEncoder != null) ? function(str) {
+            //     let encoder = new TextEncoder('utf8');
+            //     let bytes = encoder.encode(str);
+            //     let result = '';
+            //     for(let i = 0; i < bytes.length; ++i) {
+            //         result += String.fromCharCode(bytes[i]);
+            //     }
+            //     return result;
+            // } : function(str) {
+            //     return eval('\''+encodeURI(str).replace(/%/gm, '\\x')+'\'');
+            // }
+            //  return str=str.replace(/[^\u0000-\u00FF]/g, function($0){
+            //     return escape($0).replace(/(%u)(\w{4})/gi,"&#x$2;")
+            // }); 
+            // unescape(obj.value.replace(/&#x/g,'%u').replace(/;/g));
         }
     },
     mounted() {
