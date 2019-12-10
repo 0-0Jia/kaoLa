@@ -1,7 +1,11 @@
 <template>
     <div>
         <!-- 座位信息表 -->
-        <seat-msg father="timeOrder"></seat-msg>
+        <seat-msg 
+            father="timeOrder"
+            :roomType="room.roomType" 
+            :sitId="seat.sitId"
+        ></seat-msg>
         <!-- 时间日期选择器 -->
         <time-choose 
             :isChoose="isChoose" 

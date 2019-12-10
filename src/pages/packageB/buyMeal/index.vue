@@ -74,7 +74,7 @@ export default {
                 this.$wxhttp.post({
                     url: '/customer/meal',
                     data: {
-                        type: 1,
+                        payType: 4,
                         meal: {
                             mealId: mealMsg.mealId // 套餐唯一ID
                         }
@@ -86,10 +86,6 @@ export default {
             } else if(this.payMethods == "wx") {    //微信支付则调用支付接口
 
             }
-            //  else if(this.payMethods == "point") {  //套餐支付
-            //     console.log("事件传递到了父组件");
-            //     this.hasDialog = true;
-            // }
         },
         getMealMsg() {
             const eventChannel = this.$mp.page.getOpenerEventChannel();
