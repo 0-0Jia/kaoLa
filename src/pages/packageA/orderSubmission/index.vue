@@ -3,7 +3,11 @@
         <div :class="{hidden: !hasDialog}">
             <a-dialog @close="closeDialog" :dialog="dialog"></a-dialog>
         </div>
-        <seat-msg father="orderSubmission"></seat-msg>
+        <seat-msg 
+            father="orderSubmission"
+            :roomType="roomType" 
+            :sitId="sitId" 
+        ></seat-msg>
         <div class="msg">
             <msg-row name="预约日期" :value="basicmsg.date"></msg-row>
             <msg-row name="已选时间" :value="basicmsg.choosedTime"></msg-row>
@@ -50,9 +54,6 @@ export default {
             payMethods: "wx",
             hasDialog: false,
             choiceList: [{
-                name: "余额支付",
-                value: "restmoney"
-            }, {
                 name: "微信支付",
                 value: "wx"
             }, {
@@ -65,7 +66,9 @@ export default {
                 button: "确认支付"
             },
             msg: {},
-            basicmsg: {}
+            basicmsg: {},
+            roomType: "",
+            sitId: ""
         }
     },
     methods: {
@@ -82,15 +85,13 @@ export default {
             this.hasDialog = false;
         },
         submit() {
-            if(this.payMethods == "restmoney") {    //余额支付则弹出窗口
-                this.hasDialog = true;
-            } else if(this.payMethods == "wx") {    //微信支付则调用支付接口
+            if(this.payMethods == "wx") {    //微信支付则调用支付接口
+                console.log(this.msg);
                 this.msg.payType = 1;
+                console.log(this.msg);
                 this.$wxhttp.post({
                     url: '/customer/sits',
-                    data: {
-                        msg: this.msg
-                    }
+                    data: this.msg
                 })
                 .then(res => {
                     console.log(res);
@@ -106,6 +107,8 @@ export default {
             const eventChannel = this.$mp.page.getOpenerEventChannel();
             eventChannel.on('acceptPayMsg', data => {
                 this.msg = data;
+                this.roomType = data.room.roomType;
+                this.sitId = data.sitId;
             });
             eventChannel.on('acceptBasicMsg', data => {
                 this.basicmsg = data;
