@@ -123,6 +123,9 @@ export default {
       }
     });
     this.getOrderList();
+    wx.setNavigationBarTitle({
+      title: "我的订单"
+    });
   }
 };
 </script>

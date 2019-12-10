@@ -57,6 +57,9 @@ export default {
     },
     mounted() {
         this.getPreservation();
+        wx.setNavigationBarTitle({
+            title: "预约详情"
+        });
     }
 }
 </script>

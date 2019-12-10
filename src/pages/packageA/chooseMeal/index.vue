@@ -44,6 +44,9 @@ export default {
     },
     mounted() {
         this.getUserMeal();  
+        wx.setNavigationBarTitle({
+            title: "选择套餐"
+        });
     },
     methods: {
         getUserMeal() {

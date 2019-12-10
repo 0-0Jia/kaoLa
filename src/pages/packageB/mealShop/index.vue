@@ -48,6 +48,9 @@ export default {
     },
     mounted() {
         this.getMealList();
+        wx.setNavigationBarTitle({
+            title: "套餐商城"
+        });
     }
 }
 </script>

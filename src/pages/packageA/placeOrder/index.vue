@@ -189,6 +189,9 @@ export default {
     },
     mounted() {
         this.getRoomList();
+        wx.setNavigationBarTitle({
+            title: "预约座位"
+        });
     }
 }
 </script>

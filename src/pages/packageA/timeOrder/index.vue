@@ -126,6 +126,9 @@ export default {
         console.log(this.seat.curDate);
         console.log(this.seat.curDate[0]);
         this.currentDate = this.seat.curDate[0].value;
+        wx.setNavigationBarTitle({
+            title: "预约时间"
+        });
     }
 }
 </script>

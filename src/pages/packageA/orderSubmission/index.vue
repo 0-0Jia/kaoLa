@@ -211,6 +211,9 @@ export default {
   },
   mounted() {
     this.getPayMsg();
+    wx.setNavigationBarTitle({
+      title: "提交预约"
+    });
   }
 };
 </script>

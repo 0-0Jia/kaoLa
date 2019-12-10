@@ -162,6 +162,9 @@ export default {
   },
   mounted() {
     this.getMealMsg();
+    wx.setNavigationBarTitle({
+      title: "购买套餐"
+    });
   }
 };
 </script>
