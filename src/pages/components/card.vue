@@ -2,6 +2,7 @@
     <div 
         class="card blueBg"
         :cardMsg="cardMsg"
+        @click="goBuyMeal"
     >
         <img src="/static/images/cardBg.png" class="cardBg"/>
         <div class="msg">
@@ -23,6 +24,13 @@ export default {
     },
     mounted() {
         console.log(this.cardMsg);
+    },
+    methods: {
+        goBuyMeal() {
+            if(this.cardMsg.status == null) {
+                this.$emit('goBuyMeal', this.cardMsg);
+            }
+        }
     }
 }
 </script>

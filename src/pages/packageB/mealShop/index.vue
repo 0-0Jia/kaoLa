@@ -5,6 +5,7 @@
                 v-for="(cardMsg, index) in mealList" 
                 :key="index" 
                 :cardMsg="cardMsg"
+                @goBuyMeal="goBuyMeal"
             >
             </card>
         </div>
@@ -19,22 +20,6 @@ export default {
     },
     data() {
         return {
-            cardMsgList: [{
-                title: "日卡",
-                detail: "双人位",
-                timeLimit: "无期限",
-                type: "daily"
-            },{
-                title: "月卡",
-                detail: "8:00-12:00全早",
-                timeLimit: "剩余1天",
-                type: "monthly"
-            },{
-                title: "体验卡",
-                detail: null,
-                timeLimit: "无期限",
-                type: "try"
-            }],
             mealList: []
         };
     },
@@ -50,6 +35,14 @@ export default {
             })
             .catch(err => {
                 console.log(err);
+            })
+        },
+        goBuyMeal(mealMsg) {
+            mpvue.navigateTo({
+                url: '/pages/packageB/buyMeal/main',
+                success(res) {
+                    res.eventChannel.emit('acceptMealMsg', {mealMsg: mealMsg});
+                }
             })
         }
     },

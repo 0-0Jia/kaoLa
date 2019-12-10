@@ -18,12 +18,12 @@
                     :value="choiceList[1].value"
                 ></pay-choice>
             </div>
-            <pay-choice 
+            <!-- <pay-choice 
                 @choosePayMethod="choosePayMethod" 
                 :choice="choiceList[2].name" 
                 :payMethods="payMethods" 
                 :value="choiceList[2].value"
-            ></pay-choice>
+            ></pay-choice> -->
         </div>    
     </div>
 </template>
