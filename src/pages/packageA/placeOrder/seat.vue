@@ -3,7 +3,7 @@
         <img class="seatBg" src="/static/images/seatBg.png"/>
         <div class="name">{{sitId}}</div>
         <div class="price">{{money}}元/小时</div>
-        <div :class="[{'redFont': !preserved}, 'status']">{{status}}</div>
+        <div :class="[{'redFont': (!ifPreserved)}, 'status']">{{status}}</div>
     </div>
 </template>
 
@@ -11,7 +11,8 @@
 export default {
     name: "seat",
     props: {
-        seat: Object
+        seat: Object,
+        ifPreserved: Boolean
     },
     methods: {
         goChooseTime() {
@@ -21,7 +22,7 @@ export default {
     },
     computed: {
         status() {
-            if(this.seat) return (this.seat.preserved == 1)?"可预约":"已满";
+            if(this.seat) return (this.ifPreserved)?"可预约":"已满";
             else return '';
         },
         sitId() {

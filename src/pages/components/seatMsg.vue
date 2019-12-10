@@ -6,7 +6,7 @@
                 <span class="type">{{roomType}}</span>
                 <span class="name">{{sitId}}</span>
             </div>
-            <div class="price" v-if="(father=='orderSubmission' || father=='timeOrder')">￥9.6/小时</div>
+            <div class="price" v-if="(father=='orderSubmission' || father=='timeOrder')">{{price}}元/小时</div>
             <!-- <div class="effect" v-if="(father=='orderDetail')">有效</div> -->
         </div>
     </div>
@@ -18,7 +18,8 @@ export default {
     props: {
         father: String,
         roomType: String,
-        sitId: Number
+        sitId: Number,
+        price: Number
     }
 }
 </script>

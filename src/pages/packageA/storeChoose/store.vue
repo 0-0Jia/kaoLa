@@ -14,9 +14,9 @@
         </div>
         <div class="handle">
             <div class="order" @click="goDetail()">预约</div>
-            <div class="goStore">去门店</div>
+            <!-- <div class="goStore">去门店</div> -->
         </div>
-        <img class="phone" src="/static/images/phone.png"/>
+        <!-- <img class="phone" src="/static/images/phone.png"/> -->
     </div>
 </template>
 
@@ -76,11 +76,11 @@ export default {
 }
 .address{
     margin-top: 4px;
-    height: 32px;
+    height: 48px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
 .address, .workTime{

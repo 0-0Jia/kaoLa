@@ -3,7 +3,7 @@
         <div class="row">
             <span>{{name}}</span>
             <div class="rowValue">
-                <span>{{value}}</span>   
+                <span class="ell">{{value}}</span>   
             </div>
         </div>
         <div class="bar" v-if="!nobar"></div>
@@ -47,6 +47,14 @@ export default {
 .rowValue{
     position: absolute;
     right: 0;
+}
+.ell{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 250px;
+    text-align: right;
 }
 .bar{
     position: absolute;

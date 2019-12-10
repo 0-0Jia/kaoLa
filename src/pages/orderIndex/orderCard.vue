@@ -7,9 +7,9 @@
             <p class="date">{{date}}</p>
             <p class="time">{{time}}</p>
         </div>
-        <!-- <div class="button">
-            <div :class="[{'greenBorder': effect}, 'effect']">{{effectText}}</div>
-        </div> -->
+        <div class="button" @click.stop="openDoor">
+            <div class="greenBorder effect">开门</div>
+        </div>
     </div>
 </template>
 
@@ -30,6 +30,9 @@ export default {
     methods: {
         handleClick() {
             this.$emit('goOrderDetail', this.preservation);
+        },
+        openDoor() {
+            this.$emit('openDoor', this.preservation);
         }
     }
 }
