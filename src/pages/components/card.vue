@@ -1,19 +1,16 @@
 <template>
     <div 
-        :class="[
-            (cardMsg.type=='daily')?'yellowBg':'',
-            (cardMsg.type=='monthly')?'pickBg':'',
-            (cardMsg.type=='try')?'blueBg':'',
-            'card']"
+        class="card blueBg"
         :cardMsg="cardMsg"
     >
         <img src="/static/images/cardBg.png" class="cardBg"/>
         <div class="msg">
             <div class="name">
-                <div class="title">{{cardMsg.title}}</div>
-                <div :class="[{'hidden': !cardMsg.detail}, 'detail']">{{cardMsg.detail}}</div>
+                <div class="title">{{cardMsg.name}}</div>
+                <div :class="[{'hidden': !cardMsg.mealDesc}, 'detail']">{{cardMsg.mealDesc}}</div>
             </div>
-            <div class="timeLimit">{{cardMsg.timeLimit}}</div>
+            <div class="timeLimit" v-if="!cardMsg.status">时效：{{cardMsg.mealDays}}天</div>
+            <div class="timeLimit" v-else>剩余：{{cardMsg.rareDays}}天</div>
         </div>
     </div>
 </template>
@@ -23,6 +20,9 @@ export default {
     name: "card",
     props: {
         cardMsg: Object
+    },
+    mounted() {
+        console.log(this.cardMsg);
     }
 }
 </script>
@@ -51,11 +51,17 @@ export default {
     font-size: 16px;
     font-weight: bold;
     text-align: right;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .detail{
     font-size: 9px;
     margin-top: 3px;
     text-align: right;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .timeLimit{
     font-size: 12px;

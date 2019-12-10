@@ -1,15 +1,15 @@
 <template>
-    <div class="orderCard">
+    <div class="orderCard" @click="handleClick">
         <img src="/static/images/logo.png" class="logo" />
         <div class="msg">
-            <p class="title">考拉自习室</p>
-            <p class="detail">格间区 一号桌</p>
-            <p class="date">2019-11-16</p>
-            <p class="time">8:00-9:00, 9:00-10:00, 17:00-18:00</p>
+            <p class="title">{{preservation.roomId}}</p>
+            <p class="detail">{{preservation.roomType}} {{preservation.sitId}}</p>
+            <p class="date">{{date}}</p>
+            <p class="time">{{time}}</p>
         </div>
-        <div class="button">
+        <!-- <div class="button">
             <div :class="[{'greenBorder': effect}, 'effect']">{{effectText}}</div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -17,14 +17,19 @@
 export default {
     name: "orderCard",
     props: {
-        effect: Boolean
-    },
-    created() {
-
+        preservation: Object,
     },
     computed: {
-        effectText() {
-            return this.effect?"有效":"失效"
+        date() {
+            return this.preservation.preservationDate.split(' ')[0];
+        },
+        time() {
+            return this.preservation.preservationDate.split(' ')[1];
+        }
+    },
+    methods: {
+        handleClick() {
+            this.$emit('goOrderDetail', this.preservation);
         }
     }
 }
@@ -100,5 +105,12 @@ export default {
 .greenBorder{
     color: #44644A;
     border-color: #44644A;
+}
+.time{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 </style>

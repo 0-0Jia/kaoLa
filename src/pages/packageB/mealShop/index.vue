@@ -2,7 +2,7 @@
     <div>
         <div class="card">
             <card 
-                v-for="(cardMsg, index) in cardMsgList" 
+                v-for="(cardMsg, index) in mealList" 
                 :key="index" 
                 :cardMsg="cardMsg"
             >
@@ -34,8 +34,27 @@ export default {
                 detail: null,
                 timeLimit: "无期限",
                 type: "try"
-            }]
+            }],
+            mealList: []
         };
+    },
+    methods: {
+        getMealList() {
+            this.$wxhttp.get({
+                url: '/customer/meal'
+            })
+            .then(res => {
+                console.log(res);
+                this.mealList = res.data.mealList;
+                console.log(this.mealList);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+    },
+    mounted() {
+        this.getMealList();
     }
 }
 </script>
