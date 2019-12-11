@@ -33,6 +33,16 @@ export default {
       dateArray: []
     };
   },
+  onShow() {
+    //查询签到
+    this.punchedList = [];
+    this.dateArray = [];
+    this.getData();
+    setTimeout(() => {
+      //设置日期
+      this.getCurDate();
+    }, 500);
+  },
   methods: {
     getCurDate() {
       let d = new Date();
@@ -98,7 +108,9 @@ export default {
         .then(res => {
           console.log(`后台交互拿回数据:`, res);
           for (let j = 0; j < res.data.signedonList.length; j++) {
-            let punchedDate = res.data.signedonList[j].dateTime.split("-")[2].replace(/\b(0+)/gi, "");
+            let punchedDate = res.data.signedonList[j].dateTime
+              .split("-")[2]
+              .replace(/\b(0+)/gi, "");
             this.punchedList.push(punchedDate);
           }
           console.log(this.punchedList);
@@ -114,7 +126,7 @@ export default {
     setTimeout(() => {
       //设置日期
       this.getCurDate();
-    }, 200);
+    }, 500);
   }
 };
 </script>

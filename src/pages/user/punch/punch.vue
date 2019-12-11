@@ -42,7 +42,7 @@ export default {
           wx.hideLoading();
           console.log(`后台数据:`, res);
           if (res.msg == "操作成功") {
-            // this.onLoad();
+            this.onLoad();
             wx.showToast({
               title: "成功",
               icon: "success",

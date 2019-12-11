@@ -95,6 +95,7 @@ export default {
         url: '/customer/preservation'
       })
       .then(res => {
+<<<<<<< HEAD
         wx.hideLoading();
         if(res.code!=0){
           wx.showToast({
@@ -105,6 +106,11 @@ export default {
         } else if(res.code==0){
           this.preservationList = res.data.preservationList;
         }
+=======
+        this.preservationList = res.data.preservationList;
+        console.log(this.preservationList);
+        console.log("订单数据",res)
+>>>>>>> guijia
       })
       .catch(err => {
         console.log('error! ', err);
@@ -171,14 +177,6 @@ export default {
     }
   },
   mounted: function() {
-    wx.login({
-      success(res) {
-        if (res.code) {
-          console.log(res.code);
-          // 这里可以把code传给后台，后台用此获取openid及session_key
-        }
-      }
-    });
     this.getOrderList();
     wx.setNavigationBarTitle({
       title: "我的订单"
