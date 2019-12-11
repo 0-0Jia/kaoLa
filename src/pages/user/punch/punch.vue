@@ -31,11 +31,15 @@ export default {
 
   methods: {
     punchRequest() {
+      wx.showLoading({
+        title: "加载中"
+      })
       this.$wxhttp
         .post({
           url: "/customer/signedon"
         })
         .then(res => {
+          wx.hideLoading();
           console.log(`后台数据:`, res);
           if (res.msg == "操作成功") {
             // this.onLoad();
@@ -53,6 +57,7 @@ export default {
         })
         .catch(err => {
           console.log(`err:`, err);
+          wx.hideLoading();
         });
     },
     tapDate(data) {

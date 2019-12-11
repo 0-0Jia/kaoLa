@@ -17,8 +17,14 @@ export default {
   mounted() {},
   methods: {
     goOrder() {
+      wx.showLoading({
+          title: '加载中',
+      })
       wx.navigateTo({
-        url: "/pages/packageA/storeChoose/main"
+        url: "/pages/packageA/storeChoose/main",
+        success() {
+          wx.hideLoading();
+        }
       });
     },
     scanCode() {

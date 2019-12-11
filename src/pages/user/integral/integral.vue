@@ -31,8 +31,14 @@ export default {
 
   methods: {
     jumpPunch() {
+      wx.showLoading({
+        title: "加载中"
+      })
       wx.navigateTo({
-        url: "/pages/user/punch/main"
+        url: "/pages/user/punch/main",
+        success() {
+          wx.hideLoading();
+        }
       });
     }
   }

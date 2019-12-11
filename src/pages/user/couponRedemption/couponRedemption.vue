@@ -26,6 +26,9 @@ export default {
 
   methods: {
     couponRedemption() {
+      wx.showLoading({
+        title: "加载中"
+      })
       this.$wxhttp
         .post({
           url: "/customer/groupon",
@@ -34,6 +37,7 @@ export default {
           }
         })
         .then(res => {
+          wx.hideLoading();
           if (res.msg == "操作成功") {
             wx.showToast({
               title: "兑换成功",

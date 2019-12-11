@@ -3,7 +3,7 @@
         <!-- 座位信息表 -->
         <seat-msg 
             father="timeOrder"
-            :roomType="room.roomType" 
+            :roomType="room.roomType+room.roomId" 
             :sitId="seat.sitId"
             :price="seat.money"
         ></seat-msg>
@@ -55,17 +55,19 @@ export default {
     methods: {
         goPay() {
             const time = this.currentDate + " " + this.choosedTime;
-            // console.log(time);
-            // console.log("现在跳转到支付页面");
             const seat = this.seat;
             const room = this.room;
             const money = this.money;
             const currentDate = this.currentDate;
             const choosedTime = this.choosedTime;
             const storeName = this.storeName;
+            wx.showLoading({
+                title: "加载中"
+            });
             mpvue.navigateTo({
                 url: "/pages/packageA/orderSubmission/main",
                 success: function(res) {
+                    wx.hideLoading();
                     res.eventChannel.emit('acceptPayMsg', {
                         sitId: seat.sitId,
                         time: time,
