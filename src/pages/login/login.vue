@@ -20,6 +20,21 @@ export default {
   },
 
   mounted: function() {
+    wx.checkSession({
+      //检测当前用户的session_key是否过期
+      success: function() {
+        //session_key 未过期，并且在本生命周期一直有效
+        console.log("授权未过期");
+        // 跳转
+        // wx.switchTab({
+        //   url: "/pages/index/main"
+        // });
+      },
+      fail: function() {
+        //session_key 已经失效，需要重新执行登录流程
+        console.log("授权过期");
+      }
+    });
     // const that = this;
     // wx.login({
     //   //用户登录
@@ -74,15 +89,16 @@ export default {
                       console.log(res, "用户信息");
                       wx.setStorageSync("userInfo", res.userInfo);
                       let user = res;
+                      console.log(user);
                       that.$wxhttp
                         .post({
                           url: "/customer/login",
                           data: {
                             code: that.code,
-                            // rawData: user.rawData,
-                            // signature: user.signature,
-                            // encryptedData: user.encryptedData,
-                            // iv: user.iv
+                            rawData: JSON.parse(user.rawData),
+                            signature: user.signature,
+                            encryptedData: user.encryptedData,
+                            iv: user.iv
                           }
                         })
                         .then(res => {
