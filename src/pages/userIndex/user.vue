@@ -6,12 +6,9 @@
         :style=" 
      {backgroundImage:'url('+userPhoto+')'}"
         @click="changeAvatar"
-      ></div> -->
-      <div
-        class="avatar"
-        :style=" 
-     {backgroundImage:'url('+userPhoto+')'}"
-      ></div>
+      ></div>-->
+      <div class="avatar" :style=" 
+     {backgroundImage:'url('+userPhoto+')'}"></div>
       <p class="user-name">{{userData.name? userData.name : name}}</p>
       <p class="user-phone">{{userData.tel? userData.tel : "123456789"}}</p>
       <div class="integral-balance-card">
