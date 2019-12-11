@@ -8,7 +8,7 @@
                     :key="index"
                     @click="changeRoomType(index)"
                 >
-                    <span :class="(index == currentTypeIndex)?'greenFont':''">{{type}}</span>
+                    <span :class="(index == currentTypeIndex)?'greenFont':''">{{type}}{{roomList[index].roomId}}</span>
                     <div v-if="index == currentTypeIndex" class="greenBar"></div>
                 </div>
             </div>
@@ -50,12 +50,16 @@ export default {
     methods: {
         // 跳转到时间预约页面
         goChooseTime(seat) {
+            wx.showLoading({
+                title: '加载中',
+            })
             const room = this.roomList[this.currentTypeIndex];
             const storeName = this.storeName;
             console.log(room);
             mpvue.navigateTo({
                 url: `/pages/packageA/timeOrder/main`,
                 success: function(res) {
+                    wx.hideLoading();
                     res.eventChannel.emit('acceptSeatId', {seat});
                     res.eventChannel.emit('acceptRoomList', {room: room});
                     res.eventChannel.emit('acceptStoreName', {storeName: storeName});
@@ -64,6 +68,9 @@ export default {
         },
         //从上个页面获取数据
         getRoomList() {
+            wx.showLoading({
+                title: '加载中',
+            })
             const eventChannel = this.$mp.page.getOpenerEventChannel();
             eventChannel.on('acceptStore', data => {
                 console.log(data.data);
@@ -75,19 +82,34 @@ export default {
                 })
                 .then(res => {
                     // 将得到的房间列表存起来
-                    this.roomList = res.data.roomList;
-                    // 更新房间类型数组
-                    this.roomTypeList = [];
-                    res.data.roomList.forEach(room => {
-                        this.roomTypeList.push(room.roomType);
-                    })
-                    //获取座位表
-                    if(this.roomTypeList.length > 0) {
-                        this.getSeatList();
+                    wx.hideLoading();
+                    if(res.code!=0){
+                        wx.showToast({
+                            title: res.msg,
+                            icon: 'none',
+                            duration: 2000
+                        })
+                    } else if(res.code==0){
+                        this.roomList = res.data.roomList;
+                        // 更新房间类型数组
+                        this.roomTypeList = [];
+                        res.data.roomList.forEach(room => {
+                            this.roomTypeList.push(room.roomType);
+                        })
+                        //获取座位表
+                        if(this.roomTypeList.length > 0) {
+                            this.getSeatList();
+                        }
                     }
                 })
                 .catch(err => {
                     console.log("error! ", err);
+                    wx.hideLoading();
+                    wx.showToast({
+                        title: '房间列表获取失败',
+                        icon: 'none',
+                        duration: 2000
+                    })
                 })
             })
         },
@@ -101,7 +123,9 @@ export default {
         // 请求某个房间的座位信息
         // 这个函数又臭又长 可是我没办法 时间来不及了555
         getSeatList() {
-            
+            wx.showLoading({
+                title: '加载中',
+            })
             console.log(this.roomList[this.currentTypeIndex]);
             const url = `/customer/sits/${this.storeId}/${this.roomList[this.currentTypeIndex].roomId}/${this.roomList[this.currentTypeIndex].roomType}`;
             console.log(url);
@@ -109,81 +133,97 @@ export default {
                 url: url
             })
             .then(res => {
-                this.seatList = [];
-                const sitList = res.data.sitList;
-                if(sitList.length > 0) {
-                    let tempseat = {};
-                    tempseat.curDate = [];
-                    //用一个临时变量存储日期再存进数组
-                    let tempCurDate = {};
-                    tempCurDate.value = sitList[0].curDate;
-                    tempCurDate.sitDate = [];
-                    tempCurDate.sitDate.push(sitList[0].sitDate);
-                    tempseat.curDate.push(tempCurDate);
-                    tempseat.sitId = sitList[0].sitId;
-                    tempseat.money = sitList[0].money;
-                    tempseat.preserved  = sitList[0].preserved;
-                    this.seatList.push(tempseat);
-                    console.log(this.seatList, "0");
-                    sitList.forEach(sit => {
-                        for(let i = 0; i < this.seatList.length; i++){
-                            const seat = this.seatList[i];
-                            if(seat.sitId == sit.sitId) {
-                                if(seat.curDate[0]&&seat.curDate[0].value == sit.curDate) {
-                                    // 如果日期已经在座位里，只需把时间段加到该日期里
-                                    if(sit.preserved != 1){ //如果作为没有被预定，则把时间段加进去
-                                        this.seatList[i].curDate[0].sitDate.push(sit.sitDate);
+                wx.hideLoading();
+                if(res.code!=0){
+                    wx.showToast({
+                        title: res.msg,
+                        icon: 'none',
+                        duration: 2000
+                    })
+                } else if(res.code==0) {
+                    this.seatList = [];
+                    const sitList = res.data.sitList;
+                    if(sitList.length > 0) {
+                        let tempseat = {};
+                        tempseat.curDate = [];
+                        //用一个临时变量存储日期再存进数组
+                        let tempCurDate = {};
+                        tempCurDate.value = sitList[0].curDate;
+                        tempCurDate.sitDate = [];
+                        tempCurDate.sitDate.push(sitList[0].sitDate);
+                        tempseat.curDate.push(tempCurDate);
+                        tempseat.sitId = sitList[0].sitId;
+                        tempseat.money = sitList[0].money;
+                        tempseat.preserved  = sitList[0].preserved;
+                        this.seatList.push(tempseat);
+                        console.log(this.seatList, "0");
+                        sitList.forEach(sit => {
+                            for(let i = 0; i < this.seatList.length; i++){
+                                const seat = this.seatList[i];
+                                if(seat.sitId == sit.sitId) {
+                                    if(seat.curDate[0]&&seat.curDate[0].value == sit.curDate) {
+                                        // 如果日期已经在座位里，只需把时间段加到该日期里
+                                        if(sit.preserved != 1){ //如果作为没有被预定，则把时间段加进去
+                                            this.seatList[i].curDate[0].sitDate.push(sit.sitDate);
+                                        }
+                                        return;
                                     }
+                                    if(seat.curDate[1]&&seat.curDate[1].value == sit.curDate) {
+                                        if(sit.preserved != 1){ //如果作为没有被预定，则把时间段加进去
+                                            this.seatList[i].curDate[1].sitDate.push(sit.sitDate);
+                                        }
+                                        return ;
+                                    }
+                                    // 如果日期还不存在于座位里，则新建一个日期存放时间段
+                                    let tempCurDate = {};
+                                    tempCurDate.value = sit.curDate;
+                                    tempCurDate.sitDate = [];
+                                    if(sit.preserved != 1){
+                                        tempCurDate.sitDate.push(sit.sitDate);
+                                    }
+                                    seat.curDate.push(tempCurDate);
+                                    return;  
+                                }
+                                // 如果数组中还没有该sitId，则将基本信息都加进去
+                                if(i == this.seatList.length-1 && seat.sitId != sit.sitId) {
+                                    let tseat = {}
+                                    tseat.curDate = [];
+                                    let tempCurDate = {};
+                                    tempCurDate.value = sit.curDate;
+                                    tempCurDate.sitDate = [];
+                                    if(sit.preserved != 1) {
+                                        tempCurDate.sitDate.push(sit.sitDate);
+                                    }
+                                    tseat.curDate.push(tempCurDate);
+                                    tseat.sitId = sit.sitId;
+                                    tseat.money = sit.money;
+                                    tseat.preserved  = sit.preserved;
+                                    this.seatList.push(tseat);
                                     return;
                                 }
-                                if(seat.curDate[1]&&seat.curDate[1].value == sit.curDate) {
-                                    if(sit.preserved != 1){ //如果作为没有被预定，则把时间段加进去
-                                        this.seatList[i].curDate[1].sitDate.push(sit.sitDate);
-                                    }
-                                    return ;
-                                }
-                                // 如果日期还不存在于座位里，则新建一个日期存放时间段
-                                let tempCurDate = {};
-                                tempCurDate.value = sit.curDate;
-                                tempCurDate.sitDate = [];
-                                if(sit.preserved != 1){
-                                    tempCurDate.sitDate.push(sit.sitDate);
-                                }
-                                seat.curDate.push(tempCurDate);
-                                return;  
                             }
-                            // 如果数组中还没有该sitId，则将基本信息都加进去
-                            if(i == this.seatList.length-1 && seat.sitId != sit.sitId) {
-                                let tseat = {}
-                                tseat.curDate = [];
-                                let tempCurDate = {};
-                                tempCurDate.value = sit.curDate;
-                                tempCurDate.sitDate = [];
-                                if(sit.preserved != 1) {
-                                    tempCurDate.sitDate.push(sit.sitDate);
-                                }
-                                tseat.curDate.push(tempCurDate);
-                                tseat.sitId = sit.sitId;
-                                tseat.money = sit.money;
-                                tseat.preserved  = sit.preserved;
-                                this.seatList.push(tseat);
-                                return;
+                        });
+                        for(let i = 0; i < this.seatList.length; i++) {
+                            //如果座位里有时间段可以选择，则设置为可预定
+                            if(this.seatList[i].curDate[0].sitDate.length > 0 || this.seatList[i].curDate[1].sitDate.length) {
+                                this.preservedFlag[i] = true;
+                            } else{
+                                this.preservedFlag[i] = false;
                             }
                         }
-                    });
-                    for(let i = 0; i < this.seatList.length; i++) {
-                        //如果座位里有时间段可以选择，则设置为可预定
-                        if(this.seatList[i].curDate[0].sitDate.length > 0 || this.seatList[i].curDate[1].sitDate.length) {
-                            this.preservedFlag[i] = true;
-                        } else{
-                            this.preservedFlag[i] = false;
-                        }
+                        console.log(this.preservedFlag)
                     }
-                    console.log(this.preservedFlag)
                 }
             })
             .catch(err => {
                 console.log("error! " ,err);
+                //如果座位列表获取失败，则显示加载失败
+                wx.hideLoading();
+                wx.showToast({
+                    title: '座位列表获取失败',
+                    icon: 'none',
+                    duration: 2000
+                })
             })
         }
     },

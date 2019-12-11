@@ -33,8 +33,14 @@ export default {
 
   methods: {
     jumpRecharge() {
+      wx.showLoading({
+        title: "加载中"
+      })
       wx.navigateTo({
-        url: "/pages/user/balance/balanceRecharge/main"
+        url: "/pages/user/balance/balanceRecharge/main",
+        success() {
+          wx.hideLoading();
+        }
       });
     }
   }

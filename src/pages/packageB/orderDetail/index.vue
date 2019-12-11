@@ -8,7 +8,7 @@
         <div class="msg">
             <msg-row name="预约日期" :value="date"></msg-row>
             <msg-row name="已选时间" :value="time"></msg-row>
-            <msg-row name="所在门店" value="考拉自习室" nobar></msg-row> 
+            <msg-row name="所在门店" :value="storeName" nobar></msg-row> 
             <!-- <msg-row name="费用总计" :value="'￥' + preservation.money" nobar></msg-row> -->
         </div>
         <!-- <div class="refund" @click="showModal()">退款</div> -->
@@ -27,7 +27,8 @@ export default {
         return {
             preservation: {},
             date: '',
-            time: ''
+            time: '',
+            storeName: ''
         }
     },
     methods: {
@@ -52,6 +53,7 @@ export default {
                 console.log(this.preservation);
                 this.date = this.preservation.preservationDate.split(' ')[0];
                 this.time = this.preservation.preservationDate.split(' ')[1];
+                this.storeName = this.preservation.storeName;
             })
         }
     },

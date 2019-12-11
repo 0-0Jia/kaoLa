@@ -10,7 +10,7 @@
         <div class="greenBar" v-show="mode=='myMeal'"></div>
       </div>
     </div>
-    <div class="myOrder" v-show="mode=='myOrder'">
+    <div class="myOrder" v-show="mode=='myOrder'" v-if="preservationList.length > 0">
       <order-card 
         v-for="(preservation, index) in preservationList"
         :preservation="preservation"
@@ -19,15 +19,17 @@
         @openDoor="openDoor"
       ></order-card>
     </div>
+    <div v-show="mode=='myOrder'" v-else class="else">暂无预约</div>
     <div v-show="mode=='myMeal'">
       <div class="mealShop" @click="goShop">套餐商城</div>
-      <div class="myMeal">
+      <div class="myMeal" v-if="userMealList.length > 0">
         <card 
           v-for="(cardMsg, index) in userMealList" 
           :key="index" 
           :cardMsg="cardMsg"
         ></card>
       </div>
+      <div v-else class="else">无已购买套餐</div>
     </div>
   </div>
 </template>
@@ -50,20 +52,41 @@ export default {
   methods: {
     meal() {
       this.mode = "myMeal";
+      wx.showLoading({
+          title: '加载中',
+      })
       this.$wxhttp.get({
         url: '/customer/user/meal'
       })
       .then(res => {
         console.log(res);
-        this.userMealList = res.data.mealList;
-        console.log(this.userMealList);
+        wx.hideLoading();
+        if(res.code!=0){
+          wx.showToast({
+            title: res.msg,
+            icon: 'none',
+            duration: 2000
+          })
+        } else if(res.code==0) {
+          this.userMealList = res.data.mealList;
+          console.log(this.userMealList);
+        }
       })
       .catch(err => {
         console.log(err);
+        wx.hideLoading();
+        wx.showToast({
+          title: "加载失败",
+          icon: 'none',
+          duration: 2000
+        })
       })
     },
     order() {
       this.mode = "myOrder";
+      wx.showLoading({
+          title: '加载中',
+      })
       this.getOrderList();
       console.log(this.mode);
     },
@@ -72,27 +95,54 @@ export default {
         url: '/customer/preservation'
       })
       .then(res => {
-        this.preservationList = res.data.preservationList;
-        console.log(this.preservationList);
+        wx.hideLoading();
+        if(res.code!=0){
+          wx.showToast({
+            title: res.msg,
+            icon: 'none',
+            duration: 2000
+          })
+        } else if(res.code==0){
+          this.preservationList = res.data.preservationList;
+        }
       })
       .catch(err => {
         console.log('error! ', err);
+        wx.hideLoading();
+        wx.showToast({
+          title: "加载失败",
+          icon: 'none',
+          duration: 2000
+        })
       })
     },
     goOrderDetail(preservation) {
+      wx.showLoading({
+          title: '加载中',
+      })
       mpvue.navigateTo({
         url: '/pages/packageB/orderDetail/main',
         success: function(res) {
+          wx.hideLoading();
           res.eventChannel.emit('acceptPreservation', {preservation: preservation});
         }
       })
     },
     goShop() {
+      wx.showLoading({
+          title: '加载中',
+      })
       mpvue.navigateTo({
-        url: '/pages/packageB/mealShop/main'
+        url: '/pages/packageB/mealShop/main',
+        success() {
+          wx.hideLoading();
+        }
       })
     },
     openDoor(preservation) {
+      wx.showLoading({
+          title: '加载中',
+      })
       this.$wxhttp.post({
         url: '/customer/opendoor',
         data: {
@@ -102,6 +152,7 @@ export default {
       })
       .then(res => {
         console.log(res);
+        wx.hideLoading();
         wx.showToast({
           title: res.msg,
           icon: 'none',
@@ -110,6 +161,12 @@ export default {
       })
       .catch(err => {
         console.log(err)
+        wx.hideLoading();
+        wx.showToast({
+          title: "加载失败",
+          icon: 'none',
+          duration: 2000
+        })
       })
     }
   },
@@ -189,5 +246,14 @@ export default {
   text-align: center;
   line-height: 32px;
   font-size: 12px;
+}
+.else{
+    color: #44644A;
+    opacity: 0.5;
+    font-weight: bold;
+    font-size: 32px;
+    text-align: center;
+    position: relative;
+    top: 200px;
 }
 </style>

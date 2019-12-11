@@ -61,6 +61,7 @@ export default {
     font-size: 16px;
     font-weight: bold;
     margin-top: 8px;
+    text-align: right;
 }
 .effect{
     width: 48px;

@@ -5,7 +5,7 @@
     </div>
     <seat-msg 
       father="orderSubmission" 
-      :roomType="roomType" 
+      :roomType="room" 
       :sitId="sitId"
       :price="basicmsg.price"
     ></seat-msg>
@@ -65,7 +65,7 @@ export default {
       },
       msg: {},
       basicmsg: {},
-      roomType: "",
+      room: "",
       sitId: "",
       choosedMeal: {},
       mealName: "",
@@ -81,9 +81,13 @@ export default {
     goChooseMeal() {
       let temp = this.choosedMeal;
       let passValue = this.passValue;
+      wx.showLoading({
+        title: "加载中"
+      })
       wx.navigateTo({
         url: "/pages/packageA/chooseMeal/main",
         success(res) {
+          wx.hideLoading();
           res.eventChannel.on('acceptChoosedMeal', data => {
             temp = data.meal;
             passValue(temp);
@@ -135,11 +139,15 @@ export default {
         //套餐支付
           this.msg.payType = 3;
           this.msg.mealId = this.choosedMeal.mealId;
+          wx.showLoading({
+              title: '加载中',
+          })
           this.$wxhttp.post({
             url: '/customer/sits',
             data: this.msg
           })
           .then(res => {
+            wx.hideLoading();
             console.log(res);
             wx.showToast({
               title: res.msg,
@@ -161,7 +169,7 @@ export default {
       const eventChannel = this.$mp.page.getOpenerEventChannel();
       eventChannel.on("acceptPayMsg", data => {
         this.msg = data;
-        this.roomType = data.room.roomType;
+        this.room = data.room.roomType + data.room.roomId;
         this.sitId = data.sitId;
       });
       eventChannel.on("acceptBasicMsg", data => {

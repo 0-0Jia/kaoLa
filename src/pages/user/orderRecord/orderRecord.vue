@@ -18,45 +18,57 @@
                 <div class="greenBar" v-show="mode=='refunded'"></div>
             </div>
         </div>
-        <div v-if="mode=='all'">
-            <record-card 
-                v-for="(order, index) in orderList" 
-                :key="index"
-                :order="order"
-                :button="buttonList[index]"
-                :ifAble="ifAbleList[index]"
-                @handleClick="handleButtonClick"
-            ></record-card>
+        <div v-show="mode=='all'">
+            <div v-if="orderList.length > 0">
+                <record-card 
+                    v-for="(order, index) in orderList" 
+                    :key="index"
+                    :order="order"
+                    :button="buttonList[index]"
+                    :ifAble="ifAbleList[index]"
+                    @handleClick="handleButtonClick"
+                ></record-card>
+            </div>
+            <div class="else" v-else>无订单记录</div>
         </div>
-        <div v-if="mode=='payed'">
-            <record-card 
-                v-for="(order, index) in doneList" 
-                :key="index"
-                :order="order"
-                :button="button"
-                :ifAble="ifAble"
-                @handleClick="handleButtonClick"
-            ></record-card>
+        <div v-show="mode=='payed'">
+            <div v-if="doneList.length > 0">
+                <record-card 
+                    v-for="(order, index) in doneList" 
+                    :key="index"
+                    :order="order"
+                    :button="button"
+                    :ifAble="ifAble"
+                    @handleClick="handleButtonClick"
+                ></record-card>
+            </div>
+            <div class="else" v-else>无已支付订单</div>
         </div>
-        <div v-if="mode=='refunding'">
-            <record-card 
-                v-for="(order, index) in refundingList" 
-                :key="index"
-                :order="order"
-                :button="button"
-                :ifAble="ifAble"
-                @handleClick="handleButtonClick"
-            ></record-card>
+        <div v-show="mode=='refunding'">
+            <div v-if="refundingList.length > 0">
+                <record-card 
+                    v-for="(order, index) in refundingList" 
+                    :key="index"
+                    :order="order"
+                    :button="button"
+                    :ifAble="ifAble"
+                    @handleClick="handleButtonClick"
+                ></record-card>
+            </div>
+            <div class="else" v-else>无正在退款套餐</div>
         </div>
-        <div v-if="mode=='refunded'">
-            <record-card 
-                v-for="(order, index) in refundedList" 
-                :key="index"
-                :order="order"
-                :button="button"
-                :ifAble="ifAble"
-                @handleClick="handleButtonClick"
-            ></record-card>
+        <div v-show="mode=='refunded'">
+            <div v-if="refundedList.length > 0">
+                <record-card 
+                    v-for="(order, index) in refundedList" 
+                    :key="index"
+                    :order="order"
+                    :button="button"
+                    :ifAble="ifAble"
+                    @handleClick="handleButtonClick"
+                ></record-card>
+            </div>
+            <div v-else class="else">无已退款订单</div>
         </div>
     </div>
 </template>
@@ -106,53 +118,85 @@ export default {
             this.orderList = this.refundedList;
         },
         handleButtonClick(order) {
+            wx.showLoading({
+                title: '加载中',
+            })
             this.$wxhttp.Delete({
                 url: `/customer/order/${order.orderId}`
             })
             .then(res => {
-                console.log(res);
+                wx.hideLoading();
+                wx.showToast({
+                    title: res.msg,
+                    icon: 'none',
+                    duration: 2000
+                })
                 this.getOrderList();
             })
             .catch(err => {
                 console.log(err);
+                wx.hideLoading();
+                wx.showToast({
+                    title: "加载失败",
+                    icon: 'none',
+                    duration: 2000
+                })
             })
         },
         getOrderList() {
+            wx.showLoading({
+                title: '加载中',
+            })
             this.$wxhttp.get({
                 url: '/customer/order'
             })
             .then(res => {
                 console.log(res);
-                this.totalList = res.data.orderList;
-                for(let i = 0; i<this.totalList.length; i++) {
-                    if(this.totalList[i].orderStatus == "已支付") {
-                        this.doneList.push(this.totalList[i]);
-                        this.buttonList[i] = "退款";
-                        this.ifAbleList[i] = true;
+                wx.hideLoading();
+                if(res.code!=0){
+                    wx.showToast({
+                        title: res.msg,
+                        icon: 'none',
+                        duration: 2000
+                    })
+                } else if(res.code==0){
+                    this.totalList = res.data.orderList;
+                    for(let i = 0; i<this.totalList.length; i++) {
+                        if(this.totalList[i].orderStatus == "已支付") {
+                            this.doneList.push(this.totalList[i]);
+                            this.buttonList[i] = "退款";
+                            this.ifAbleList[i] = true;
+                        }
+                        if(this.totalList[i].orderStatus == "正在退款") {
+                            this.refundingList.push(this.totalList[i]);
+                            this.buttonList[i] = "退款中";
+                            this.ifAbleList[i] = false;
+                        }
+                        if(this.totalList[i].orderStatus == "同意退款") {
+                            this.refundedList.push(this.totalList[i]);
+                            this.buttonList[i] = "已退款";
+                            this.ifAbleList[i] = false;
+                        }
+                        if(this.totalList[i].orderStatus == "未支付") {
+                            this.buttonList[i] = "未支付";
+                            this.ifAbleList[i] = false;
+                        }
                     }
-                    if(this.totalList[i].orderStatus == "正在退款") {
-                        this.refundingList.push(this.totalList[i]);
-                        this.buttonList[i] = "退款中";
-                        this.ifAbleList[i] = false;
-                    }
-                    if(this.totalList[i].orderStatus == "同意退款") {
-                        this.refundedList.push(this.totalList[i]);
-                        this.buttonList[i] = "已退款";
-                        this.ifAbleList[i] = false;
-                    }
-                    if(this.totalList[i].orderStatus == "未支付") {
-                        this.buttonList[i] = "未支付";
-                        this.ifAbleList[i] = false;
-                    }
+                    this.orderList = this.totalList;
+                    console.log(this.orderList);
+                    console.log(this.doneList);
+                    console.log(this.refundingList);
+                    console.log(this.refundedList);
                 }
-                this.orderList = this.totalList;
-                console.log(this.orderList);
-                console.log(this.doneList);
-                console.log(this.refundingList);
-                console.log(this.refundedList);
             })
             .catch(err => {
                 console.log(err);
+                wx.hideLoading();
+                wx.showToast({
+                    title: "加载失败",
+                    icon: 'none',
+                    duration: 2000
+                })
             })
         }
     },
@@ -197,5 +241,14 @@ export default {
 }
 .gridArea{
     margin-right: 36px;
+}
+.else{
+    color: #44644A;
+    opacity: 0.5;
+    font-weight: bold;
+    font-size: 32px;
+    text-align: center;
+    position: relative;
+    top: 200px;
 }
 </style>

@@ -5,9 +5,9 @@
             <p class="method">订单类型：{{order.orderType}}</p>
             <p class="method">交易方式：{{(order.mealId==0)?'微信支付':'套餐支付'}}</p>
             <p class="money">交易金额：{{order.orderMoney}}</p>
-            <p class="date">有效日期：{{order.orderDate}}</p>
+            <p class="date">下单日期：{{order.orderDate}}</p>
         </div>
-        <div class="time">11月16日9：00</div>
+        <!-- <div class="time">11月16日9：00</div> -->
         <div :class="[{unable: !ifAble}, 'button']" @click="handleClick">{{button}}</div>
     </div>
 </template>

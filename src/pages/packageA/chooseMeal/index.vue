@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="title">点击你要使用的套餐</div>
-        <div class="card">
+        <div class="card" v-if="userMealList.length > 0">
             <card 
                 v-for="(cardMsg, index) in userMealList" 
                 :key="index" 
@@ -11,6 +11,7 @@
             >
             </card>
         </div>
+        <div class="else" v-else>无可用套餐</div>
     </div>
 </template>
 
@@ -50,16 +51,34 @@ export default {
     },
     methods: {
         getUserMeal() {
+            wx.showLoading({
+                title: '加载中',
+            })
             this.$wxhttp.get({
                 url: '/customer/user/meal'
             })
             .then(res => {
                 console.log(res);
-                this.userMealList = res.data.mealList;
-                console.log(this.userMealList);
+                wx.hideLoading();
+                if(res.code!=0){
+                    wx.showToast({
+                        title: res.msg,
+                        icon: 'none',
+                        duration: 2000
+                    })
+                } else if(res.code==0) {
+                    this.userMealList = res.data.mealList;
+                    console.log(this.userMealList);
+                }
             })
             .catch(err => {
                 console.log(err);
+                wx.hideLoading();
+                wx.showToast({
+                    title: "加载失败",
+                    icon: 'none',
+                    duration: 2000
+                })
             })
         },
         chooseMeal(meal) {
@@ -89,5 +108,14 @@ export default {
     margin-right: 16px;
     flex-wrap: wrap;
     justify-content: space-between;
+}
+.else{
+    color: #44644A;
+    opacity: 0.5;
+    font-weight: bold;
+    font-size: 32px;
+    text-align: center;
+    position: relative;
+    top: 200px;
 }
 </style>
