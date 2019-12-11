@@ -1,5 +1,5 @@
 // 接口地址
-const host = 'https://qgailab.com:12410/kaola-customer' 
+const host = 'http://qgailab.com:11114' 
  
 function request (url, method, data, header = {}) {
   wx.showLoading({
