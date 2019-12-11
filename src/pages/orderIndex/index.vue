@@ -95,7 +95,6 @@ export default {
         url: '/customer/preservation'
       })
       .then(res => {
-<<<<<<< HEAD
         wx.hideLoading();
         if(res.code!=0){
           wx.showToast({
@@ -106,11 +105,6 @@ export default {
         } else if(res.code==0){
           this.preservationList = res.data.preservationList;
         }
-=======
-        this.preservationList = res.data.preservationList;
-        console.log(this.preservationList);
-        console.log("订单数据",res)
->>>>>>> guijia
       })
       .catch(err => {
         console.log('error! ', err);
