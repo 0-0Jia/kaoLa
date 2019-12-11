@@ -82,7 +82,7 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
-  margin-top: 64px;
+  margin-top: 80px;
   margin-bottom: 32px;
 }
 .green {
@@ -98,7 +98,7 @@ export default {
   background-color: #44644a;
   border-radius: 24px;
   line-height: 48px;
-  margin-top: 16.5px;
+  margin-top: 50px;
   font-size: 16px;
 }
 </style>
