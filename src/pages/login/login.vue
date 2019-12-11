@@ -8,6 +8,7 @@
       <br />请允许稍后的微信授权
     </p>
     <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
+    <button class="green" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号码</button>
   </div>
 </template>
 
@@ -142,6 +143,12 @@ export default {
         console.log("用户按了拒绝按钮");
       }
     }
+  },
+  getPhoneNumber (e) {
+    console.log(e,"手机号码")
+    console.log(e.detail.errMsg)
+    console.log(e.detail.iv)
+    console.log(e.detail.encryptedData)
   }
 };
 </script>

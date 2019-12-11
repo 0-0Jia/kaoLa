@@ -55,11 +55,16 @@ export default {
       name: wx.getStorageSync("userInfo").nickName
     };
   },
+
   mounted() {
     wx.setNavigationBarTitle({
       title: "个人中心"
     });
 
+    this.getData();
+  },
+
+  onShow() {
     this.getData();
   },
 
@@ -108,8 +113,7 @@ export default {
           console.log(`后台交互拿回数据:`, res);
           this.userData = res.data.user;
           console.log(this.userData.url);
-          // this.userPhoto =
-          //   "https://qgailab.com:12410/portrait/" + this.userData.url;
+          this.userPhoto = this.userData.url;
         })
         .catch(err => {
           console.log(`自动请求api失败 err:`, err);
