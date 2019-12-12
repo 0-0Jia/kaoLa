@@ -2,22 +2,26 @@
     <div class="payMethods">
         <p class="payTitle">支付方式</p>
         <div class="methods">
-            <div class="marginRight">
-                <pay-choice 
+            <div
+                class="marginRight" 
+                v-for="(choice, index) in choiceList"
+                :key="index"
+            >
+                <pay-choice
                     @choosePayMethod="choosePayMethod" 
-                    :choice="choiceList[0].name" 
+                    :choice="choice.name" 
                     :payMethods="payMethods" 
-                    :value="choiceList[0].value"
+                    :value="choice.value"
                 ></pay-choice>
             </div>
-            <div class="marginRight">
+            <!-- <div class="marginRight">
                 <pay-choice 
                     @choosePayMethod="choosePayMethod" 
                     :choice="choiceList[1].name" 
                     :payMethods="payMethods" 
                     :value="choiceList[1].value"
                 ></pay-choice>
-            </div>
+            </div> -->
         </div>    
     </div>
 </template>
@@ -54,7 +58,7 @@ export default {
     margin-top: 8px;
 }
 .marginRight{
-    margin-right: 54px;
+    margin-right: 41px;
     display: inline-block;
 }
 </style>

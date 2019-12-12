@@ -127,6 +127,7 @@ export default {
     mounted() {
         this.getSeatMsg();
         this.currentDate = this.seat.curDate[0].value;
+        this.initDate = this.startDay;
         wx.setNavigationBarTitle({
             title: "预约时间"
         });

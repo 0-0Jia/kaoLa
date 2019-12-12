@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="card">
+        <div class="card" v-if="mealList.length>0">
             <card 
                 v-for="(cardMsg, index) in mealList" 
                 :key="index" 
@@ -9,6 +9,7 @@
             >
             </card>
         </div>
+        <div class="else" v-else>暂无可购买套餐</div>
     </div>
 </template>
 
@@ -40,7 +41,7 @@ export default {
                         icon: 'none',
                         duration: 2000
                     })
-                } else if(res.code==1){
+                } else if(res.code==0){
                     this.mealList = res.data.mealList;
                     console.log(this.mealList);
                 }
@@ -85,5 +86,14 @@ export default {
     margin-top: 16px;
     flex-wrap: wrap;
     justify-content: space-between;
+}
+.else{
+    color: #44644A;
+    opacity: 0.5;
+    font-weight: bold;
+    font-size: 32px;
+    text-align: center;
+    position: relative;
+    top: 200px;
 }
 </style>
