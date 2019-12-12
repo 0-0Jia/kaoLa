@@ -98,6 +98,7 @@ export default {
             this.mode = "all";
             this.button = "全部";
             this.orderList = this.totalList;
+            this.getOrderList();
         },
         payed() {
             this.mode = "payed";
