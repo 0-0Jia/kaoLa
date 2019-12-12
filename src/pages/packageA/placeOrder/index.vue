@@ -228,10 +228,13 @@ export default {
         }
     },
     mounted() {
-        this.getRoomList();
+        // this.getRoomList();
         wx.setNavigationBarTitle({
             title: "预约座位"
         });
+    },
+    onShow() {
+        this.getRoomList();
     }
 }
 </script>

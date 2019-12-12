@@ -70,10 +70,13 @@ export default {
         }
     },
     mounted() {
-        this.getMealList();
+        // this.getMealList();
         wx.setNavigationBarTitle({
             title: "套餐商城"
         });
+    },
+    onShow() {
+        this.getMealList();
     }
 }
 </script>

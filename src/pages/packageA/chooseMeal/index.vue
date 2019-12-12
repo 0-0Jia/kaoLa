@@ -44,10 +44,13 @@ export default {
         }
     },
     mounted() {
-        this.getUserMeal();  
+        // this.getUserMeal();  
         wx.setNavigationBarTitle({
             title: "选择套餐"
         });
+    },
+    onShow() {
+        this.getUserMeal();
     },
     methods: {
         getUserMeal() {
