@@ -2,7 +2,7 @@
   <div class="balance-recharge">
     <div class="balance-recharge-card">
       <span class="money">￥</span>
-      <input type="text" class="recharge-input" v-model.lazy="money" placeholder="充值范围为0-300(整数)"/>
+      <input type="text" class="recharge-input" v-model.lazy="money" placeholder="充值范围为0-300(整数)" />
     </div>
     <button class="recharge-button" @click="rechargeConfirm">确认</button>
   </div>
@@ -23,7 +23,11 @@ export default {
       title: "余额充值"
     });
   },
-
+  onUnload: function() {
+    wx.navigateBack({
+      delta: 2, // 回退前 delta(默认为1) 页面
+    })
+  },
   methods: {
     rechargeConfirm() {
       let that = this;
@@ -54,7 +58,7 @@ export default {
     doWxPay(param) {
       //小程序发起微信支付
       wx.requestPayment({
-        timeStamp: param.timeStamp+"", //记住，这边的timeStamp一定要是字符串类型的，不然会报错
+        timeStamp: param.timeStamp + "", //记住，这边的timeStamp一定要是字符串类型的，不然会报错
         nonceStr: param.nonceStr,
         package: param.package,
         signType: "MD5",
@@ -64,8 +68,7 @@ export default {
           // success
           console.log(event);
           wx.showToast({
-            title: "支付成功",
-            icon: "success",
+            title: "",
             duration: 2000
           });
         },
@@ -86,7 +89,7 @@ export default {
 
 <style scoped>
 .balance-recharge-card {
- width: 84%;
+  width: 84%;
   margin: 20px 4%;
   border-radius: 6pt;
   background-color: white;

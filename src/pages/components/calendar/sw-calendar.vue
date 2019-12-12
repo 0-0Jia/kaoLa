@@ -34,14 +34,7 @@ export default {
     };
   },
   onShow() {
-    //查询签到
-    this.punchedList = [];
-    this.dateArray = [];
-    this.getData();
-    setTimeout(() => {
-      //设置日期
-      this.getCurDate();
-    }, 500);
+    this.showCalendar();
   },
   methods: {
     getCurDate() {
@@ -118,15 +111,20 @@ export default {
         .catch(err => {
           console.log(`自动请求api失败 err:`, err);
         });
+    },
+    showCalendar() {
+      //查询签到
+      this.punchedList = [];
+      this.dateArray = [];
+      this.getData();
+      setTimeout(() => {
+        //设置日期
+        this.getCurDate();
+      }, 500);
     }
   },
   mounted() {
-    //查询签到
-    this.getData();
-    setTimeout(() => {
-      //设置日期
-      this.getCurDate();
-    }, 500);
+    this.showCalendar();
   }
 };
 </script>
@@ -171,9 +169,9 @@ export default {
   color: #999;
 }
 .active {
+  padding: 2px 0;
   color: #44644a;
   background: white;
-  border: 1px dashed #44644a;
 }
 .punched {
   background: linear-gradient(90deg, #fff, #44644a, #fff);

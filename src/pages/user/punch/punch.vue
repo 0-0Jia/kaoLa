@@ -3,7 +3,7 @@
     <div class="punch-bg">
       <img class="punch-img" src="../../../../static/images/punchBg.png" />
     </div>
-    <calendar @tapDate="tapDate"></calendar>
+    <calendar @tapDate="tapDate" ref="calendar"></calendar>
     <button class="punch-button" @click="punchRequest">立即签到</button>
     <p class="introduction">打卡一天可获得1积分</p>
   </div>
@@ -28,12 +28,17 @@ export default {
       title: "打卡签到"
     });
   },
+onUnload: function () {
+    wx.switchTab({
+      url: 'pages/userIndex/main'
+    });
+  },
 
   methods: {
     punchRequest() {
       wx.showLoading({
         title: "加载中"
-      })
+      });
       this.$wxhttp
         .post({
           url: "/customer/signedon"
@@ -41,8 +46,8 @@ export default {
         .then(res => {
           wx.hideLoading();
           console.log(`后台数据:`, res);
-          if (res.msg == "操作成功") {
-            this.onLoad();
+          if (res.msg == "success") {
+            this.$refs.calendar.showCalendar();
             wx.showToast({
               title: "成功",
               icon: "success",
