@@ -56,6 +56,10 @@ export default {
         {
           name: "套餐支付",
           value: "meal"
+        },
+        {
+          name: "余额支付",
+          value: "restmoney"
         }
       ],
       dialog: {
@@ -75,7 +79,7 @@ export default {
   methods: {
     choosePayMethod(value) {
       this.payMethods = value;
-      if(value == "wx") this.money = this.basicmsg.money;
+      if(value == "wx" || value == "restmoney") this.money = this.basicmsg.money;
       if(value == "meal") this.money = 0;
     },
     goChooseMeal() {
@@ -110,8 +114,6 @@ export default {
     },
     submit() {
       if (this.payMethods == "wx") {
-        //微信支付则调用支付接口
-        //微信支付则调用支付接口
         this.msg.payType = 1;
         this.msg.mealId = null;
         //微信支付则调用支付接口
@@ -156,14 +158,55 @@ export default {
             })
             if(res.code == 0) {
               wx.switchTab({
-                url: '/index/main'
+                url: 'pages/index/main'
               })
             }
           })
           .catch(err => {
             console.log(err);
           })
-      }
+      } else if(this.payMethods == "restmoney") {
+        //余额支付
+        this.msg.payType = 4;
+        this.msg.mealId = null;
+        wx.showLoading({
+            title: '加载中'
+        })
+        this.$wxhttp
+          .post({
+            url: "/customer/meal",
+            data: this.msg
+          })
+          .then(res => {
+            console.log(res);
+            wx.hideLoading();
+            if(res.code!=0) {
+              wx.showToast({
+                title: res.msg,
+                icon: 'none',
+                duration: 2000
+              })
+            } else if(res.code==0){
+              wx.showToast({
+                title: "支付成功",
+                icon: 'none',
+                duration: 2000
+              });
+              wx.switchTab({
+                url: "pages/index/main"
+              })
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            wx.hideLoading();
+            wx.showToast({
+              title: "加载失败",
+              icon: 'none',
+              duration: 2000
+            })
+          });
+        }
     },
     getPayMsg() {
       const eventChannel = this.$mp.page.getOpenerEventChannel();
