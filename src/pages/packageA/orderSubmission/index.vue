@@ -3,12 +3,7 @@
     <div :class="{hidden: !hasDialog}">
       <a-dialog @close="closeDialog" :dialog="dialog"></a-dialog>
     </div>
-    <seat-msg 
-      father="orderSubmission" 
-      :roomType="room" 
-      :sitId="sitId"
-      :price="basicmsg.price"
-    ></seat-msg>
+    <seat-msg father="orderSubmission" :roomType="room" :sitId="sitId" :price="basicmsg.price"></seat-msg>
     <div class="msg">
       <msg-row name="预约日期" :value="basicmsg.date"></msg-row>
       <msg-row name="已选时间" :value="basicmsg.choosedTime"></msg-row>
@@ -75,23 +70,23 @@ export default {
   methods: {
     choosePayMethod(value) {
       this.payMethods = value;
-      if(value == "wx") this.money = this.basicmsg.money;
-      if(value == "meal") this.money = 0;
+      if (value == "wx") this.money = this.basicmsg.money;
+      if (value == "meal") this.money = 0;
     },
     goChooseMeal() {
       let temp = this.choosedMeal;
       let passValue = this.passValue;
       wx.showLoading({
         title: "加载中"
-      })
+      });
       wx.navigateTo({
         url: "/pages/packageA/chooseMeal/main",
         success(res) {
           wx.hideLoading();
-          res.eventChannel.on('acceptChoosedMeal', data => {
+          res.eventChannel.on("acceptChoosedMeal", data => {
             temp = data.meal;
             passValue(temp);
-          })
+          });
         }
       });
     },
@@ -128,6 +123,7 @@ export default {
             } else {
               wx.showToast({
                 title: res.msg,
+                icon: "none",
                 duration: 2000
               });
             }
@@ -137,13 +133,14 @@ export default {
           });
       } else if (this.payMethods == "meal") {
         //套餐支付
-          this.msg.payType = 3;
-          this.msg.mealId = this.choosedMeal.mealId;
-          wx.showLoading({
-              title: '加载中',
-          })
-          this.$wxhttp.post({
-            url: '/customer/sits',
+        this.msg.payType = 3;
+        this.msg.mealId = this.choosedMeal.mealId;
+        wx.showLoading({
+          title: "加载中"
+        });
+        this.$wxhttp
+          .post({
+            url: "/customer/sits",
             data: this.msg
           })
           .then(res => {
@@ -153,16 +150,16 @@ export default {
               title: res.msg,
               duration: 2000,
               icon: "none"
-            })
-            if(res.code == 0) {
+            });
+            if (res.code == 0) {
               wx.switchTab({
-                url: '/index/main'
-              })
+                url: "/index/main"
+              });
             }
           })
           .catch(err => {
             console.log(err);
-          })
+          });
       }
     },
     getPayMsg() {
@@ -178,7 +175,6 @@ export default {
         this.money = this.basicmsg.money;
         console.log(this.basicmsg);
         console.log(this.basicmsg.price);
-
       });
       console.log(this.msg);
     },
@@ -199,11 +195,9 @@ export default {
             icon: "none",
             duration: 2000
           });
-          if(res.code == 0) {
-              wx.switchTab({
-                url: '/index/main'
-              })
-            }
+          wx.switchTab({
+            url: "/index/main"
+          });
         },
         fail: function(error) {
           // fail

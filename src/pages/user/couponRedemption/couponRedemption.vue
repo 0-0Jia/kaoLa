@@ -24,6 +24,10 @@ export default {
     });
   },
 
+  onShow(){
+    this.coupon = '';
+  },
+
   methods: {
     couponRedemption() {
       wx.showLoading({
@@ -38,7 +42,7 @@ export default {
         })
         .then(res => {
           wx.hideLoading();
-          if (res.msg == "操作成功") {
+          if (res.code == 0) {
             wx.showToast({
               title: "兑换成功",
               icon: "success",
@@ -47,6 +51,7 @@ export default {
           } else {
             wx.showToast({
               title: res.msg,
+              icon: 'none',
               duration: 2000
             });
           }

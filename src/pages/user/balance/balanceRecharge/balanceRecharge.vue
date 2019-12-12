@@ -41,11 +41,12 @@ export default {
         })
         .then(res => {
           console.log(`后台交互拿回数据:`, res);
-          if (res.data.msg == "success") {
+          if (res.data.code == 0) {
             this.doWxPay(res.data.data.wxPayMap);
           } else {
             wx.showToast({
-              title: res.msg,
+              title: res.data.msg,
+              icon: 'none',
               duration: 2000
             });
           }

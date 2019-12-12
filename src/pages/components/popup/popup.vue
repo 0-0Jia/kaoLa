@@ -31,6 +31,7 @@ export default {
         this.telMessage = e;
         console.log(e);
         this.$emit("loginrequest", e);
+        this.flag = true;
       },
   },
   mounted() {}
