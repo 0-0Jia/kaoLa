@@ -98,6 +98,7 @@ export default {
             this.mode = "all";
             this.button = "全部";
             this.orderList = this.totalList;
+            this.getOrderList();
         },
         payed() {
             this.mode = "payed";
@@ -161,6 +162,9 @@ export default {
                     })
                 } else if(res.code==0){
                     this.totalList = res.data.orderList;
+                    this.doneList = [];
+                    this.refundingList = [];
+                    this.refundedList = [];
                     for(let i = 0; i<this.totalList.length; i++) {
                         if(this.totalList[i].orderStatus == "已支付") {
                             this.doneList.push(this.totalList[i]);
