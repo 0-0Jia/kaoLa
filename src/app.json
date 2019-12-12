@@ -34,6 +34,7 @@
       "integral/main",
       "orderRecord/main",
       "punch/main",
+      "userInfo/main",
       "balance/balanceRecharge/main"
     ],
     "name": "user"

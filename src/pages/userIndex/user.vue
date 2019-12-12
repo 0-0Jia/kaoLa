@@ -6,14 +6,11 @@
         :style=" 
      {backgroundImage:'url('+userPhoto+')'}"
         @click="changeAvatar"
-      ></div> -->
-      <div
-        class="avatar"
-        :style=" 
-     {backgroundImage:'url('+userPhoto+')'}"
-      ></div>
-      <p class="user-name">{{userData.name? userData.name : name}}</p>
-      <p class="user-phone">{{userData.tel? userData.tel : "123456789"}}</p>
+      ></div>-->
+      <div class="avatar" :style=" 
+     {backgroundImage:'url('+userPhoto+')'}"></div>
+      <p class="user-name">{{name}}</p>
+      <p class="user-phone">{{userData.tel? userData.tel : ""}}<span :class="{displayNone: login}" @click="returnLogin">登录</span></p>
       <div class="integral-balance-card">
         <div class="integral" @click="jumpIntegral">
           <p style="font-size:16px;">{{userData.score? userData.score : '0'}}分</p>
@@ -45,6 +42,12 @@
           <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></view>
         </view>
       </view>
+      <view class="weui-cells weui-cells_after-title" @click="jumpUserInfo">
+        <view class="weui-cell weui-cell_access">
+          <view class="weui-cell__bd" style="font-size:16px">用户信息</view>
+          <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></view>
+        </view>
+      </view>
     </view>
   </div>
 </template>
@@ -54,10 +57,13 @@ export default {
   data() {
     return {
       userData: [],
-      userPhoto: wx.getStorageSync("userInfo").avatarUrl,
-      name: wx.getStorageSync("userInfo").nickName
+      userPhoto: "",
+      name: "",
+      flag: false,
+      login: true
     };
   },
+
   mounted() {
     wx.setNavigationBarTitle({
       title: "个人中心"
@@ -66,41 +72,79 @@ export default {
     this.getData();
   },
 
+  onShow() {
+    this.getData();
+  },
+
   methods: {
+    returnLogin() {
+      if (!this.flag) {
+        wx.navigateTo({
+          url:
+            "/pages/login/main"
+        });
+      }
+    },
     jumpIntegral() {
-      wx.navigateTo({
-        url:
-          "/pages/user/integral/main" +
-          "?integral=" +
-          (this.userData.score ? this.userData.score : "0") +
-          "&name=" +
-          (this.userData.name ? this.userData.name : "用户")
-      });
+      if (this.flag) {
+        wx.navigateTo({
+          url:
+            "/pages/user/integral/main" +
+            "?integral=" +
+            (this.userData.score ? this.userData.score : "0") +
+            "&name=" +
+            (this.userData.name ? this.userData.name : "用户")
+        });
+      }
     },
     jumpBalance() {
-      wx.navigateTo({
-        url:
-          "/pages/user/balance/main" +
-          "?balance=" +
-          (this.userData.rareMoney ? this.userData.rareMoney : "0.00") +
-          "&name=" +
-          (this.userData.name ? this.userData.name : "用户")
-      });
+      if (this.flag) {
+        wx.navigateTo({
+          url:
+            "/pages/user/balance/main" +
+            "?balance=" +
+            (this.userData.rareMoney ? this.userData.rareMoney : "0.00") +
+            "&name=" +
+            (this.userData.name ? this.userData.name : "用户")
+        });
+      }
     },
     jumpPunch() {
-      wx.navigateTo({
-        url: "/pages/user/punch/main"
-      });
+      if (this.flag) {
+        wx.navigateTo({
+          url: "/pages/user/punch/main"
+        });
+      }
     },
     jumpCoupon() {
-      wx.navigateTo({
-        url: "/pages/user/couponRedemption/main"
-      });
+      if (this.flag) {
+        wx.navigateTo({
+          url: "/pages/user/couponRedemption/main"
+        });
+      }
     },
     jumpOrderRecord() {
-      wx.navigateTo({
-        url: "/pages/user/orderRecord/main"
-      });
+      if (this.flag) {
+        wx.navigateTo({
+          url: "/pages/user/orderRecord/main"
+        });
+      }
+    },
+    jumpUserInfo() {
+      if (this.flag) {
+        wx.navigateTo({
+          url:
+            "/pages/user/userInfo/main" +
+            "?realName=" +
+            (this.userData.realName ? this.userData.realName : "用户名") +
+            "&birth=" +
+            (this.userData.birth ? this.userData.birth : "2000-00-00") +
+            "&job=" +
+            (this.userData.job ? this.userData.job : "无业游民") +
+            "&target=" +
+            (this.userData.target ? this.userData.target : "无")
+        });
+      }
     },
     getData() {
       this.$wxhttp
@@ -109,10 +153,22 @@ export default {
         })
         .then(res => {
           console.log(`后台交互拿回数据:`, res);
-          this.userData = res.data.user;
-          console.log(this.userData.url);
-          // this.userPhoto =
-          //   "https://qgailab.com:12410/portrait/" + this.userData.url;
+          if (res.code == 0) {
+            this.userData = res.data.user;
+            this.userPhoto = this.userData.url;
+            this.name = this.userData.name;
+            this.flag = true;
+            this.login = true;
+          } else {
+            wx.showToast({
+              title: res.msg,
+              duration: 2000
+            });
+            this.userPhoto = "../../../static/tabs/photo.png";
+            this.name = "用户名";
+            this.flag = false;
+            this.login = false;
+          }
         })
         .catch(err => {
           console.log(`自动请求api失败 err:`, err);
@@ -225,6 +281,9 @@ export default {
   color: white;
   font-size: 16px;
   text-align: center;
+}
+.displayNone {
+  display: none;
 }
 .avatar {
   height: 80px;

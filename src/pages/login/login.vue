@@ -1,71 +1,54 @@
 <template>
   <div class="login">
-    <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button> -->
-    <img class="logo" src="/static/images/logo.png" />
-    <p class="title">需要您的授权</p>
-    <p class="discription">
-      为了提供更好的服务，
-      <br />请允许稍后的微信授权
-    </p>
-    <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
+    <div>
+      <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button> -->
+      <img class="logo" src="/static/images/logo.png" />
+      <p class="title">需要您的授权</p>
+      <p class="discription">
+        为了提供更好的服务，
+        <br />请允许稍后的微信授权
+      </p>
+      <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
+      <!-- <button class="green" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">获取手机号码</button> -->
+
+      <popup ref="popup" @loginrequest="loginrequest"></popup>
+    </div>
   </div>
 </template>
 
 <script>
+import popup from "../components/popup/popup.vue";
 export default {
+  components: { popup },
   data() {
     return {
-      code: ""
+      code: "",
+      user: [],
+      telMessage: "",
+      login: true
     };
   },
+  onLoad() {},
 
   mounted: function() {
+    let that = this;
     wx.checkSession({
       //检测当前用户的session_key是否过期
-      success: function() {
+      success: function(res) {
         //session_key 未过期，并且在本生命周期一直有效
-        console.log("授权未过期");
+        console.log("授权未过期", res);
+        that.login = true;
         // 跳转
-        // wx.switchTab({
-        //   url: "/pages/index/main"
-        // });
+        wx.switchTab({
+          url: "/pages/index/main"
+        });
       },
       fail: function() {
         //session_key 已经失效，需要重新执行登录流程
         console.log("授权过期");
+        that.login = false;
       }
     });
-    // const that = this;
-    // wx.login({
-    //   //用户登录
-    //   success(res) {
-    //     if (res.code) {
-    //       // 发起网络请求
-    //       console.log("res.code+" + res.code);
-    //       that.code = res.code;
-    //       that.$wxhttp
-    //         .post({
-    //           url: "/customer/login",
-    //           data: {
-    //             code: that.code
-    //           }
-    //         })
-    //         .then(res => {
-    //           console.log(`后台交互拿回数据:`, res);
-    //           // 获取到后台重写的session数据，可以通过vuex做本地保存
-    //           wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
-    //           console.log(res.header["Set-Cookie"].split(";")[0]);
-    //           // 测试跳转
-    //           wx.switchTab({
-    //             url: "/pages/index/main"
-    //           });
-    //         })
-    //         .catch(err => {
-    //           console.log(`自动请求api失败 err:`, err);
-    //         });
-    //     }
-    //   }
-    // });
   },
 
   methods: {
@@ -88,36 +71,9 @@ export default {
                     success: res => {
                       console.log(res, "用户信息");
                       wx.setStorageSync("userInfo", res.userInfo);
-                      let user = res;
-                      console.log(user);
-                      that.$wxhttp
-                        .post({
-                          url: "/customer/login",
-                          data: {
-                            code: that.code,
-                            rawData: JSON.parse(user.rawData),
-                            signature: user.signature,
-                            encryptedData: user.encryptedData,
-                            iv: user.iv
-                          }
-                        })
-                        .then(res => {
-                          console.log(`后台交互拿回数据:`, res);
-                          // 获取到后台重写的session数据，可以通过vuex做本地保存
-
-                          wx.setStorageSync(
-                            "sessionid",
-                            res.header["Set-Cookie"]
-                          );
-
-                          // 测试跳转
-                          wx.switchTab({
-                            url: "/pages/index/main"
-                          });
-                        })
-                        .catch(err => {
-                          console.log(`自动请求api失败 err:`, err);
-                        });
+                      that.user = res;
+                      console.log(that.user);
+                      that.$refs.popup.flag = false;
                     }
                   });
                 }
@@ -141,6 +97,37 @@ export default {
         //用户按了拒绝按钮
         console.log("用户按了拒绝按钮");
       }
+    },
+    loginrequest(e) {
+      console.log("aaa");
+      let that = this;
+      let data = {
+        code: that.code,
+        rawData: JSON.parse(that.user.rawData),
+        signature: that.user.signature,
+        encryptedData: e.mp.detail.encryptedData,
+        iv: e.mp.detail.iv
+      };
+      console.log(data, "传过去的数据");
+      that.$wxhttp
+        .post({
+          url: "/customer/login",
+          data: data
+        })
+        .then(res => {
+          console.log(`登录成功数据:`, res);
+          // 获取到后台重写的session数据，可以通过vuex做本地保存
+
+          wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
+
+          // 测试跳转
+          wx.switchTab({
+            url: "/pages/index/main"
+          });
+        })
+        .catch(err => {
+          console.log(`自动请求api失败 err:`, err);
+        });
     }
   }
 };
@@ -150,6 +137,9 @@ export default {
 .login {
   color: rgb(66, 66, 66);
   text-align: center;
+}
+.displayNone {
+  display: none;
 }
 .logo {
   width: 200px;
