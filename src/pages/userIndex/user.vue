@@ -47,7 +47,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title" @click="jumpUserInfo">
         <view class="weui-cell weui-cell_access">
-          <view class="weui-cell__bd" style="font-size:16px">用户信息</view>
+          <view class="weui-cell__bd" style="font-size:16px">个人信息</view>
           <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></view>
         </view>
       </view>
@@ -88,7 +88,7 @@ export default {
       }
     },
     jumpIntegral() {
-      if (!this.flag) {
+      if (this.flag) {
         wx.navigateTo({
           url:
             "/pages/user/integral/main" +

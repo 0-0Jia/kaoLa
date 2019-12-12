@@ -27,25 +27,19 @@ export default {
       login: false
     };
   },
-  onLoad() {},
+  onLoad() {
+
+  },
 
   beforeCreate: function() {
-    console.log("beforeCreate")
-  },
-  onShow(){
-    console.log("onshow")
-    this.judgeSession();
-  },
-
-  methods: {
-    judgeSession() {
+    console.log("onshow");
+    this.judgeSession = () => {
       let that = this;
       wx.checkSession({
         //检测当前用户的session_key是否过期
         success: function(res) {
           //session_key 未过期，并且在本生命周期一直有效
           console.log("授权未过期", res);
-          that.login = true;
           that.$wxhttp
             .get({
               url: "/customer/user"
@@ -54,11 +48,13 @@ export default {
               console.log("user:", res);
               if (res.code == 0) {
                 // 成功
+                that.login = true;
                 wx.switchTab({
                   url: "/pages/index/main"
                 });
               } else {
                 // 失败
+                that.login = false;
               }
             })
             .catch(err => {
@@ -71,7 +67,13 @@ export default {
           that.login = false;
         }
       });
-    },
+    };
+  },
+  onShow() {
+    this.judgeSession();
+  },
+
+  methods: {
     setting() {
       const that = this;
       wx.login({
