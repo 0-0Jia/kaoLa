@@ -40,7 +40,7 @@ export default {
                         icon: 'none',
                         duration: 2000
                     })
-                } else if(res.code==1){
+                } else if(res.code==0){
                     this.mealList = res.data.mealList;
                     console.log(this.mealList);
                 }
