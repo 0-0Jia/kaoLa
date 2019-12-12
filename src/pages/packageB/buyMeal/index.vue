@@ -96,6 +96,9 @@ export default {
                 title: "支付成功",
                 icon: 'none',
                 duration: 2000
+              });
+              wx.switchTab({
+                url: "pages/orderIndex/main"
               })
             }
           })

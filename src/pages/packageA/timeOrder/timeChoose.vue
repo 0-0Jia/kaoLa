@@ -38,7 +38,8 @@ export default {
     props: {
         timeList: Array,
         startDay: String,
-        endDay: String
+        endDay: String,
+        initDate: String
     },
     data() {
         return {
@@ -84,8 +85,13 @@ export default {
             this.tdate = this.currentDate;
         }
     },
-    created() {
-        this.getCurrentDate();
+    // created() {
+    //     this.getCurrentDate();
+    // },
+    onShow() {
+        // this.getCurrentDate();
+        this.date = this.initDate;
+        this.$emit("refreshTimeList", this.date);
     }
 }
 </script>

@@ -11,6 +11,7 @@
         <time-choose 
             :isChoose="isChoose" 
             :timeList="timeList"
+            :initDate="initDate"
             :startDay="startDay"
             :endDay="endDay"
             @sendChoosedTime="getChooseTime"
@@ -49,7 +50,8 @@ export default {
             ableToClick: false,
             room: {},
             money: 0,
-            storeName: ""
+            storeName: "",
+            initDate: ""
         }
     },
     methods: {
@@ -87,11 +89,11 @@ export default {
             const eventChannel = this.$mp.page.getOpenerEventChannel();
             eventChannel.on('acceptSeatId', data => {
                 this.seat = data.seat;
-                // console.log(this.seat);
                 //设置时间段
                 this.timeList = data.seat.curDate[0].sitDate;
                 //设置时间选择器的起止时间
                 this.startDay = data.seat.curDate[0].value;
+                this.initDate = this.startDay;  //设置初始时间为当前时间
                 if(data.seat.curDate.length > 1) {
                     this.endDay = data.seat.curDate[data.seat.curDate.length-1].value;
                 } else this.endDay = this.startDay;
@@ -110,7 +112,6 @@ export default {
             this.money = (data.choosedTime.length * this.seat.money).toFixed(2);
             //判断当前按钮是否为亮
             this.ableToClick = data.able;
-            // console.log(this.ableToClick);
         },
         //刷新时间表
         refreshTimeList(date) {
