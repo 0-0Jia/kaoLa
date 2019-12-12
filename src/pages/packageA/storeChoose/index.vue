@@ -70,10 +70,12 @@ export default {
     }
   },
   created() {
-    this.getStoreList();
     wx.setNavigationBarTitle({
       title: "选择门店"
     });
+  },
+  onShow() {
+    this.getStoreList();
   }
 }
 </script>

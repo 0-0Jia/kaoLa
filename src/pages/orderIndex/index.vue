@@ -55,32 +55,7 @@ export default {
       wx.showLoading({
           title: '加载中',
       })
-      this.$wxhttp.get({
-        url: '/customer/user/meal'
-      })
-      .then(res => {
-        console.log(res);
-        wx.hideLoading();
-        if(res.code!=0){
-          wx.showToast({
-            title: res.msg,
-            icon: 'none',
-            duration: 2000
-          })
-        } else if(res.code==0) {
-          this.userMealList = res.data.mealList;
-          console.log(this.userMealList);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        wx.hideLoading();
-        wx.showToast({
-          title: "加载失败",
-          icon: 'none',
-          duration: 2000
-        })
-      })
+      this.getMealList();
     },
     order() {
       this.mode = "myOrder";
@@ -108,6 +83,34 @@ export default {
       })
       .catch(err => {
         console.log('error! ', err);
+        wx.hideLoading();
+        wx.showToast({
+          title: "加载失败",
+          icon: 'none',
+          duration: 2000
+        })
+      })
+    },
+    getMealList() {
+      this.$wxhttp.get({
+        url: '/customer/user/meal'
+      })
+      .then(res => {
+        console.log(res);
+        wx.hideLoading();
+        if(res.code!=0){
+          wx.showToast({
+            title: res.msg,
+            icon: 'none',
+            duration: 2000
+          })
+        } else if(res.code==0) {
+          this.userMealList = res.data.mealList;
+          console.log(this.userMealList);
+        }
+      })
+      .catch(err => {
+        console.log(err);
         wx.hideLoading();
         wx.showToast({
           title: "加载失败",
@@ -171,10 +174,21 @@ export default {
     }
   },
   mounted: function() {
-    this.getOrderList();
+    wx.login({
+      success(res) {
+        if (res.code) {
+          console.log(res.code);
+          // 这里可以把code传给后台，后台用此获取openid及session_key
+        }
+      }
+    });
+    // this.getOrderList();
     wx.setNavigationBarTitle({
       title: "我的订单"
     });
+  },
+  onShow() {
+    this.order();
   }
 };
 </script>
