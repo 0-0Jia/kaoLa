@@ -25,8 +25,8 @@ export default {
   },
   onUnload: function() {
     wx.navigateBack({
-      delta: 2, // 回退前 delta(默认为1) 页面
-    })
+      delta: 2 // 回退前 delta(默认为1) 页面
+    });
   },
   methods: {
     rechargeConfirm() {
@@ -68,14 +68,19 @@ export default {
           // success
           console.log(event);
           wx.showToast({
-            title: "",
+            title: "支付成功",
+            icon: "none",
             duration: 2000
           });
         },
         fail: function(error) {
           // fail
           console.log("支付失败");
-          console.log(error);
+          wx.showToast({
+            title: "支付失败",
+            icon: "none",
+            duration: 2000
+          });
         },
         complete: function() {
           // complete
