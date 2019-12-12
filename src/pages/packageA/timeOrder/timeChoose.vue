@@ -85,13 +85,14 @@ export default {
             this.tdate = this.currentDate;
         }
     },
-    // created() {
-    //     this.getCurrentDate();
-    // },
     onShow() {
         // this.getCurrentDate();
         this.date = this.initDate;
         this.$emit("refreshTimeList", this.date);
+        this.choosedTime = [];
+        this.isChoose = [];
+        this.able = false;
+        this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
     }
 }
 </script>
