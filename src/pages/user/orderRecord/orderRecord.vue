@@ -205,10 +205,12 @@ export default {
         }
     },
     mounted() {
-        this.getOrderList();
         wx.setNavigationBarTitle({
             title: "订单记录"
         });
+    },
+    onShow() {
+        this.all();
     }
 }
 </script>
