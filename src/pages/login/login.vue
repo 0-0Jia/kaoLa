@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" :class="{displayNone: login}">
     <div>
       <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button> -->
       <img class="logo" src="/static/images/logo.png" />
@@ -10,8 +10,7 @@
       </p>
       <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
       <!-- <button class="green" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">获取手机号码</button> -->
-
-      <popup ref="popup" @loginrequest="loginrequest"></popup>
+      <popup ref="popup" @loginrequest="loginrequest" :class="{displayNone: login}"></popup>
     </div>
   </div>
 </template>
@@ -30,28 +29,49 @@ export default {
   },
   onLoad() {},
 
-  mounted: function() {
-    let that = this;
-    wx.checkSession({
-      //检测当前用户的session_key是否过期
-      success: function(res) {
-        //session_key 未过期，并且在本生命周期一直有效
-        console.log("授权未过期", res);
-        that.login = true;
-        // 跳转
-        wx.switchTab({
-          url: "/pages/index/main"
-        });
-      },
-      fail: function() {
-        //session_key 已经失效，需要重新执行登录流程
-        console.log("授权过期");
-        that.login = false;
-      }
-    });
+  beforeCreate: function() {
+    console.log("beforeCreate")
+  },
+  onShow(){
+    console.log("onshow")
+    this.judgeSession();
   },
 
   methods: {
+    judgeSession() {
+      let that = this;
+      wx.checkSession({
+        //检测当前用户的session_key是否过期
+        success: function(res) {
+          //session_key 未过期，并且在本生命周期一直有效
+          console.log("授权未过期", res);
+          that.login = true;
+          that.$wxhttp
+            .get({
+              url: "/customer/user"
+            })
+            .then(res => {
+              console.log(`user:`, res);
+              if (res.code == 0) {
+                // 成功
+                wx.switchTab({
+                  url: "/pages/index/main"
+                });
+              } else {
+                // 失败
+              }
+            })
+            .catch(err => {
+              console.log(`自动请求api失败 err:`, err);
+            });
+        },
+        fail: function() {
+          //session_key 已经失效，需要重新执行登录流程
+          console.log("授权过期");
+          that.login = false;
+        }
+      });
+    },
     setting() {
       const that = this;
       wx.login({
@@ -83,7 +103,6 @@ export default {
         }
       });
     },
-
     //引导用户授权
     bindGetUserInfo(e) {
       const that = this;

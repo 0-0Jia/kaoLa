@@ -10,7 +10,10 @@
       <div class="avatar" :style=" 
      {backgroundImage:'url('+userPhoto+')'}"></div>
       <p class="user-name">{{name}}</p>
-      <p class="user-phone">{{userData.tel? userData.tel : ""}}<span :class="{displayNone: login}" @click="returnLogin">登录</span></p>
+      <p class="user-phone">
+        {{userData.tel? userData.tel : ""}}
+        <span :class="{displayNone: login}" @click="returnLogin">登录</span>
+      </p>
       <div class="integral-balance-card">
         <div class="integral" @click="jumpIntegral">
           <p style="font-size:16px;">{{userData.score? userData.score : '0'}}分</p>
@@ -80,8 +83,7 @@ export default {
     returnLogin() {
       if (!this.flag) {
         wx.navigateTo({
-          url:
-            "/pages/login/main"
+          url: "/pages/login/main"
         });
       }
     },
@@ -162,6 +164,7 @@ export default {
           } else {
             wx.showToast({
               title: res.msg,
+              icon: "none",
               duration: 2000
             });
             this.userPhoto = "../../../static/tabs/photo.png";
