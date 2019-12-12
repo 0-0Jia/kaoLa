@@ -1,6 +1,6 @@
 <template>
-  <div class="login" :class="{displayNone: login}">
-    <div>
+  <div class="login">
+    <div :class="{ displayNone: login }">
       <!-- <button open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">获取用户信息</button> -->
       <img class="logo" src="/static/images/logo.png" />
       <p class="title">需要您的授权</p>
@@ -10,7 +10,7 @@
       </p>
       <button class="green" open-type="getUserInfo" lang="zh_CN" @getuserinfo="bindGetUserInfo">我知道了</button>
       <!-- <button class="green" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">获取手机号码</button> -->
-      <popup ref="popup" @loginrequest="loginrequest" :class="{displayNone: login}"></popup>
+      <popup ref="popup" @loginrequest="loginrequest"></popup>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
       code: "",
       user: [],
       telMessage: "",
-      login: true
+      login: false
     };
   },
   onLoad() {},
@@ -51,7 +51,7 @@ export default {
               url: "/customer/user"
             })
             .then(res => {
-              console.log(`user:`, res);
+              console.log("user:", res);
               if (res.code == 0) {
                 // 成功
                 wx.switchTab({
@@ -134,7 +134,7 @@ export default {
           data: data
         })
         .then(res => {
-          console.log(`登录成功数据:`, res);
+          console.log("登录成功数据:", res);
           // 获取到后台重写的session数据，可以通过vuex做本地保存
 
           wx.setStorageSync("sessionid", res.header["Set-Cookie"]);
