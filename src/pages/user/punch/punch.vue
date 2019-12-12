@@ -31,15 +31,6 @@ export default {
   onUnload: function() {
     wx.switchTab({
       url: '/pages/userIndex/main',
-      success: function(res){
-        // success
-      },
-      fail: function() {
-        // fail
-      },
-      complete: function() {
-        // complete
-      }
     })
   },
 
@@ -55,7 +46,7 @@ export default {
         .then(res => {
           wx.hideLoading();
           console.log(`后台数据:`, res);
-          if (res.msg == "success") {
+          if (res.code == 0) {
             this.$refs.calendar.showCalendar();
             wx.showToast({
               title: "成功",
@@ -65,6 +56,7 @@ export default {
           } else {
             wx.showToast({
               title: res.msg,
+              icon: 'none',
               duration: 2000
             });
           }

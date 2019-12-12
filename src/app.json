@@ -36,6 +36,7 @@
       "orderRecord/main",
       "punch/main",
       "userInfo/main",
+      "telBind/main",
       "balance/balanceRecharge/main"
     ],
     "name": "user"

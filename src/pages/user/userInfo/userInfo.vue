@@ -7,12 +7,8 @@
       </div>
       <div class="userInformation">
         <p style="font-size:14px;">生日</p>
-        <apicker @refreshTime="refreshTime" ref="apicker" :birth="birth"></apicker>
+        <apicker @refreshTime="refreshTime" ref="apicker" :birth ="birth"></apicker>
         <!-- <input type="text" class="userInfo-input" v-model.lazy="birth" /> -->
-      </div>
-      <div class="userInformation">
-        <p style="font-size:14px;">手机号</p>
-        <input type="text" class="userInfo-input" v-model.lazy="tel" />
       </div>
       <div class="userInformation">
         <p style="font-size:14px;">职业</p>
@@ -37,8 +33,7 @@ export default {
   data() {
     return {
       realName: "魏桂佳",
-      birth: "2000-00-00",
-      tel: '',
+      birth: '2000-00-00',
       job: "学生",
       target: "成为一名qger"
     };
@@ -62,8 +57,6 @@ export default {
     //   console.log(this.birth);
     // },
     saveInfo() {
-      let mobileReg = /^1[3456789]\d{9}$/;
-      let isMobile = mobileReg.exec(this.logindata.userName);
       wx.showLoading({
         title: "加载中"
       });
@@ -82,7 +75,7 @@ export default {
         .then(res => {
           console.log(res);
           wx.hideLoading();
-          if (res.msg == "操作成功") {
+          if (res.code == 0) {
             wx.showToast({
               title: "成功",
               icon: "success",
@@ -90,6 +83,7 @@ export default {
             });
           } else {
             wx.showToast({
+              icon: 'none',
               title: res.msg,
               duration: 2000
             });

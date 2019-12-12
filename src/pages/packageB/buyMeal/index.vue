@@ -73,8 +73,8 @@ export default {
       if (this.payMethods == "restmoney") {
         //余额支付则弹出窗口
         wx.showLoading({
-            title: '加载中'
-        })
+          title: "加载中"
+        });
         this.$wxhttp
           .post({
             url: "/customer/meal",
@@ -88,16 +88,16 @@ export default {
           .then(res => {
             console.log(res);
             wx.hideLoading();
-            if(res.code!=0) {
+            if (res.code != 0) {
               wx.showToast({
                 title: res.msg,
-                icon: 'none',
+                icon: "none",
                 duration: 2000
-              })
-            } else if(res.code==0){
+              });
+            } else if (res.code == 0) {
               wx.showToast({
                 title: "支付成功",
-                icon: 'none',
+                icon: "none",
                 duration: 2000
               });
               wx.switchTab({
@@ -110,9 +110,9 @@ export default {
             wx.hideLoading();
             wx.showToast({
               title: "加载失败",
-              icon: 'none',
+              icon: "none",
               duration: 2000
-            })
+            });
           });
       } else if (this.payMethods == "wx") {
         //微信支付则调用支付接口
@@ -129,7 +129,7 @@ export default {
           .then(res => {
             console.log(`微信支付:`, res);
             if (res.msg == "success") {
-            console.log(`微信支付here`);
+              console.log(`微信支付here`);
               this.doWxPay(res.data.wxPayMap);
             } else {
               wx.showToast({
@@ -170,6 +170,9 @@ export default {
             title: "支付成功",
             icon: "none",
             duration: 2000
+          });
+          wx.switchTab({
+            url: "/index/main"
           });
         },
         fail: function(error) {

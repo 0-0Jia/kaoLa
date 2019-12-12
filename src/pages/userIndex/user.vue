@@ -12,7 +12,7 @@
       <p class="user-name">{{name}}</p>
       <p class="user-phone">
         {{userData.tel? userData.tel : ""}}
-        <span :class="{displayNone: login}" @click="returnLogin">登录</span>
+        <span :class="{displayNone: !login}" @click="bindTel">绑定手机号码登录</span>
       </p>
       <div class="integral-balance-card">
         <div class="integral" @click="jumpIntegral">
@@ -80,10 +80,10 @@ export default {
   },
 
   methods: {
-    returnLogin() {
+    bindTel() {
       if (!this.flag) {
         wx.navigateTo({
-          url: "/pages/login/main"
+          url: "/pages/user/telBind/main"
         });
       }
     },
@@ -160,7 +160,7 @@ export default {
             this.userPhoto = this.userData.url;
             this.name = this.userData.name;
             this.flag = true;
-            this.login = true;
+            this.login = false;
           } else {
             wx.showToast({
               title: res.msg,
@@ -170,7 +170,7 @@ export default {
             this.userPhoto = "../../../static/tabs/photo.png";
             this.name = "用户名";
             this.flag = false;
-            this.login = false;
+            this.login = true;
           }
         })
         .catch(err => {
@@ -210,7 +210,7 @@ export default {
             })
             .then(res => {
               console.log(`后台数据:`, res);
-              if (res.msg == "操作成功") {
+              if (res.code == 0) {
                 that.userPhoto = tempFilePaths[0];
                 wx.showToast({
                   title: "成功",
@@ -220,6 +220,7 @@ export default {
               } else {
                 wx.showToast({
                   title: res.msg,
+                  icon: 'none',
                   duration: 2000
                 });
               }
