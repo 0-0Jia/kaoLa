@@ -88,7 +88,7 @@ export default {
       }
     },
     jumpIntegral() {
-      if (this.flag) {
+      if (!this.flag) {
         wx.navigateTo({
           url:
             "/pages/user/integral/main" +

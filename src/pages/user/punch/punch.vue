@@ -28,10 +28,19 @@ export default {
       title: "打卡签到"
     });
   },
-onUnload: function () {
+  onUnload: function() {
     wx.switchTab({
-      url: 'pages/userIndex/main'
-    });
+      url: '/pages/userIndex/main',
+      success: function(res){
+        // success
+      },
+      fail: function() {
+        // fail
+      },
+      complete: function() {
+        // complete
+      }
+    })
   },
 
   methods: {

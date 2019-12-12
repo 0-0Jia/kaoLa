@@ -165,14 +165,18 @@ export default {
           console.log(event);
           wx.showToast({
             title: "支付成功",
-            icon: "success",
+            icon: "none",
             duration: 2000
           });
         },
         fail: function(error) {
           // fail
           console.log("支付失败");
-          console.log(error);
+          wx.showToast({
+            title: "支付失败",
+            icon: "none",
+            duration: 2000
+          });
         },
         complete: function() {
           // complete
