@@ -1,7 +1,7 @@
 <template>
     <div class="seat" :seat="seat" @click="goChooseTime">
         <img class="seatBg" src="/static/images/seatBg.png"/>
-        <div class="name">{{sitId}}</div>
+        <div class="name">{{sitId}}号座位</div>
         <div class="price">{{money}}元/小时</div>
         <div :class="[{'redFont': (!ifPreserved)}, 'status']">{{status}}</div>
     </div>

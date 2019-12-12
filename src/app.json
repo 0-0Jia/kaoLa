@@ -22,7 +22,8 @@
       "orderDetail/main",
       "mealShop/main",
       "buyMeal/main",
-      "orderRecord/main"
+      "orderRecord/main",
+      "mealDetail/main"
     ],
     "name": "packageB"
   },

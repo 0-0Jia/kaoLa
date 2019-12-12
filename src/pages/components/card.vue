@@ -28,11 +28,17 @@ export default {
     },
     methods: {
         handleClick() {
+            //跳转到套餐购买页
             if(this.cardMsg.status == null) {
                 this.$emit('handleClick', this.cardMsg);
             }
+            //预定时选择套餐
             if(this.chooseCard) {
                 this.$emit('chooseCard', this.cardMsg);
+            }
+            //跳转到套餐详情页
+            if(this.cardMsg.status) {
+                this.$emit('handleClick', this.cardMsg);
             }
         }
     }
@@ -53,7 +59,7 @@ export default {
     height: 100%;
 }
 .msg{
-    width: 65px;
+    width: 80px;
     height: 66px;
     position: absolute;
     top: 12px;

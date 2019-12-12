@@ -27,6 +27,7 @@
           v-for="(cardMsg, index) in userMealList" 
           :key="index" 
           :cardMsg="cardMsg"
+          @handleClick="handleClick"
         ></card>
       </div>
       <div v-else class="else">无已购买套餐</div>
@@ -170,6 +171,21 @@ export default {
           icon: 'none',
           duration: 2000
         })
+      })
+    },
+    //跳转到套餐详情界面
+    handleClick(mealMsg) {
+      wx.showLoading({
+        title: '加载中'
+      })
+      mpvue.navigateTo({
+        url: "/pages/packageB/mealDetail/main",
+        success(res) {
+          wx.hideLoading();
+          res.eventChannel.emit('getMealMsg', {
+            mealMsg: mealMsg
+          })
+        }
       })
     }
   },
