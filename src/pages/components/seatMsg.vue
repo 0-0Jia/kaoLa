@@ -4,7 +4,7 @@
         <div class="msg">
             <div class="badge">
                 <span class="type">{{roomType}}</span>
-                <span class="name">{{sitId}}</span>
+                <span class="name">{{sitId}}号座位</span>
             </div>
             <div class="price" v-if="(father=='orderSubmission' || father=='timeOrder')">{{price}}元/小时</div>
             <!-- <div class="effect" v-if="(father=='orderDetail')">有效</div> -->

@@ -5,12 +5,12 @@
             <div class="basicMsg">
                 <div class="name">{{message.storeName}}</div>
                 <div class="address">{{message.storeAddress}}</div>
-                <div class="workTime">营业时间：8:00-20:30</div>
+                <div class="workTime">营业时间：8:00-23:00</div>
             </div>
-            <div class="seatCount">
+            <!-- <div class="seatCount">
                 <span class="restSeat">空位数：{{message.freeSeats}}</span>
                 <span class="totalSeat">座位数：{{message.totalSeats}}</span>
-            </div>
+            </div> -->
         </div>
         <div class="handle">
             <div class="order" @click="goDetail()">预约</div>

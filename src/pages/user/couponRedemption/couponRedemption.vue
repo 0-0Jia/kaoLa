@@ -2,7 +2,7 @@
   <div class="coupon">
     <div class="coupon-card">
       <p style="font-size:14px;">输入优惠码</p>
-      <input type="text" class="coupon-input" v-model.lazy="coupon" />
+      <input type="text" class="coupon-input" v-model="coupon" />
     </div>
     <button class="coupon-button" @click="couponRedemption">确认</button>
   </div>

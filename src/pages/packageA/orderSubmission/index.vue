@@ -171,7 +171,7 @@ export default {
         })
         this.$wxhttp
           .post({
-            url: "/customer/meal",
+            url: "/customer/sits",
             data: this.msg
           })
           .then(res => {

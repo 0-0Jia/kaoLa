@@ -2,7 +2,7 @@
   <div class="balance-recharge">
     <div class="balance-recharge-card">
       <span class="money">￥</span>
-      <input type="text" class="recharge-input" v-model.lazy="money" placeholder="充值范围为0-300(整数)" />
+      <input type="text" class="recharge-input" v-model="money" placeholder="充值范围为0-300(整数)" />
     </div>
     <button class="recharge-button" @click="rechargeConfirm">确认</button>
   </div>

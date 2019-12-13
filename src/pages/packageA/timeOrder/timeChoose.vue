@@ -100,7 +100,10 @@ export default {
         this.able = false;
         this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
     },
-    mounted() {
+    created() {
+        this.date = this.initDate;
+    },
+    onUnload() {
         this.date = this.initDate;
     }
 }

@@ -3,20 +3,20 @@
     <div class="userInfo-card">
       <div class="userInformation">
         <p style="font-size:14px;">真实姓名</p>
-        <input type="text" class="userInfo-input" v-model.lazy="realName" />
+        <input type="text" class="userInfo-input" v-model="realName" />
       </div>
       <div class="userInformation">
         <p style="font-size:14px;">生日</p>
         <apicker @refreshTime="refreshTime" ref="apicker" :birth ="birth"></apicker>
-        <!-- <input type="text" class="userInfo-input" v-model.lazy="birth" /> -->
+        <!-- <input type="text" class="userInfo-input" v-model="birth" /> -->
       </div>
       <div class="userInformation">
         <p style="font-size:14px;">职业</p>
-        <input type="text" class="userInfo-input" v-model.lazy="job" />
+        <input type="text" class="userInfo-input" v-model="job" />
       </div>
       <div class="userInformation">
         <p style="font-size:14px;">目标</p>
-        <input type="text" class="userInfo-input" v-model.lazy="target" />
+        <input type="text" class="userInfo-input" v-model="target" />
       </div>
     </div>
     <button class="save-button" @click="saveInfo">保存</button>
@@ -32,10 +32,10 @@ export default {
   },
   data() {
     return {
-      realName: "魏桂佳",
-      birth: '2000-00-00',
-      job: "学生",
-      target: "成为一名qger"
+      realName: "",
+      birth: '',
+      job: "",
+      target: ""
     };
   },
   onLoad: function(options) {
@@ -52,11 +52,12 @@ export default {
   },
 
   methods: {
-    // refreshTime(date){
-    //   this.birth = date;
-    //   console.log(this.birth);
-    // },
+    refreshTime(date){
+      this.birth = date;
+      console.log(this.birth);
+    },
     saveInfo() {
+      console.log(this.birth)
       wx.showLoading({
         title: "加载中"
       });

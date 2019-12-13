@@ -2,7 +2,7 @@
   <div class="tel-bind">
     <div class="bind-card">
       <p style="font-size:14px;">绑定手机号：</p>
-      <input type="text" class="bind-input" v-model.lazy="tel" />
+      <input type="text" class="bind-input" v-model="tel" />
     </div>
     <button class="bind-button" @click="bindRedemption">确认</button>
     <button class="wxbind" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">绑定微信手机号</button>
