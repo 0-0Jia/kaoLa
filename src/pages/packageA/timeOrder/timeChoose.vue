@@ -1,16 +1,14 @@
 <template>
     <div class="chooseToOrder">
-        <picker 
-            mode="date" 
-            :value="date" 
-            :start="startDay"
-            :end="endDay" 
-            @change="bindDateChange"
+        <picker
+            :value="index" 
+            :range="dateList"
+            @change="bindPickerChange"
         >
             <div class="picker">
                 <span>预约日期</span>
                 <div class="dateValue">
-                    <span>{{date}}</span>   
+                    <span>{{dateList[index]}}</span>   
                     <img class="arrow" src="/static/images/arrow.png" />
                 </div>
             </div>
@@ -37,25 +35,22 @@ export default {
     name: "timeChoose",
     props: {
         timeList: Array,
-        startDay: String,
-        endDay: String,
-        initDate: String
+        dateList: Array
     },
     data() {
         return {
-            date: "",
-            tdate: "",
-            currentDate: "",
             isChoose: [],
             choosedTime: [],
-            able: false
+            able: false,
+            index: 0,
+            tindex: 0
         }
     },
     methods: {
         chooseTime(index) {
             this.isChoose[index] = !this.isChoose[index];
-            this.date = "0";
-            this.date = this.tdate;
+            // this.index = 0;
+            // this.index = this.tindex;
             //将选择的时间段传到父组件
             this.choosedTime = [];
             this.isChoose.forEach((flag, i) => {
@@ -70,41 +65,33 @@ export default {
             }
             this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
         },
-        bindDateChange(e) {
-            this.date = e.mp.detail.value;
-            if(this.date!=this.tdate) {
+        bindPickerChange(e) {
+            //获取当前时间下标
+            this.index = e.mp.detail.value;
+            console.log(this.index);
+            if(this.index!=this.tindex) {
                 //如果重新选择的时间和当前时间不一样。则刷新时间段的选择
                 this.choosedTime = [];
                 this.isChoose = [];
                 this.able = false;
                 this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
             }
-            this.tdate = this.date;
-            this.$emit("refreshTimeList", this.date);
-        },
-        getCurrentDate() {
-            const current = new Date();
-            let day = ((current.getDate()<10)?"0":"") + current.getDate();
-            let month = (((current.getMonth()+1)<10)?"0":"") + (current.getMonth()+1);
-            let year = current.getFullYear();
-            this.currentDate = year + "-" + month + "-" + day;
-            this.date = this.currentDate;
-            this.tdate = this.currentDate;
+            this.tindex = this.index;
+            this.$emit("refreshTimeList", this.dateList[this.index]);
         }
     },
     onShow() {
-        // this.getCurrentDate();
-        this.$emit("refreshTimeList", this.date);
+        this.$emit("refreshTimeList", this.dateList[this.index]);
         this.choosedTime = [];
         this.isChoose = [];
         this.able = false;
         this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
     },
     created() {
-        this.date = this.initDate;
+        this.index = 0;
     },
     onUnload() {
-        this.date = this.initDate;
+        this.index = 0;
     }
 }
 </script>

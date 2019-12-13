@@ -7,13 +7,11 @@
             :sitId="seat.sitId"
             :price="seat.money"
         ></seat-msg>
-        <!-- 时间日期选择器 -->
+        <!-- 时间普通选择器 -->
         <time-choose 
             :isChoose="isChoose" 
             :timeList="timeList"
-            :initDate="initDate"
-            :startDay="startDay"
-            :endDay="endDay"
+            :dateList="dateList"
             @sendChoosedTime="getChooseTime"
             @refreshTimeList="refreshTimeList"
         >
@@ -42,8 +40,6 @@ export default {
         return {
             type: "order",
             timeList: [],
-            startDay: "",
-            endDay: "",
             seat: {},
             choosedTime: "",
             currentDate: "",
@@ -51,7 +47,8 @@ export default {
             room: {},
             money: 0,
             storeName: "",
-            initDate: ""
+            initDate: "",
+            dateList: []
         }
     },
     methods: {
@@ -91,12 +88,12 @@ export default {
                 this.seat = data.seat;
                 //设置时间段
                 this.timeList = data.seat.curDate[0].sitDate;
-                //设置时间选择器的起止时间
-                this.startDay = data.seat.curDate[0].value;
-                this.initDate = this.startDay;  //设置初始时间为当前时间
-                if(data.seat.curDate.length > 1) {
-                    this.endDay = data.seat.curDate[data.seat.curDate.length-1].value;
-                } else this.endDay = this.startDay;
+                //将座位里的时间都push进dateList日期表
+                this.dateList = [];
+                for(let i = 0; i  < data.seat.curDate.length; i++) {
+                    this.dateList.push(data.seat.curDate[i].value);
+                }
+                console.log(this.dateList);
             });
             eventChannel.on('acceptRoomList', data => {
                 this.room = data.room;
@@ -127,7 +124,9 @@ export default {
     mounted() {
         this.getSeatMsg();
         this.currentDate = this.seat.curDate[0].value;
-        this.initDate = this.startDay;
+        if(this.dateList.length > 0) {
+            this.initDate = this.dateList[0];
+        }
         wx.setNavigationBarTitle({
             title: "预约时间"
         });
