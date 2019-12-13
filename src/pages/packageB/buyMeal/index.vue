@@ -101,7 +101,7 @@ export default {
                 duration: 2000
               });
               wx.switchTab({
-                url: "pages/orderIndex/main"
+                url: "/pages/orderIndex/main"
               })
             }
           })
@@ -172,7 +172,7 @@ export default {
             duration: 2000
           });
           wx.switchTab({
-            url: "/index/main"
+            url: "/pages/orderIndex/main"
           });
         },
         fail: function(error) {

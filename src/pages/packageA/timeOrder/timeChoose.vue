@@ -72,6 +72,13 @@ export default {
         },
         bindDateChange(e) {
             this.date = e.mp.detail.value;
+            if(this.date!=this.tdate) {
+                //如果重新选择的时间和当前时间不一样。则刷新时间段的选择
+                this.choosedTime = [];
+                this.isChoose = [];
+                this.able = false;
+                this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
+            }
             this.tdate = this.date;
             this.$emit("refreshTimeList", this.date);
         },
@@ -87,12 +94,14 @@ export default {
     },
     onShow() {
         // this.getCurrentDate();
-        this.date = this.initDate;
         this.$emit("refreshTimeList", this.date);
         this.choosedTime = [];
         this.isChoose = [];
         this.able = false;
         this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
+    },
+    mounted() {
+        this.date = this.initDate;
     }
 }
 </script>

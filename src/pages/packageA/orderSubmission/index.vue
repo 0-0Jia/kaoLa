@@ -155,7 +155,7 @@ export default {
             });
             if (res.code == 0) {
               wx.switchTab({
-                url: 'pages/index/main'
+                url: '/pages/index/main'
               })
             }
           })
@@ -190,7 +190,7 @@ export default {
                 duration: 2000
               });
               wx.switchTab({
-                url: "pages/index/main"
+                url: "/pages/index/main"
               })
             }
           })
@@ -239,7 +239,7 @@ export default {
             duration: 2000
           });
           wx.switchTab({
-            url: "/index/main"
+            url: "/pages/index/main"
           });
         },
         fail: function(error) {
@@ -263,6 +263,14 @@ export default {
     wx.setNavigationBarTitle({
       title: "提交预约"
     });
+  },
+  onHide() {
+    console.log("onhide")
+    this.mealName = "";
+  },
+  onUnload(){
+    console.log("unload")
+    this.mealName = "";
   }
 };
 </script>
