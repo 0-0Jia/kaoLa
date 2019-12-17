@@ -2,6 +2,7 @@
   <div>
     <img class="logo" src="/static/images/logo.png" />
     <button class="green" @click="goOrder()">点击预约</button>
+    <button class="green" @click="goStore()">去门店</button>
     <!-- <button class="green" @click="scanCode()">扫码开锁</button> -->
   </div>
 </template>
@@ -11,15 +12,15 @@ export default {
   data() {
     return {
       msg: "Hello",
-      code: ''
+      code: ""
     };
   },
   mounted() {},
   methods: {
     goOrder() {
       wx.showLoading({
-          title: '加载中',
-      })
+        title: "加载中"
+      });
       wx.navigateTo({
         url: "/pages/packageA/storeChoose/main",
         success() {
@@ -27,9 +28,28 @@ export default {
         }
       });
     },
+    goStore() {
+      wx.showLoading({
+        title: "加载中"
+      });
+      wx.navigateTo({
+        url: "/pages/map/main",
+        success() {
+          wx.hideLoading();
+        }
+      });
+
+      // //使用微信内置地图查看位置接口
+      // wx.openLocation({
+      //   latitude: "23.04149", // 纬度，浮点数，范围为90 ~ -90
+      //   longitude: "113.405216", // 经度，浮点数，范围为180 ~ -180。
+      //   name: "门店位置", // 位置名
+      //   address: "广东工业大学大学城校区工学一号馆", // 地址详情说明
+      //   scale: 28 // 地图缩放级别,整形值,范围从1~28。默认为最大
+      // });
+    },
     scanCode() {
       // 智能门锁
-
       // this.$wxhttp
       //   .post({
       //     url: "/customer/opendoor",

@@ -2,7 +2,7 @@
   <div class="balance-recharge">
     <div class="balance-recharge-card">
       <span class="money">￥</span>
-      <input type="text" class="recharge-input" v-model="money" placeholder="充值范围为0-300(整数)" />
+      <input type="number" class="recharge-input" v-model="money" placeholder="充值范围为0-300(整数)" />
     </div>
     <button class="recharge-button" @click="rechargeConfirm">确认</button>
   </div>
@@ -32,6 +32,14 @@ export default {
     rechargeConfirm() {
       let that = this;
       console.log(this.money);
+      if (!this.money.match(/\b[1-9]\d{0，1}\b|\b[1-2]\d\d\b|\b300\b/)) {
+        wx.showToast({
+          title: "请输入1-300之间的整数",
+          icon: "none",
+          duration: 2000
+        });
+        return false;
+      }
       that.$wxhttp
         .post({
           url: "/customer/money",
@@ -46,7 +54,7 @@ export default {
           } else {
             wx.showToast({
               title: res.data.msg,
-              icon: 'none',
+              icon: "none",
               duration: 2000
             });
           }

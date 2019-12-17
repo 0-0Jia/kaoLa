@@ -2,7 +2,7 @@
   <div class="coupon">
     <div class="coupon-card">
       <p style="font-size:14px;">输入优惠码</p>
-      <input type="text" class="coupon-input" v-model="coupon" />
+      <input type="number" class="coupon-input" v-model="coupon"/>
     </div>
     <button class="coupon-button" @click="couponRedemption">确认</button>
   </div>
@@ -20,19 +20,17 @@ export default {
 
   mounted: function() {
     wx.setNavigationBarTitle({
-      title: "兑换优惠码"
+      title: "团购兑换"
     });
   },
 
-  onShow(){
-    this.coupon = '';
-  },
+  onShow() {},
 
   methods: {
     couponRedemption() {
       wx.showLoading({
         title: "加载中"
-      })
+      });
       this.$wxhttp
         .post({
           url: "/customer/groupon",
@@ -42,7 +40,8 @@ export default {
         })
         .then(res => {
           wx.hideLoading();
-          if (res.code == 0) {
+          console.log(res);
+          if (res.data.code == 0) {
             wx.showToast({
               title: "兑换成功",
               icon: "success",
@@ -50,8 +49,8 @@ export default {
             });
           } else {
             wx.showToast({
-              title: res.msg,
-              icon: 'none',
+              title: res.data.msg,
+              icon: "none",
               duration: 2000
             });
           }

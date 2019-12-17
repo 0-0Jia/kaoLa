@@ -35,7 +35,7 @@
       </view>
       <view class="weui-cells weui-cells_after-title" @click="jumpCoupon">
         <view class="weui-cell weui-cell_access">
-          <view class="weui-cell__bd" style="font-size:16px">兑换优惠码</view>
+          <view class="weui-cell__bd" style="font-size:16px">团购兑换</view>
           <view class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></view>
         </view>
       </view>
@@ -138,13 +138,13 @@ export default {
           url:
             "/pages/user/userInfo/main" +
             "?realName=" +
-            (this.userData.realName ? this.userData.realName : "用户名") +
+            (this.userData.realName ? this.userData.realName : "") +
             "&birth=" +
             (this.userData.birth ? this.userData.birth : "2000-00-00") +
             "&job=" +
-            (this.userData.job ? this.userData.job : "无业游民") +
+            (this.userData.job ? this.userData.job : "") +
             "&target=" +
-            (this.userData.target ? this.userData.target : "无")
+            (this.userData.target ? this.userData.target : "")
         });
       }
     },

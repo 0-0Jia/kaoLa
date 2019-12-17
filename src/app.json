@@ -3,44 +3,47 @@
     "pages/login/main",
     "pages/index/main",
     "pages/orderIndex/main",
-    "pages/userIndex/main"
+    "pages/userIndex/main",
+    "pages/map/main"
   ],
-  "subPackages": [{
-    "root": "pages/packageA/",
-    "pages": [
-      "storeChoose/main",
-      "placeOrder/main",
-      "timeOrder/main",
-      "orderSubmission/main",
-      "chooseMeal/main"
-    ],
-    "name": "packageA"
-  },
-  {
-    "root": "pages/packageB/",
-    "pages": [
-      "orderDetail/main",
-      "mealShop/main",
-      "buyMeal/main",
-      "orderRecord/main",
-      "mealDetail/main"
-    ],
-    "name": "packageB"
-  },
-  {
-    "root": "pages/user/",
-    "pages": [
-      "balance/main",
-      "couponRedemption/main",
-      "integral/main",
-      "orderRecord/main",
-      "punch/main",
-      "userInfo/main",
-      "telBind/main",
-      "balance/balanceRecharge/main"
-    ],
-    "name": "user"
-  }],
+  "subPackages": [
+    {
+      "root": "pages/packageA/",
+      "pages": [
+        "storeChoose/main",
+        "placeOrder/main",
+        "timeOrder/main",
+        "orderSubmission/main",
+        "chooseMeal/main"
+      ],
+      "name": "packageA"
+    },
+    {
+      "root": "pages/packageB/",
+      "pages": [
+        "orderDetail/main",
+        "mealShop/main",
+        "buyMeal/main",
+        "orderRecord/main",
+        "mealDetail/main"
+      ],
+      "name": "packageB"
+    },
+    {
+      "root": "pages/user/",
+      "pages": [
+        "balance/main",
+        "couponRedemption/main",
+        "integral/main",
+        "orderRecord/main",
+        "punch/main",
+        "userInfo/main",
+        "telBind/main",
+        "balance/balanceRecharge/main"
+      ],
+      "name": "user"
+    }
+  ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
@@ -48,22 +51,30 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "list": [{
-      "pagePath": "pages/index/main",
-      "text": "首页",
-      "iconPath": "static/tabs/index.png",
-      "selectedIconPath": "static/tabs/index_selected.png"
-    },{
-      "pagePath": "pages/orderIndex/main",
-      "text": "订单",
-      "iconPath": "static/tabs/order.png",
-      "selectedIconPath": "static/tabs/order_selected.png"
-    },
-    {
-      "pagePath": "pages/userIndex/main",
-      "text": "我的",
-      "iconPath": "static/tabs/user.png",
-      "selectedIconPath": "static/tabs/user_selected.png"
-    }]
+    "list": [
+      {
+        "pagePath": "pages/index/main",
+        "text": "首页",
+        "iconPath": "static/tabs/index.png",
+        "selectedIconPath": "static/tabs/index_selected.png"
+      },
+      {
+        "pagePath": "pages/orderIndex/main",
+        "text": "订单",
+        "iconPath": "static/tabs/order.png",
+        "selectedIconPath": "static/tabs/order_selected.png"
+      },
+      {
+        "pagePath": "pages/userIndex/main",
+        "text": "我的",
+        "iconPath": "static/tabs/user.png",
+        "selectedIconPath": "static/tabs/user_selected.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
   }
 }
