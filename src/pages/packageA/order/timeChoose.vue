@@ -18,7 +18,7 @@
             <div class="title">预约时间</div>
             <div class="timeTable">
                 <div 
-                    :class="[{'greenbutton': isChoose[index]}, {'unable': timeList[index].preserved==1}, 'time']" 
+                    :class="[{'greenbutton': isChoose[index]}, {'unable': timeList[index].preserved!=0}, 'time']" 
                     v-for="(time, index) in timeList" 
                     :key="index" 
                     @click="chooseTime(index)"
