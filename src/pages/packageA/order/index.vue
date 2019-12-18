@@ -11,6 +11,7 @@
                 <div class="seatTypeChoose">
                     <div class="left">
                         <div class="title">座位类型</div>
+                        <div class="tip" @click="showTip">说明</div>
                         <div class="type">
                             <div 
                                 :class="[(index==roomIndex)?'chooseRoomType':'','button']" 
@@ -48,16 +49,29 @@
                             :isChoose="isChoose" 
                             :timeList="timeList"
                             :dateList="dateList"
-                            @sendChoosedTime="getChooseTime"
+                            :dateIndex="dateIndex"                           
                             @refreshTimeList="refreshTimeList"
+                            @update="upDate"
+                            @updateChoosedTime="updateChoosedTime"
                         ></time-choose>
+                        <div class="bar"></div>
+                    </div>
+                    <pay-methods
+                        :payMethods="payMethods"
+                        @choosePayMethod="choosePayMethod"
+                        :choiceList="choiceList"
+                    ></pay-methods>
+                    <div class="chooseMeal" v-show="payMethods=='meal'" @click="goChooseMeal">
+                        <div class="mealtitle">选择套餐</div>
+                        <span class="meal">{{mealName}}</span>
+                        <img class="arrow" src="/static/images/arrow.png" />
                     </div>
                 </div>
                 <div class="else" v-else>暂无座位</div>
             </div>
             <div v-else class="else">暂无房间</div>
         </div>
-        <submit :type="type" @orderRightNow="goPay" :ableToClick="ableToClick" :money="money"></submit>
+        <submit :type="type" @submit="submit" :ableToClick="ableToClick" :money="payMoney"></submit>
     </div>
 </template>
 
@@ -83,15 +97,35 @@ export default {
             seatList: [],           //获取到的对应房间的座位列表
             seatIndex: 0,           //当前选择的座位
             curDateIndex: 0,        //当前选择的时间
-            timeList: [
-                "8:00-9:00"
-            ],
+            timeList: [],
             dateList: [],
-            type: "order",
             money: 0,
             ableToClick: false,
             choosedTime: [],
-            imgList: []             //轮播图列表
+            imgList: [],             //轮播图列表
+            type: "pay",
+            payMethods: "wx",
+            choiceList: [
+                {
+                name: "微信支付",
+                value: "wx"
+                },
+                {
+                name: "套餐支付",
+                value: "meal"
+                },
+                {
+                name: "余额支付",
+                value: "restmoney"
+                }
+            ],
+            choosedMeal: {},
+            payMsg: {},
+            payMoney: 0,
+            dateIndex: 0,
+            choosedTimeStr: "",
+            isChoose: [],
+            mealName: ""
         }
     },
     methods: {
@@ -290,6 +324,7 @@ export default {
                     res.eventChannel.on("sendChooseSeat", data => {
                         that.setSeatIndex(data.index);
                         that.resetCurDateIndex();
+                        that.upDate(0);
                     });
                 }
             })
@@ -322,50 +357,11 @@ export default {
                 this.timeList = this.seatList[this.seatIndex].curDate[this.curDateIndex].sitDate;
             } 
         },
-        //获得选择的时间段
-        getChooseTime(data) {
-            this.choosedTime = data.choosedTime.join(',');
-            this.money = (data.choosedTime.length * this.seatList[this.seatIndex].money).toFixed(2);
-            //判断当前按钮是否为亮
-            this.ableToClick = data.able;
-            console.log(this.choosedTime);
-        },
         //刷新时间表
         refreshTimeList(index) {
             this.curDateIndex = index;
             console.log("curdateindex: ", this.curDateIndex);
             this.setTimeList();
-        },
-        //前往支付页面
-        goPay() {
-            const time = this.seatList[this.seatIndex].curDate[this.curDateIndex].value + " " + this.choosedTime;
-            const seat = this.seatList[this.seatIndex];
-            const room = this.roomList[this.roomIndex];
-            const money = this.money;
-            const currentDate = this.seatList[this.seatIndex].curDate[this.curDateIndex].value;
-            const choosedTime = this.choosedTime;
-            const storeName = this.store.storeName;
-            wx.showLoading({
-                title: "加载中"
-            });
-            mpvue.navigateTo({
-                url: "/pages/packageA/orderSubmission/main",
-                success: function(res) {
-                    wx.hideLoading();
-                    res.eventChannel.emit('acceptPayMsg', {
-                        sitId: seat.sitId,
-                        time: time,
-                        room: room
-                    });
-                    res.eventChannel.emit('acceptBasicMsg', {
-                        money: money,
-                        date: currentDate,
-                        choosedTime: choosedTime,
-                        storeName: storeName,
-                        price: seat.money
-                    });
-                }
-            })
         },
         //获取轮播的图片
         getImgList() {
@@ -381,6 +377,221 @@ export default {
             let baseUrl = `https://qgrobot.oss-cn-shenzhen.aliyuncs.com`;
             wx.previewImage({
                 urls: [`${baseUrl}/${this.store.storeId}_sit.png`] // 需要预览的图片http链接列表
+            })
+        },
+        //选择支付方式
+        choosePayMethod(value) {
+            this.payMethods = value;
+            if(value == "wx" || value == "restmoney") this.payMoney = this.money;
+            if(value == "meal") this.payMoney = 0;
+        },
+        //跳转到套餐选择页面
+        goChooseMeal() {
+            let that = this;
+            let temp = this.choosedMeal;
+            wx.showLoading({
+                title: "加载中"
+            });
+            wx.navigateTo({
+                url: "/pages/packageA/chooseMeal/main",
+                success(res) {
+                    wx.hideLoading();
+                    res.eventChannel.on("acceptChoosedMeal", data => {
+                        that.setPayMsg(data.meal);
+                    });
+                }
+            });
+        },
+        //根据所选套餐设置支付接口的参数
+        setPayMsg(meal) {
+            this.choosedMeal = meal;
+            this.mealName = this.choosedMeal.name;
+            this.payMsg.payType = 3;
+            this.payMsg.meal = {};
+            this.payMsg.meal.mealId = this.choosedMeal.mealId;
+            this.payMoney = 0;
+            console.log(this.payMsg);
+        },
+        //支付
+        submit() {
+            //设置支付的参数
+            this.payMsg.sitId = this.seatList[this.seatIndex].sitId;
+            this.payMsg.time = this.seatList[this.seatIndex].curDate[this.curDateIndex].value + " " + this.choosedTimeStr;
+            this.payMsg.room = this.roomList[this.roomIndex];
+            // this.payMsg.money = this.payMoney;
+            if (this.payMethods == "wx") {
+                this.payMsg.payType = 1;
+                this.payMsg.mealId = null;
+                //微信支付则调用支付接口
+                this.$wxhttp
+                .post({
+                    url: "/customer/sits",
+                    data: this.payMsg
+                })
+                .then(res => {
+                    console.log(`微信支付:`, res);
+                    if (res.msg == "success") {
+                        console.log(`微信支付here`);
+                        this.doWxPay(res.data.wxPayMap);
+                    } else {
+                        wx.showToast({
+                            title: res.msg,
+                            icon: "none",
+                            duration: 2000
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.log(`err:`, err);
+                });
+            } else if (this.payMethods == "meal") {
+                //套餐支付
+                this.payMsg.payType = 3;
+                this.payMsg.mealId = this.choosedMeal.mealId;
+                wx.showLoading({
+                    title: "加载中"
+                });
+                this.$wxhttp
+                .post({
+                    url: "/customer/sits",
+                    data: this.payMsg
+                })
+                .then(res => {
+                    wx.hideLoading();
+                    console.log(res);
+                    wx.showToast({
+                        title: res.msg,
+                        duration: 2000,
+                        icon: "none"
+                    });
+                    if (res.code == 0) {
+                    wx.switchTab({
+                        url: '/pages/index/main'
+                    })
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            } else if(this.payMethods == "restmoney") {
+                //余额支付
+                this.payMsg.payType = 4;
+                this.payMsg.mealId = null;
+                wx.showLoading({
+                    title: '加载中'
+                })
+                this.$wxhttp
+                .post({
+                    url: "/customer/sits",
+                    data: this.payMsg
+                })
+                .then(res => {
+                    console.log(res);
+                    wx.hideLoading();
+                    if(res.code!=0) {
+                        wx.showToast({
+                            title: res.msg,
+                            icon: 'none',
+                            duration: 2000
+                        })
+                    } else if(res.code==0){
+                        wx.showToast({
+                            title: "支付成功",
+                            icon: 'none',
+                            duration: 2000
+                        });
+                        wx.switchTab({
+                            url: "/pages/index/main"
+                        })
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    wx.hideLoading();
+                    wx.showToast({
+                        title: "加载失败",
+                        icon: 'none',
+                        duration: 2000
+                    })
+                });
+            }
+        },
+        //更新所选的时间
+        upDate(index) {
+            this.dateIndex = index;
+            this.isChoose = [];
+            this.choosedTime = [];
+            this.ableToClick = false;
+            this.payMoney = this.money = 0;
+            console.log("update");
+            this.refreshTimeList(index);
+        },
+        //更新选择的时间段
+        updateChoosedTime(index) {
+            if(this.timeList[index].preserved == 0) {
+                this.isChoose[index] = !this.isChoose[index];
+                console.log(this.isChoose);
+                //将选择的时间段传到父组件
+                this.choosedTime = [];
+                this.isChoose.forEach((flag, i) => {
+                    if(flag) {
+                        this.choosedTime.push(this.timeList[i].value);
+                    }
+                });
+                //如果有选择时间，则支付按钮点亮
+                this.ableToClick = false;
+                if(this.choosedTime.length>0) {
+                    this.ableToClick = true;
+                }
+                //更新钱的数量
+                this.money = (this.choosedTime.length * this.seatList[this.seatIndex].money).toFixed(2);
+                this.payMoney = this.money;
+                this.choosedTimeStr = this.choosedTime.join(',');
+            }
+        },
+        //微信支付
+        doWxPay(param) {
+            //小程序发起微信支付
+            wx.requestPayment({
+                timeStamp: param.timeStamp + "", //记住，这边的timeStamp一定要是字符串类型的，不然会报错
+                nonceStr: param.nonceStr,
+                package: param.package,
+                signType: "MD5",
+                paySign: param.paySign,
+                appId: param.appId,
+                success: function(event) {
+                    // success
+                    console.log(event);
+                    wx.showToast({
+                        title: "支付成功",
+                        icon: "none",
+                        duration: 2000
+                    });
+                    wx.switchTab({
+                        url: "/pages/index/main"
+                    });
+                },
+                fail: function(error) {
+                    // fail
+                    console.log("支付失败");
+                    wx.showToast({
+                        title: "支付失败",
+                        icon: "none",
+                        duration: 2000
+                    });
+                },
+                complete: function() {
+                    // complete
+                    console.log("pay complete");
+                }
+            });        
+        },
+        //显示座位说明
+        showTip() {
+            wx.showModal({
+                title: '座位类型说明',
+                content: '哈哈哈哈哈哈哈哈哈哈哈哈',
+                showCancel: false
             })
         }
     }, 
@@ -413,11 +624,26 @@ export default {
 .title{
     color: #2E2E2E;
     font-size: 12px;
+    display: inline-block;
+    margin-right: 10px;
 }
 .type{
     width: 100%;
     margin-top: 8px;
     padding-left: 3.5px;
+}
+.tip{
+    width: 45px;
+    height: 24px;
+    border: 2px solid #44644A;
+    border-radius: 24px;
+    box-sizing: border-box;
+    color: #44644A;
+    font-size: 10px;
+    text-align: center;
+    line-height: 24px;
+    display: inline-block;
+    margin-right: 16px;
 }
 .button{
     width: 58.5px;
@@ -525,5 +751,39 @@ export default {
     text-align: center;
     position: relative;
     top: 50px;
+}
+.chooseMeal {
+  width: 343px;
+  height: 26px;
+  right: 0;
+  left: 0;
+  margin: auto;
+  margin-top: 20px;
+  position: relative;
+  color: #2e2e2e;
+  background-color: white;
+}
+.mealtitle {
+  display: inline-block;
+  line-height: 22px;
+  font-size: 12px;
+}
+.meal {
+  display: inline-block;
+  line-height: 22px;
+  position: absolute;
+  font-size: 12px;
+  color: #a8a8a8;
+  right: 11px;
+}
+.chooseMeal>.arrow {
+  width: 7.13px;
+  height: 12.97px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  margin-left: 10.5px;
 }
 </style>

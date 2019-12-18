@@ -1,14 +1,14 @@
 <template>
     <div class="chooseToOrder">
         <picker
-            :value="index" 
+            :value="dateIndex" 
             :range="dateList"
             @change="bindPickerChange"
         >
             <div class="picker">
                 <span>预约日期</span>
                 <div class="dateValue">
-                    <span>{{dateList[index]}}</span>   
+                    <span>{{dateList[dateIndex]}}</span>   
                     <img class="arrow" src="/static/images/arrow.png" />
                 </div>
             </div>
@@ -18,7 +18,7 @@
             <div class="title">预约时间</div>
             <div class="timeTable">
                 <div 
-                    :class="[{'greenbutton': isChoose[index]}, {'unable': timeList[index].preserved!=0}, 'time']" 
+                    :class="[isChoose[index]?'greenbutton':'', {'unable': timeList[index].preserved!=0}, 'time']" 
                     v-for="(time, index) in timeList" 
                     :key="index" 
                     @click="chooseTime(index)"
@@ -35,67 +35,39 @@ export default {
     name: "timeChoose",
     props: {
         timeList: Array,
-        dateList: Array
+        dateList: Array,
+        dateIndex: Number,
+        isChoose: Array
     },
     data() {
         return {
-            isChoose: [],
-            choosedTime: [],
-            able: false,
-            index: 0,       //选择的时间的下标
             tindex: 0
         }
     },
     methods: {
         chooseTime(index) {
-            if(this.timeList[index].preserved == 0) {
-                this.isChoose[index] = !this.isChoose[index];
-                // this.index = 0;
-                // this.index = this.tindex;
-                //将选择的时间段传到父组件
-                this.choosedTime = [];
-                this.isChoose.forEach((flag, i) => {
-                    if(flag) {
-                        this.choosedTime.push(this.timeList[i].value);
-                    }
-                });
-                //如果有选择时间，则支付按钮点亮
-                this.able = false;
-                if(this.choosedTime.length>0) {
-                    this.able = true;
-                }
-                this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
-            }
+            this.tindex = this.dateIndex;
+            this.$forceUpdate();
+            this.$emit("updateChoosedTime", index);
         },
         bindPickerChange(e) {
             //获取当前时间下标
-            this.index = e.mp.detail.value;
-            console.log(this.index);
-            if(this.index!=this.tindex) {
-                //如果重新选择的时间和当前时间不一样。则刷新时间段的选择
-                this.choosedTime = [];
-                this.isChoose = [];
-                this.able = false;
-                this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
+            if(e.mp.detail.value!=this.tindex) {
+                this.$emit('update', e.mp.detail.value)
+                this.tindex = this.dateIndex;
             }
-            this.tindex = this.index;
-            this.$emit("refreshTimeList", this.index);
         }
     },
     onShow() {
-        this.index = 0;
-        this.tindex = 0;
-        this.$emit("refreshTimeList", this.index);
-        this.choosedTime = [];
-        this.isChoose = [];
-        this.able = false;
-        this.$emit("sendChoosedTime", {choosedTime:this.choosedTime, able:this.able});
+        this.tindex = this.dateIndex;
     },
     created() {
-        this.index = 0;
+        this.$emit('update', 0);
+        this.tindex = this.dateIndex;
     },
     onUnload() {
-        this.index = 0;
+        this.$emit('update', 0);
+        this.tindex = this.dateIndex;
     }
 }
 </script>
