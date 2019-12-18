@@ -209,7 +209,7 @@ export default {
       const eventChannel = this.$mp.page.getOpenerEventChannel();
       eventChannel.on("acceptPayMsg", data => {
         this.msg = data;
-        this.room = data.room.roomType + data.room.roomId;
+        this.room = data.room.roomType;
         this.sitId = data.sitId;
       });
       eventChannel.on("acceptBasicMsg", data => {

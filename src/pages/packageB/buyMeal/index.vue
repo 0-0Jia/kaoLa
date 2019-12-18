@@ -12,7 +12,7 @@
     </div>
     <div class="detail">
       <msg-row name="套餐时效" :value="mealMsg.mealDays+'天'"></msg-row>
-      <msg-row name="可用次数" :value="mealMsg.usedTimes+'次'"></msg-row>
+      <msg-row name="可用次数" :value="mealMsg.usedTimes+'次'" v-if="mealMsg.display==1"></msg-row>
       <msg-row name="套餐描述" :value="mealMsg.mealDesc"></msg-row>
       <msg-row name="费用总计" :value="'￥' + mealMsg.money"></msg-row>
       <pay-methods

@@ -4,7 +4,7 @@
       v-for="message in storeList" 
       :message="message" 
       :key="message.storeId"
-      @goDetail="clickToPlaceOrder"
+      @goDetail="clickToOrder"
     >
     </store>
   </div>
@@ -23,12 +23,12 @@ export default {
   },
   methods: {
     //跳转到座位预定页面
-    clickToPlaceOrder(msg) {
+    clickToOrder(msg) {
       wx.showLoading({
           title: '加载中',
       })
       mpvue.navigateTo({
-        url: "/pages/packageA/placeOrder/main",
+        url: "/pages/packageA/order/main",
         //监听跳转到的页面的事件，执行拿到座位信息的函数
         success: function(res) {
           wx.hideLoading();

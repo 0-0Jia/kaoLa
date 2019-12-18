@@ -11,7 +11,7 @@
                 <div :class="[{'hidden': !cardMsg.mealDesc}, 'detail']">{{cardMsg.mealDesc}}</div>
             </div>
             <div class="timeLimit" v-if="!cardMsg.status">时效：{{cardMsg.mealDays}}天</div>
-            <div class="timeLimit" v-else>剩余：{{cardMsg.usedTimes}}次</div>
+            <div class="timeLimit" v-if="cardMsg.display==1&&cardMsg.status">剩余：{{cardMsg.usedTimes}}次</div>
         </div>
     </div>
 </template>

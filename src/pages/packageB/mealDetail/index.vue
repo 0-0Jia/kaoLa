@@ -12,9 +12,10 @@
     </div>
     <div class="detail">
       <msg-row name="套餐时效" :value="mealMsg.mealDays+'天'"></msg-row>
-      <msg-row name="剩余次数" :value="mealMsg.usedTimes+'次'"></msg-row>
-      <msg-row name="套餐描述" :value="mealMsg.mealDesc"></msg-row>
+      <msg-row name="剩余次数" :value="mealMsg.usedTimes+'次'" v-if="mealMsg.display==1"></msg-row>
+      <msg-row name="套餐描述" :value="mealMsg.mealDesc" nobar></msg-row>
     </div>
+    <div class="button" @click="goStore">去使用</div>
   </div>
 </template>
 
@@ -50,6 +51,11 @@ export default {
         this.mealMsg = data.mealMsg;
         console.log(this.mealMsg);
       });
+    },
+    goStore() {
+      wx.navigateTo({
+        url: "/pages/packageA/storeChoose/main"
+      })
     }
   },
   mounted() {
@@ -116,7 +122,6 @@ export default {
 .detail {
   width: 375px;
   background-color: white;
-  padding-bottom: 16px;
 }
 /* .tip{
     font-size: 9px;
@@ -126,5 +131,21 @@ export default {
 } */
 .hidden {
   visibility: hidden;
+}
+.button {
+  display: block;
+  position: relative;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  width: 220px;
+  height: 48px;
+  color: #ffffff;
+  background-color: #44644a;
+  border-radius: 24px;
+  line-height: 48px;
+  margin-top: 300px;
+  font-size: 16px;
 }
 </style>

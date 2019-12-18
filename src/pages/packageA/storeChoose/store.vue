@@ -5,7 +5,8 @@
             <div class="basicMsg">
                 <div class="name">{{message.storeName}}</div>
                 <div class="address">{{message.storeAddress}}</div>
-                <div class="workTime">营业时间：8:00-23:00</div>
+                <div class="workTime">营业时间：{{message.storeTime}}</div>
+                <div class="tel">联系电话：{{message.tel}}</div>
             </div>
             <!-- <div class="seatCount">
                 <span class="restSeat">空位数：{{message.freeSeats}}</span>
@@ -83,7 +84,7 @@ export default {
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
 }
-.address, .workTime{
+.address, .workTime, .tel{
     color: #2B2B2B;
     font-size: 10px;
 }

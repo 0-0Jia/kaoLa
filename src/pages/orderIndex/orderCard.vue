@@ -3,7 +3,7 @@
         <img src="/static/images/logo.png" class="logo" />
         <div class="msg">
             <p class="title">{{preservation.sitId}}号座位</p>
-            <p class="detail">房间：{{preservation.roomType}} {{preservation.roomId}}</p>
+            <p class="detail">房间：{{preservation.roomType}}</p>
             <p class="date">日期：{{date}}</p>
             <p class="time">{{time}}</p>
         </div>

@@ -14,7 +14,9 @@
         "placeOrder/main",
         "timeOrder/main",
         "orderSubmission/main",
-        "chooseMeal/main"
+        "chooseMeal/main",
+        "order/main",
+        "chooseSeat/main"
       ],
       "name": "packageA"
     },
