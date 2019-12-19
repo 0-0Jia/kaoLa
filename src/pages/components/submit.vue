@@ -48,6 +48,7 @@ export default {
     position: fixed;
     bottom: 0;
     background-color: white;
+    z-index: 3;
 }
 .money{
     height: 48px;

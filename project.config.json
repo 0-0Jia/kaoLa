@@ -54,8 +54,8 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "pages/user/userInfo/main",
-					"pathName": "pages/userIndex/main",
+					"name": "pages/packageA/storeChoose/main",
+					"pathName": "pages/packageA/storeChoose/main",
 					"query": "",
 					"scene": null
 				}

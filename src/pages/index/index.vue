@@ -2,7 +2,6 @@
   <div>
     <img class="logo" src="/static/images/logo.png" />
     <button class="green" @click="goOrder()">点击预约</button>
-    <button class="green" @click="goStore()">去门店</button>
     <!-- <button class="green" @click="scanCode()">扫码开锁</button> -->
   </div>
 </template>
@@ -27,68 +26,6 @@ export default {
           wx.hideLoading();
         }
       });
-    },
-    goStore() {
-      wx.showLoading({
-        title: "加载中"
-      });
-      wx.navigateTo({
-        url: "/pages/map/main",
-        success() {
-          wx.hideLoading();
-        }
-      });
-
-      // //使用微信内置地图查看位置接口
-      // wx.openLocation({
-      //   latitude: "23.04149", // 纬度，浮点数，范围为90 ~ -90
-      //   longitude: "113.405216", // 经度，浮点数，范围为180 ~ -180。
-      //   name: "门店位置", // 位置名
-      //   address: "广东工业大学大学城校区工学一号馆", // 地址详情说明
-      //   scale: 28 // 地图缩放级别,整形值,范围从1~28。默认为最大
-      // });
-    },
-    scanCode() {
-      // 智能门锁
-      // this.$wxhttp
-      //   .post({
-      //     url: "/customer/opendoor",
-      //     data: {
-      //       code: this.code
-      //     }
-      //   })
-      //   .then(res => {
-      //     console.log(`后台交互拿回数据:`, res);
-      //     wx.config({
-      //       debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-      //       appId: "", // 必填，公众号的唯一标识
-      //       timestamp: "", // 必填，生成签名的时间戳
-      //       nonceStr: "", // 必填，生成签名的随机串
-      //       signature: "", // 必填，签名
-      //       jsApiList: ["openLocation"] // 必填，需要使用的JS接口列表 这里填写需要用到的微信api openlocation为使用微信内置地图查看位置接口
-      //     });
-      //     wx.ready(function() {
-      //       wx.checkJsApi({
-      //         jsApiList: ["checkJsApi", "openLocation"],
-      //         success: function(res) {
-      //           wx.scanQRCode({
-      //             needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-      //             scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
-      //             success: res => {
-      //               console.log(res, "扫码结果");
-      //               // 后续操作
-      //             }
-      //           });
-      //         }
-      //       });
-      //     });
-      //     wx.error(function(res) {
-      //       console.log(res);
-      //     });
-      //   })
-      //   .catch(err => {
-      //     console.log(`自动请求api失败 err:`, err);
-      //   });
     }
   }
 };

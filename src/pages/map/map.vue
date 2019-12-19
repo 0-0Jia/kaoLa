@@ -2,13 +2,16 @@
   <div class="map">
     <map
       id="map"
-      longitude="113.398730"
-      latitude="23.034930"
+      :showLocation="showLocation"
+      :longitude="locationNow.lng"
+      :latitude="locationNow.lat"
       scale="28"
       style="width: 100%; height: 100vh;"
       bindtap="goStore"
       :markers="markers"
     ></map>
+    <button class="green" @click="moveToStore">门店位置</button>
+    <img class="location" title="定位" src="../../../static/tabs/position.png" @click="userPosition" />
   </div>
 </template>
 
@@ -16,48 +19,73 @@
 export default {
   data() {
     return {
-      msg: "Map",
+      mapCtx: "",
+      store: "",
+      showLocation: true,
       markers: [
         {
           iconPath: "../../static/tabs/location.png",
           id: 0,
-          latitude: 23.03493,
-          longitude: 113.39873,
-          width: 35,
-          height: 35,
-          title: "广东工业大学大学城校区工学一号馆",
+          latitude: 22.562811,
+          longitude: 113.879066,
+          width: 40,
+          height: 40,
+          title: "",
           label: {
-            content: "QG工作室",
+            content: "",
             bgColor: "transparent",
-            fontSize: "16px",
+            fontSize: "14px",
             textAlign: "left"
           },
           callout: {
-            content: "广东工业大学大学城校区工学一号馆312",
-            bgColor: "transparent",
-            fontSize: "16px",
+            content: "",
+            fontSize: "14px",
             textAlign: "center",
-            padding: "3px 6px",
-            borderRadius: "5px"
+            borderRadius: 3, //边框圆角
+            borderWidth: 1, //边框宽度
+            bgColor: "#ffffff", //背景色
+            padding: 5 //文本边缘留白
           }
         }
-      ]
+      ],
+      uesrLocation: {},
+      locationNow: {
+        longitude: "",
+        latitude: ""
+      }
     };
+  },
+  onLoad: function(options) {
+    this.store = JSON.parse(options.store);
+    this.mapCtx = wx.createMapContext("map");
+    this.locationNow = JSON.parse(options.store).location;
+    this.markers[0].latitude = parseFloat(this.store.location.lat);
+    this.markers[0].longitude = parseFloat(this.store.location.lng);
+    this.markers[0].label.content = this.store.storeName;
+    this.markers[0].callout.content = this.store.storeAddress;
   },
   mounted() {
     this.goStore();
+    console.log(this.markers);
   },
   methods: {
     goStore(e) {
-      console.log("1asc1352dcz");
-      //使用微信内置地图查看位置接口
-      wx.openLocation({
-        latitude: "23.04149", // 纬度，浮点数，范围为90 ~ -90
-        longitude: "113.405216", // 经度，浮点数，范围为180 ~ -180。
-        name: "门店位置", // 位置名
-        address: "广东工业大学大学城校区工学一号馆", // 地址详情说明
-        scale: 28 // 地图缩放级别,整形值,范围从1~28。默认为最大
+      let that = this;
+      wx.getLocation({
+        type: "gcj02",
+        success(res) {
+          console.log(res, "位置");
+          that.uesrLocation = res;
+        }
       });
+    },
+    userPosition() {
+      this.locationNow.lat = parseFloat(this.uesrLocation.latitude);
+      this.locationNow.lng = parseFloat(this.uesrLocation.longitude);
+    },
+    moveToStore() {
+      this.locationNow.lat = parseFloat(this.store.location.lat);
+      this.locationNow.lng = parseFloat(this.store.location.lng);
     }
   }
 };
@@ -67,5 +95,25 @@ export default {
 .map {
   width: 100%;
   height: 100vh;
+}
+.location {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  bottom: 3.5%;
+  right: 3%;
+  z-index: 100;
+}
+.green {
+  position: absolute;
+  right: 12%;
+  bottom: 3%;
+  text-align: center;
+  width: 80px;
+  height: 30px;
+  color: #ffffff;
+  background-color: #44644a;
+  border-radius: 10px;
+  font-size: 12px;
 }
 </style>
