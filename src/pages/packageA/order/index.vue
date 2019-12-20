@@ -365,10 +365,11 @@ export default {
         },
         //获取轮播的图片
         getImgList() {
+            let randomNum = Math.floor(Math.random() * 100)
             let baseUrl = `https://qgrobot.oss-cn-shenzhen.aliyuncs.com`;
             this.imgList = [];
             for(let i=1; i<4; i++) {
-                let imgUrl = `${baseUrl}/${this.store.storeId}_dist_${i}.png`;
+                let imgUrl = `${baseUrl}/${this.store.storeId}_dist_${i}.png?${randomNum}`;
                 this.imgList.push(imgUrl);
             }
         },
@@ -588,22 +589,49 @@ export default {
         },
         //显示座位说明
         showTip() {
-            wx.showModal({
-                title: '座位类型说明',
-                content: '哈哈哈哈哈哈哈哈哈哈哈哈',
-                showCancel: false
-            })
+            if(this.roomTypeList[this.roomIndex]=="开放区") {
+                wx.showModal({
+                    title: '开放区',
+                    content: '低分贝阳光区，可正常敲打使用电脑键盘和鼠标',
+                    showCancel: false
+                })
+            } else if(this.roomTypeList[this.roomIndex]=="格间区") {           
+                wx.showModal({
+                    title: '格间区',
+                    content: '静谧小黑屋, 请勿使用有声键盘和鼠标',
+                    showCancel: false
+                })
+            } else {
+                wx.showModal({
+                    title: this.roomTypeList[this.roomIndex],
+                    content: '暂无类型说明',
+                    showCancel: false
+                })
+            }
         }
     }, 
     mounted() {
         this.getStoreMsg();
+        wx.setNavigationBarTitle({
+            title: "预约"
+        });
     }
 }
 </script>
 
 <style scoped>
+swiper{
+    height: 200px;
+}
+swiper-item>img{
+    display: inline-block;
+    width: 90%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
 .msg {
-  margin-top: 8px;
   width: 375px;
   padding-bottom: 64px;
   background-color: white;
