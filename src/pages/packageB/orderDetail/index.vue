@@ -7,11 +7,14 @@
         ></seat-msg>
         <div class="msg">
             <msg-row name="预约日期" :value="date"></msg-row>
-            <msg-row name="已选时间" :value="time"></msg-row>
-            <msg-row name="所在门店" :value="storeName" nobar></msg-row> 
-            <!-- <msg-row name="费用总计" :value="'￥' + preservation.money" nobar></msg-row> -->
+            <msg-row name="所在门店" :value="storeName"></msg-row> 
+            <div class="msg-row">
+                <div class="row">
+                    <span>已选时间</span>
+                    <div class="rowValue">{{time}}</div>
+                </div>
+            </div>
         </div>
-        <!-- <div class="refund" @click="showModal()">退款</div> -->
     </div>
 </template>
 
@@ -85,5 +88,30 @@ export default {
     right: 0;
     margin: auto;
     margin-top: 248px;
+}
+.msg-row{
+    width: 343px;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+    font-size: 12px;
+    color: #2E2E2E;
+    background-color: white;
+}
+.row{
+    width: 100%;
+    margin-top: 10px;
+    padding-bottom: 10px; 
+    display: flex;
+    justify-content: space-between;
+}
+.row>div{
+    display: inline-block;
+}
+.rowValue{
+    width: 209px;
+    text-align: right;
+    word-break: break-all;
 }
 </style>

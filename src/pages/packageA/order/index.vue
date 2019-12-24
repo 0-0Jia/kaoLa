@@ -49,10 +49,12 @@
                             :isChoose="isChoose" 
                             :timeList="timeList"
                             :dateList="dateList"
-                            :dateIndex="dateIndex"                           
+                            :dateIndex="dateIndex" 
+                            :chooseAll="chooseAll"                          
                             @refreshTimeList="refreshTimeList"
                             @update="upDate"
                             @updateChoosedTime="updateChoosedTime"
+                            @clickChooseAll="handleChooseAll"
                         ></time-choose>
                         <div class="bar"></div>
                     </div>
@@ -125,7 +127,9 @@ export default {
             dateIndex: 0,
             choosedTimeStr: "",
             isChoose: [],
-            mealName: ""
+            mealName: "",
+            chooseAll: false,   //全选样式控制
+            ableTimeNum: 0      //可选择的时间段的数量
         }
     },
     methods: {
@@ -291,6 +295,8 @@ export default {
                     }
                     console.log(this.seatList, "done");
                     this.setDateList();
+                    //获取当前可选时间段的数目
+                    this.getAbleTimeNum();
                 }
             })
             .catch(err => {
@@ -355,6 +361,13 @@ export default {
                 console.log(this.curDateIndex)
                 console.log(this.seatList[this.seatIndex].curDate[this.curDateIndex])
                 this.timeList = this.seatList[this.seatIndex].curDate[this.curDateIndex].sitDate;
+                this.getAbleTimeNum();
+                //刷新全选按钮
+                if(this.choosedTime.length == this.ableTimeNum && this.ableTimeNum>0) {
+                    this.chooseAll = true;
+                } else {
+                    this.chooseAll = false;
+                }
             } 
         },
         //刷新时间表
@@ -517,7 +530,7 @@ export default {
                 });
             }
         },
-        //更新所选的时间
+        //更新所选的日期
         upDate(index) {
             this.dateIndex = index;
             this.isChoose = [];
@@ -543,6 +556,11 @@ export default {
                 this.ableToClick = false;
                 if(this.choosedTime.length>0) {
                     this.ableToClick = true;
+                }
+                if(this.choosedTime.length == this.ableTimeNum && this.ableTimeNum>0) {
+                    this.chooseAll = true;
+                } else {
+                    this.chooseAll = false;
                 }
                 //更新钱的数量
                 this.money = (this.choosedTime.length * this.seatList[this.seatIndex].money).toFixed(2);
@@ -608,6 +626,47 @@ export default {
                     showCancel: false
                 })
             }
+        },
+        //全选所有时间段
+        handleChooseAll() {
+            //如果当前有可预约的时间段才能按可选按钮
+            if(this.ableTimeNum>0) {
+                //将所有可选的时间段加入choosedTime
+                this.choosedTime = [];
+                this.isChoose = [];
+                for(let i = 0; i < this.timeList.length; i++) {
+                    if(this.timeList[i].preserved==0) {
+                        this.choosedTime.push(this.timeList[i].value);
+                        this.isChoose[i] = true;
+                    }
+                }
+                //如果有选择时间，则支付按钮点亮
+                this.ableToClick = false;
+                if(this.choosedTime.length>0) {
+                    this.ableToClick = true;
+                }
+                //如果当前选择的时间段长度和可选时间段长度相同且有可选的时间段，则全选按钮点亮。否则不亮
+                if(this.choosedTime.length == this.ableTimeNum && this.ableTimeNum>0) {
+                    this.chooseAll = true;
+                } else {
+                    this.chooseAll = false;
+                }
+                //更新钱的数量
+                this.money = (this.choosedTime.length * this.seatList[this.seatIndex].money).toFixed(2);
+                this.payMoney = this.money;
+                this.choosedTimeStr = this.choosedTime.join(',');
+            }
+        },
+        //获取可预约的时间段的长度
+        getAbleTimeNum() {
+            this.ableTimeNum = 0;
+            for(let i = 0; i < this.timeList.length; i++) {
+                //如果当前时间段还没被预约，则ableTimeNum数量加一
+                if(this.timeList[i].preserved==0) {
+                    this.ableTimeNum++;
+                }
+            }
+            console.log("当前可选时间段的长度为：", this.ableTimeNum);
         }
     }, 
     mounted() {

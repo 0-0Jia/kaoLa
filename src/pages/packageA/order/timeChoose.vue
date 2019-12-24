@@ -16,6 +16,12 @@
         <div class="bar"></div>
         <div class="orderTime">
             <div class="title">预约时间</div>
+            <div class="chooseAll" @click="clickChooseAll">
+                <div :class="[chooseAll?'greenBg':'' ,'choosed']">
+                    <img :class="chooseAll?'':'disvisable'" src="/static/images/choosed.png"/>
+                </div>
+                <div class="choice">全选</div>
+            </div>
             <div class="timeTable">
                 <div 
                     :class="[isChoose[index]?'greenbutton':'', {'unable': timeList[index].preserved!=0}, 'time']" 
@@ -37,7 +43,8 @@ export default {
         timeList: Array,
         dateList: Array,
         dateIndex: Number,
-        isChoose: Array
+        isChoose: Array,
+        chooseAll: Boolean
     },
     data() {
         return {
@@ -56,6 +63,10 @@ export default {
                 this.$emit('update', e.mp.detail.value)
                 this.tindex = this.dateIndex;
             }
+        },
+        clickChooseAll() {
+            console.log("全选按钮被点击")
+            this.$emit('clickChooseAll')
         }
     },
     onShow() {
@@ -155,5 +166,52 @@ picker{
 .unable{
     color: #A8A8A8 !important;
     border-color: #A8A8A8 !important;
+}
+.chooseAll{
+    width: 60px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 18px;
+}
+.choice{
+    display: inline-block;
+    height: 18px;
+    vertical-align: top;
+    color: #2E2E2E;
+    font-size: 12px;
+    line-height: 18px;
+    position: absolute;
+    left: 20px;
+    top: 0;
+}
+.choosed{
+    display: inline-block;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    border: 0.6px solid black;
+    margin-right: 8px;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+}
+.choosed>img{
+    width: 70%;
+    height: 70%;
+    position: absolute;
+    right: 0;
+    display: block;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    margin: auto;
+}
+.disvisable{
+    visibility: hidden;
+}
+.greenBg{
+    background-color: #44644A;
 }
 </style>
