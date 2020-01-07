@@ -294,6 +294,25 @@ export default {
                         }
                     }
                     console.log(this.seatList, "done");
+                    /*20200107*/
+                    //将所选时间设置为空
+                    this.choosedTime = [];
+                    //将所有按钮变暗
+                    this.isChoose = [];
+                    //将钱数设置为0
+                    this.money = 0;
+                    this.payMoney = this.money;
+                    //将时间设置为空
+                    this.choosedTimeStr = '';
+                    //更新全选按钮
+                    if(this.choosedTime.length == this.ableTimeNum && this.ableTimeNum>0) {
+                        this.chooseAll = true;
+                    } else {
+                        this.chooseAll = false;
+                    }
+                    //将支付按钮变暗
+                    this.ableToClick = false;
+                    /*20200107*/
                     this.setDateList();
                     //获取当前可选时间段的数目
                     this.getAbleTimeNum();
@@ -629,33 +648,56 @@ export default {
         },
         //全选所有时间段
         handleChooseAll() {
-            //如果当前有可预约的时间段才能按可选按钮
-            if(this.ableTimeNum>0) {
-                //将所有可选的时间段加入choosedTime
-                this.choosedTime = [];
-                this.isChoose = [];
-                for(let i = 0; i < this.timeList.length; i++) {
-                    if(this.timeList[i].preserved==0) {
-                        this.choosedTime.push(this.timeList[i].value);
-                        this.isChoose[i] = true;
+            /*20200107*/
+            //如果当前不是全选状态
+            if(this.chooseAll == false) {
+                //如果当前有可预约的时间段才能按可选按钮
+                if(this.ableTimeNum>0) {
+                    //将所有可选的时间段加入choosedTime
+                    this.choosedTime = [];
+                    this.isChoose = [];
+                    for(let i = 0; i < this.timeList.length; i++) {
+                        if(this.timeList[i].preserved==0) {
+                            this.choosedTime.push(this.timeList[i].value);
+                            this.isChoose[i] = true;
+                        }
                     }
+                    //如果有选择时间，则支付按钮点亮
+                    this.ableToClick = false;
+                    if(this.choosedTime.length>0) {
+                        this.ableToClick = true;
+                    }
+                    //如果当前选择的时间段长度和可选时间段长度相同且有可选的时间段，则全选按钮点亮。否则不亮
+                    if(this.choosedTime.length == this.ableTimeNum && this.ableTimeNum>0) {
+                        this.chooseAll = true;
+                    } else {
+                        this.chooseAll = false;
+                    }
+                    //更新钱的数量
+                    this.money = (this.choosedTime.length * this.seatList[this.seatIndex].money).toFixed(2);
+                    this.payMoney = this.money;
+                    this.choosedTimeStr = this.choosedTime.join(',');
                 }
-                //如果有选择时间，则支付按钮点亮
-                this.ableToClick = false;
-                if(this.choosedTime.length>0) {
-                    this.ableToClick = true;
-                }
-                //如果当前选择的时间段长度和可选时间段长度相同且有可选的时间段，则全选按钮点亮。否则不亮
+            } else if(this.chooseAll == true) {
+                //将所选时间设置为空
+                this.choosedTime = [];
+                //将所有按钮变暗
+                this.isChoose = [];
+                //将钱数设置为0
+                this.money = 0;
+                this.payMoney = this.money;
+                //将时间设置为空
+                this.choosedTimeStr = '';
+                //更新全选按钮
                 if(this.choosedTime.length == this.ableTimeNum && this.ableTimeNum>0) {
                     this.chooseAll = true;
                 } else {
                     this.chooseAll = false;
                 }
-                //更新钱的数量
-                this.money = (this.choosedTime.length * this.seatList[this.seatIndex].money).toFixed(2);
-                this.payMoney = this.money;
-                this.choosedTimeStr = this.choosedTime.join(',');
+                //将支付按钮变暗
+                this.ableToClick = false;
             }
+            /*20200107*/
         },
         //获取可预约的时间段的长度
         getAbleTimeNum() {
@@ -684,7 +726,7 @@ swiper{
 }
 swiper-item>img{
     display: inline-block;
-    width: 90%;
+    width: 100%;
     position: absolute;
     left: 0;
     right: 0;

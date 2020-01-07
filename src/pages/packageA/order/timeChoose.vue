@@ -58,11 +58,11 @@ export default {
             this.$emit("updateChoosedTime", index);
         },
         bindPickerChange(e) {
+            /*20200107*/
             //获取当前时间下标
-            if(e.mp.detail.value!=this.tindex) {
-                this.$emit('update', e.mp.detail.value)
-                this.tindex = this.dateIndex;
-            }
+            this.$emit('update', e.mp.detail.value)
+            this.tindex = this.dateIndex; 
+            /*20200107*/        
         },
         clickChooseAll() {
             console.log("全选按钮被点击")
